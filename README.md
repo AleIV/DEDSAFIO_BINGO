@@ -1,2 +1,2 @@
-# Template
-Super template for super plugins.
+# DEDSAFIO BINGO
+DEDSAFIO BINGO
