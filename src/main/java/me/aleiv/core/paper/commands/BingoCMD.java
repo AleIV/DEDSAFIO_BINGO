@@ -1,5 +1,6 @@
 package me.aleiv.core.paper.commands;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -101,6 +102,15 @@ public class BingoCMD extends BaseCommand {
     @Subcommand("neg")
     public void neg(CommandSender sender, Integer neg){
         Slot.negativeSpace  = instance.getNegativeSpaces().get(neg);
+
+    }
+
+    @Subcommand("test")
+    public void neg2(CommandSender sender, Material material, Integer neg){
+        var mat = instance.getGame().getMaterials();
+        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + instance.getNegativeSpaces().get(neg) + Character.toString('\uE008'));
+        instance.broadcastMessage("");
+        instance.broadcastMessage("");
 
     }
 

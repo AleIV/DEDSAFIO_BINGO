@@ -39,13 +39,13 @@ public class Slot {
         String c = Character.toString(code);
 
         if(isFound){
-            return c + negativeSpace + found;
+            return found + negativeSpace + c;
 
         }else if(game.isNormalMode()){
-            return c + negativeSpace + normal;
+            return normal + negativeSpace + c;
 
         }else{
-            return c + negativeSpace + twitch;
+            return twitch + negativeSpace + c;
         }
         
     }

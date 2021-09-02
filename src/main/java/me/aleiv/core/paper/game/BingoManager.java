@@ -28,12 +28,14 @@ public class BingoManager implements Listener {
 
         // TODO: TEST
 
+        var options = instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
 
-                var options = instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
-
                 var material = options.get(random.nextInt(options.size()));
+
+                options.remove(material);
 
                 table.getBoard()[i][j] = new Slot(instance, material);
                 table.getSelectedItems().add(material);

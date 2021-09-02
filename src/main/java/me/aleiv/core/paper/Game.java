@@ -30,7 +30,7 @@ public class Game extends BukkitRunnable {
         BingoDifficulty bingoDifficulty;
         BingoType bingoType;
 
-        String color1 = "#9e4610"; // INFO COLOR
+        String color1 = "#808dac"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR
         String color3 = "#ac1133"; // ERROR COLOR
         String color4 = "#16e384"; // CONFIG COLOR
@@ -39,9 +39,6 @@ public class Game extends BukkitRunnable {
         HashMap<String, Table> tables = new HashMap<>();
         HashMap<String, FastBoard> boards = new HashMap<>();
         HashMap<Material, ItemCode> materials = new HashMap<>();
-
-        List<ItemCode> animation = new ArrayList<>();
-        HashMap<Integer, ItemCode> numbers = new HashMap<>();
 
         List<List<Material>> classEasy = new ArrayList<>();
         List<List<Material>> classMedium = new ArrayList<>();
@@ -329,9 +326,8 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.JUNGLE_SAPLING, new ItemCode('\uEA44'));
                 materials.put(Material.OAK_SAPLING, new ItemCode('\uEA45'));
                 materials.put(Material.SPRUCE_SAPLING, new ItemCode('\uEA46'));
-                materials.put(Material.ALLIUM, new ItemCode('\uEA47'));/*
-                
-                materials.put(Material.AZURE_BLUET, new ItemCode('\uEA48'));
+                materials.put(Material.ALLIUM, new ItemCode('\uEA47'));
+                materials.put(Material.AZURE_BLUET, new ItemCode('\uEA48'));/*
                 materials.put(Material.CORNFLOWER, new ItemCode('\uEA49'));
                 materials.put(Material.DANDELION, new ItemCode('\uEA50'));
                 materials.put(Material.LILY_OF_THE_VALLEY, new ItemCode('\uEA51'));
