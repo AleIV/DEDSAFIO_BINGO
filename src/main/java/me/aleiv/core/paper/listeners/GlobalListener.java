@@ -29,7 +29,7 @@ public class GlobalListener implements Listener{
             for (var board : boards.values()) {
                 var uuid = board.getPlayer().getUniqueId().toString();
                 var table = game.getTables().get(uuid);
-                instance.updateBoard(board, table);
+                instance.getBingoManager().updateBoard(board, table);
 
             }
         });
@@ -62,10 +62,10 @@ public class GlobalListener implements Listener{
 
         var boards = game.getBoards();
         var board = new FastBoard(player);
-        var title = game.getTitle();
+        var title = instance.getBingoManager().getTitle();
 
         board.updateTitle(" " + title);
-        instance.updateBoard(board, table);
+        instance.getBingoManager().updateBoard(board, table);
         boards.put(uuid, board);
 
     }

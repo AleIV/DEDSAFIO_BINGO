@@ -63,7 +63,7 @@ spigot {
     authors 'aleiv'
     apiVersion '1.17'
     version '0.1'
-    name 'CoreTemplate'
+    name 'DEDSAFIO_BINGO'
     load STARTUP
     //depends = ['ProtocolLib']
 }

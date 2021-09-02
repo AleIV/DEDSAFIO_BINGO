@@ -13,11 +13,10 @@ import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.core.paper.commands.BingoCMD;
 import me.aleiv.core.paper.game.BingoManager;
-import me.aleiv.core.paper.game.Table;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
-import me.aleiv.core.paper.utilities.FastBoard;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
@@ -31,6 +30,7 @@ public class Core extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private @Getter BingoManager bingoManager;
+    private @Getter NegativeSpaces negativeSpaces;
 
     @Override
     public void onEnable() {
@@ -42,6 +42,7 @@ public class Core extends JavaPlugin {
         RapidInvManager.register(this);
 
         bingoManager = new BingoManager(this);
+        negativeSpaces = new NegativeSpaces();
 
         //LISTENERS
 
@@ -78,31 +79,6 @@ public class Core extends JavaPlugin {
 
     public void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut){
         player.showTitle(Title.title(miniMessage.parse(title), miniMessage.parse(subtitle), Times.of(Duration.ofMillis(50*fadeIn), Duration.ofMillis(50*stay), Duration.ofMillis(50*fadeIn))));
-    }
-
-    public void updateBoard(FastBoard board, Table table) {
-
-        if (table == null) {
-            board.updateLines("", "WAITING BOARD");
-
-        } else {
-            board.updateLines("",
-                    " " + table.getPosDisplay(0, 0) + table.getPosDisplay(0, 1) + table.getPosDisplay(0, 2)
-                            + table.getPosDisplay(0, 3) + table.getPosDisplay(0, 4),
-                    "",
-                    " " + table.getPosDisplay(1, 0) + table.getPosDisplay(1, 1) + table.getPosDisplay(1, 2)
-                            + table.getPosDisplay(1, 3) + table.getPosDisplay(1, 4),
-                    "",
-                    " " + table.getPosDisplay(2, 0) + table.getPosDisplay(2, 1) + table.getPosDisplay(2, 2)
-                            + table.getPosDisplay(2, 3) + table.getPosDisplay(2, 4),
-                    "",
-                    " " + table.getPosDisplay(3, 0) + table.getPosDisplay(3, 1) + table.getPosDisplay(3, 2)
-                            + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4),
-                    "", " " + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
-                            + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4),
-                    "");
-        }
-
     }
 
 }

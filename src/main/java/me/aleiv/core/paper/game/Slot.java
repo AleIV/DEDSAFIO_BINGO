@@ -12,7 +12,8 @@ public class Slot {
     boolean isFound;
     ItemCode itemCode;
     Material material;
-    public static String negativeSpace = Character.toString('\uF808') + Character.toString('\uF807');
+    public static String negativeSpace;
+    
     public static String twitch = Character.toString('\uE007');
     public static String normal = Character.toString('\uE008');
     public static String found = Character.toString('\uE009');
@@ -28,6 +29,7 @@ public class Slot {
 
         this.itemCode = itemCode;
 
+        negativeSpace = instance.getNegativeSpaces().get(-18);
     }
 
     public String getDisplay(){
@@ -35,7 +37,6 @@ public class Slot {
 
         int code = itemCode.getCode();
         String c = Character.toString(code);
-        
 
         if(isFound){
             return c + negativeSpace + found;

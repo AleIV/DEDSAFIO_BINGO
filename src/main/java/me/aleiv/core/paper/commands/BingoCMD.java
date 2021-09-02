@@ -16,6 +16,7 @@ import me.aleiv.core.paper.Game.BingoDifficulty;
 import me.aleiv.core.paper.Game.BingoMode;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
+import me.aleiv.core.paper.game.Slot;
 import me.aleiv.core.paper.game.Table;
 import net.md_5.bungee.api.ChatColor;
 
@@ -44,7 +45,7 @@ public class BingoCMD extends BaseCommand {
 
         }else{
         
-            instance.getGame().startGame();
+            instance.getBingoManager().startGame();
 
         }
 
@@ -54,7 +55,7 @@ public class BingoCMD extends BaseCommand {
     public void restart(CommandSender sender){
         var game = instance.getGame();
         if(game.getGameStage() == GameStage.INGAME){
-            instance.getGame().restartGame();
+            instance.getBingoManager().restartGame();
 
         }else{
             
@@ -97,6 +98,12 @@ public class BingoCMD extends BaseCommand {
 
     }
 
+    @Subcommand("neg")
+    public void neg(CommandSender sender, Integer neg){
+        Slot.negativeSpace  = instance.getNegativeSpaces().get(neg);
+
+    }
+
     @Subcommand("type")
     public void type(CommandSender sender){
         var game = instance.getGame();
@@ -133,7 +140,7 @@ public class BingoCMD extends BaseCommand {
 
         }
 
-        var title = game.getTitle();
+        var title = instance.getBingoManager().getTitle();
         var boards = game.getBoards();
 
         for (var board : boards.values()) {
@@ -141,7 +148,7 @@ public class BingoCMD extends BaseCommand {
             var table = game.getTables().get(uuid);
 
             board.updateTitle(" " + title);
-            instance.updateBoard(board, table);
+            instance.getBingoManager().updateBoard(board, table);
         }
 
     }

@@ -3,7 +3,6 @@ package me.aleiv.core.paper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,7 +15,6 @@ import me.aleiv.core.paper.game.BingoPlayer;
 import me.aleiv.core.paper.game.ItemCode;
 import me.aleiv.core.paper.game.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
-import net.md_5.bungee.api.ChatColor;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -60,8 +58,6 @@ public class Game extends BukkitRunnable {
 
                 registerMaterials();
 
-                registerAnimation();
-
                 registerClassEasy();
                 registerClassMedium();
                 registerClassHard();
@@ -77,52 +73,6 @@ public class Game extends BukkitRunnable {
                 gameTime = new_time;
 
                 Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
-        }
-
-        public void restartGame() {
-                var game = instance.getGame();
-
-                game.setGameStage(GameStage.POSTGAME);
-                instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarting...");
-
-                game.setGameStage(GameStage.LOBBY);
-                instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
-
-                players.values().forEach(bingoPlayer -> {
-                        bingoPlayer.setTable(null);
-                });
-
-                tables.clear();
-
-        }
-
-        public void startGame() {
-                var game = instance.getGame();
-
-                game.setGameStage(GameStage.STARTING);
-                instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game starting...");
-
-                game.setGameStage(GameStage.INGAME);
-                instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
-
-                var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
-
-                players.values().forEach(bingoPlayer -> {
-
-                        var uuid = bingoPlayer.getUuid();
-                        var table = new Table();
-                        instance.getBingoManager().selectItems(table);
-
-                        bingoPlayer.setTable(table);
-                        tables.put(uuid, table);
-
-                        var player = Bukkit.getPlayer(UUID.fromString(uuid));
-                        if (player != null) {
-                                player.teleport(loc);
-                        }
-
-                });
-
         }
 
         public enum BingoMode {
@@ -151,47 +101,6 @@ public class Game extends BukkitRunnable {
 
         public boolean isBingoTypeFull() {
                 return bingoType == BingoType.FULL;
-        }
-
-        public String getTitle() {
-                var game = instance.getGame();
-
-                if (game.isNormalMode()) {
-
-                        String t = Character.toString('\uE001');
-                        return t;
-
-                } else {
-
-                        String t = Character.toString('\uE000');
-                        return t;
-                }
-        }
-
-        public void registerAnimation() {
-
-                animation.add(new ItemCode('\uE020'));
-                animation.add(new ItemCode('\uE021'));
-                animation.add(new ItemCode('\uE022'));
-                animation.add(new ItemCode('\uE023'));
-                animation.add(new ItemCode('\uE024'));
-                animation.add(new ItemCode('\uE025'));
-                animation.add(new ItemCode('\uE026'));
-                animation.add(new ItemCode('\uE027'));
-                animation.add(new ItemCode('\uE028'));
-                animation.add(new ItemCode('\uE029'));
-                animation.add(new ItemCode('\uE030'));
-
-                numbers.put(0, new ItemCode('\uE040'));
-                numbers.put(1, new ItemCode('\uE039'));
-                numbers.put(2, new ItemCode('\uE038'));
-                numbers.put(3, new ItemCode('\uE037'));
-                numbers.put(4, new ItemCode('\uE036'));
-                numbers.put(5, new ItemCode('\uE035'));
-                numbers.put(6, new ItemCode('\uE034'));
-                numbers.put(7, new ItemCode('\uE033'));
-                numbers.put(8, new ItemCode('\uE032'));
-                numbers.put(9, new ItemCode('\uE031'));
         }
 
         public void registerClassEasy() {
@@ -420,8 +329,8 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.JUNGLE_SAPLING, new ItemCode('\uEA44'));
                 materials.put(Material.OAK_SAPLING, new ItemCode('\uEA45'));
                 materials.put(Material.SPRUCE_SAPLING, new ItemCode('\uEA46'));
-                materials.put(Material.ALLIUM, new ItemCode('\uEA47'));
-                /*
+                materials.put(Material.ALLIUM, new ItemCode('\uEA47'));/*
+                
                 materials.put(Material.AZURE_BLUET, new ItemCode('\uEA48'));
                 materials.put(Material.CORNFLOWER, new ItemCode('\uEA49'));
                 materials.put(Material.DANDELION, new ItemCode('\uEA50'));

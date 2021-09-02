@@ -44,7 +44,7 @@ public class InGameListener implements Listener {
                             slot.setFound(true);
 
                             var score = boards.get(uuid);
-                            instance.updateBoard(score, table);
+                            instance.getBingoManager().updateBoard(score, table);
 
                             //var itemName = item.getType().toString().replace('_', ' ').toLowerCase();
                             instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
