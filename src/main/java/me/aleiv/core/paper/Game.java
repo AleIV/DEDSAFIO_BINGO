@@ -327,7 +327,7 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.OAK_SAPLING, new ItemCode('\uEA45'));
                 materials.put(Material.SPRUCE_SAPLING, new ItemCode('\uEA46'));
                 materials.put(Material.ALLIUM, new ItemCode('\uEA47'));
-                materials.put(Material.AZURE_BLUET, new ItemCode('\uEA48'));/*
+                materials.put(Material.AZURE_BLUET, new ItemCode('\uEA48'));
                 materials.put(Material.CORNFLOWER, new ItemCode('\uEA49'));
                 materials.put(Material.DANDELION, new ItemCode('\uEA50'));
                 materials.put(Material.LILY_OF_THE_VALLEY, new ItemCode('\uEA51'));
@@ -724,7 +724,7 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.FIREWORK_ROCKET, new ItemCode('\uEE35'));
                 materials.put(Material.FIRE_CHARGE, new ItemCode('\uEE36'));
                 materials.put(Material.SALMON_BUCKET, new ItemCode('\uEE37'));
-                materials.put(Material.COD_BUCKET, new ItemCode('\uEE38'));*/
+                materials.put(Material.COD_BUCKET, new ItemCode('\uEE38'));
 
         }
 }
