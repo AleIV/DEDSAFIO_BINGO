@@ -17,7 +17,7 @@ public class TeamManager implements Listener{
     HashMap<UUID, Team> teamMap = new HashMap<>();
     boolean teamManagement;
     boolean friendlyFire;
-    int teamSize;
+    int teamSize = 1;
 
     public TeamManager(Core instance){
         this.instance = instance;

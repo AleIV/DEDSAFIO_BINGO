@@ -99,6 +99,7 @@ public class LobbyListener implements Listener {
             player.teleport(lobby.getSpawnLocation());
 
         }else if(player.getWorld() == lobby || table == null){
+            
             player.setGameMode(GameMode.SPECTATOR);
         }
     }

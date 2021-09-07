@@ -165,7 +165,7 @@ public class BingoCMD extends BaseCommand {
             var uuid = board.getPlayer().getUniqueId();
             var table = instance.getBingoManager().findTable(uuid);
 
-            board.updateTitle(" " + title);
+            board.updateTitle("" + title);
             instance.getBingoManager().updateBoard(board, table);
         }
 

@@ -18,6 +18,7 @@ import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
+import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
@@ -33,6 +34,7 @@ public class Core extends JavaPlugin {
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private @Getter BingoManager bingoManager;
     private @Getter NegativeSpaces negativeSpaces;
+    private @Getter TeamManager teamManager;
 
     @Override
     public void onEnable() {
@@ -45,6 +47,7 @@ public class Core extends JavaPlugin {
 
         bingoManager = new BingoManager(this);
         negativeSpaces = new NegativeSpaces();
+        teamManager = new TeamManager(this);
 
         //LISTENERS
 

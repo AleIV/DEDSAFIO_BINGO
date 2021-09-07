@@ -30,7 +30,7 @@ public class Game extends BukkitRunnable {
         BingoType bingoType;
         BingoGamemode bingoGamemode;
 
-        String color1 = "#df320c"; // INFO COLOR
+        String color1 = "#f31b2d"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR
         String color3 = "#ac1133"; // ERROR COLOR
         String color4 = "#16e384"; // CONFIG COLOR
@@ -127,7 +127,7 @@ public class Game extends BukkitRunnable {
                 classEasy.add(List.of(Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART,
                                 Material.TNT_MINECART, Material.MINECART));
                 classEasy.add(List.of(Material.BIRCH_SAPLING, Material.ACACIA_SAPLING, Material.DARK_OAK_SAPLING,
-                                Material.OAK_SAPLING, Material.SPRUCE_SAPLING));
+                                Material.OAK_SAPLING, Material.SPRUCE_SAPLING, Material.JUNGLE_SAPLING));
                 classEasy.add(List.of(Material.AZURE_BLUET, Material.ALLIUM, Material.RED_TULIP, Material.ORANGE_TULIP,
                                 Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
                                 Material.LILY_OF_THE_VALLEY, Material.DANDELION, Material.POPPY, Material.SUGAR_CANE,
@@ -324,6 +324,7 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.BIRCH_SAPLING, new ItemCode('\uEA42'));
                 materials.put(Material.DARK_OAK_SAPLING, new ItemCode('\uEA43'));
                 materials.put(Material.JUNGLE_SAPLING, new ItemCode('\uEA44'));
+
                 materials.put(Material.OAK_SAPLING, new ItemCode('\uEA45'));
                 materials.put(Material.SPRUCE_SAPLING, new ItemCode('\uEA46'));
                 materials.put(Material.ALLIUM, new ItemCode('\uEA47'));

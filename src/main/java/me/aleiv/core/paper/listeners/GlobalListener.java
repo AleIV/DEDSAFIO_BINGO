@@ -48,7 +48,7 @@ public class GlobalListener implements Listener{
 
         var table = manager.findTable(player.getUniqueId());
 
-        board.updateTitle(" " + title);
+        board.updateTitle("" + title);
         instance.getBingoManager().updateBoard(board, table);
         boards.put(uuid, board);
 
