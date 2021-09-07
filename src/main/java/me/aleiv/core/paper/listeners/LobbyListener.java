@@ -1,5 +1,7 @@
 package me.aleiv.core.paper.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
@@ -82,6 +85,22 @@ public class LobbyListener implements Listener {
             }
         }
 
+    }
+    
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+        var player = e.getPlayer();
+        var game = instance.getGame();
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(player.getUniqueId());
+        var lobby = Bukkit.getWorld("lobby");
+
+        if(game.getGameStage() != GameStage.INGAME){
+            player.teleport(lobby.getSpawnLocation());
+
+        }else if(player.getWorld() == lobby || table == null){
+            player.setGameMode(GameMode.SPECTATOR);
+        }
     }
 
 

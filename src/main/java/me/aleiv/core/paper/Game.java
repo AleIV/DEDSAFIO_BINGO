@@ -11,7 +11,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.GameTickEvent;
-import me.aleiv.core.paper.game.BingoPlayer;
 import me.aleiv.core.paper.game.ItemCode;
 import me.aleiv.core.paper.game.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
@@ -29,14 +28,14 @@ public class Game extends BukkitRunnable {
         BingoMode bingoMode;
         BingoDifficulty bingoDifficulty;
         BingoType bingoType;
+        BingoGamemode bingoGamemode;
 
-        String color1 = "#808dac"; // INFO COLOR
+        String color1 = "#df320c"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR
         String color3 = "#ac1133"; // ERROR COLOR
         String color4 = "#16e384"; // CONFIG COLOR
 
-        HashMap<String, BingoPlayer> players = new HashMap<>();
-        HashMap<String, Table> tables = new HashMap<>();
+        List<Table> tables = new ArrayList<>();
         HashMap<String, FastBoard> boards = new HashMap<>();
         HashMap<Material, ItemCode> materials = new HashMap<>();
 
@@ -52,6 +51,7 @@ public class Game extends BukkitRunnable {
                 this.bingoMode = BingoMode.NORMAL;
                 this.bingoDifficulty = BingoDifficulty.EASY;
                 this.bingoType = BingoType.LINE;
+                this.bingoGamemode = BingoGamemode.ITEM;
 
                 registerMaterials();
 
@@ -710,7 +710,7 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.PAINTING, new ItemCode('\uEE21'));
                 materials.put(Material.ARMOR_STAND, new ItemCode('\uEE22'));
                 materials.put(Material.HAY_BLOCK, new ItemCode('\uEE23'));
-                materials.put(Material.BREAD, new ItemCode('\uEE24'));
+                materials.put(Material.WHEAT, new ItemCode('\uEE24'));
                 materials.put(Material.CHAIN, new ItemCode('\uEE25'));
                 materials.put(Material.IRON_BARS, new ItemCode('\uEE26'));
                 materials.put(Material.IRON_DOOR, new ItemCode('\uEE27'));

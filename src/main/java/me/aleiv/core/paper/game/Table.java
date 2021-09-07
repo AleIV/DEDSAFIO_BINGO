@@ -4,74 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import lombok.Data;
-import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.events.BingoEvent;
-import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class Table implements Cloneable{
-
-    Core instance;
     
     UUID uuid;
     List<Material> selectedItems;
     Slot[][] board = new Slot[5][5];
+    List<UUID> members;
     
     public Table(){
         this.uuid = UUID.randomUUID();
         this.selectedItems = new ArrayList<>();
+        this.members = new ArrayList<>();
 
     }
 
-    public void checkBingoFull(){
-        
-        var game = instance.getGame();
+    public boolean isPlaying(UUID uuid) {
+        return members.stream().anyMatch(member -> member.getMostSignificantBits() == uuid.getMostSignificantBits());
+    }
 
-        if(game.isBingoTypeFull() && isBingoFull()){
-            //FULL BINGO CASE
-
-            List<String> winners = new ArrayList<>();
-            Bukkit.getOnlinePlayers().forEach(player ->{
-
-                if(player.getUniqueId().toString() == uuid.toString()){
-                    winners.add(player.getName());
-                }    
-            });
-            
-
-            Bukkit.getOnlinePlayers().forEach(player ->{
-                if(player.getUniqueId().toString() == this.uuid.toString()){
-                    instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " WON!");
-                }
-            });
     
-            Bukkit.getScheduler().runTaskAsynchronously(instance, task ->{
-                Bukkit.getPluginManager().callEvent(new BingoEvent(winners, true));
-            });
-
-        }else if(!game.isBingoTypeFull() && isBingoLine()){
-            //ONE LINE CASE
-
-            List<String> winners = new ArrayList<>();
-            winners.add(uuid.toString());
-
-            Bukkit.getOnlinePlayers().forEach(player ->{
-                if(player.getUniqueId().toString() == this.uuid.toString()){
-                    instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " WON!");
-                }
-            });
-
-            Bukkit.getScheduler().runTaskAsynchronously(instance, task ->{
-                Bukkit.getPluginManager().callEvent(new BingoEvent(winners, true));
-            });
-        }
-
-    }
 
     public boolean isBingoFull(){
         for (int i = 0; i < 5; i++) {
@@ -94,21 +51,17 @@ public class Table implements Cloneable{
 
         for (var i = 0; i < length; i++) {
             if (checkColumn(board, i)) {
-                instance.broadcastMessage("Column " + i + " is the same");
                 return true;
             }
         }
 
         for (var i = 0; i < width; i++) {
             if (checkRow(board, i)) {
-                instance.broadcastMessage("Row " + i + " is the same");
                 return true;
             }
         }
 
         if (checkDiagonal(board)) {
-            
-            instance.broadcastMessage("Diagonal is the same");
             return true;
         }
 
@@ -166,7 +119,7 @@ public class Table implements Cloneable{
         return slot.getDisplay();
     }
 
-    public void sendTableDisplay(CommandSender sender){
+    public void sendTableDisplay(Player sender){
                     
         String[] message = {
         " " + getPosDisplay(0, 0) + getPosDisplay(0, 1) + getPosDisplay(0, 2) + getPosDisplay(0, 3) + getPosDisplay(0, 4) + "\n",

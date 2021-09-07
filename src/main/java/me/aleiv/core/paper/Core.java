@@ -5,6 +5,8 @@ import java.time.Duration;
 import com.google.common.collect.ImmutableList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,6 +63,12 @@ public class Core extends JavaPlugin {
         });
 
         commandManager.registerCommand(new BingoCMD(this));
+
+        Bukkit.getScheduler().runTaskLater(this, task->{
+            WorldCreator worldCreator = new WorldCreator("lobby");
+            worldCreator.environment(Environment.NORMAL);
+            worldCreator.createWorld();
+        }, 20);
 
     }
 

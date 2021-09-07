@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
+import me.aleiv.core.paper.events.FoundItemEvent;
 import net.md_5.bungee.api.ChatColor;
 
 public class InGameListener implements Listener {
@@ -24,10 +25,10 @@ public class InGameListener implements Listener {
     public void attempToFind(Player player, ItemStack item) {
         var uuid = player.getUniqueId().toString();
         var game = instance.getGame();
-        var players = game.getPlayers();
-        var bingoPlayer = players.get(uuid);
 
-        var table = bingoPlayer.getTable();
+        var manager = instance.getBingoManager();
+
+        var table = manager.findTable(player.getUniqueId());
 
         if (table != null) {
             var board = table.getBoard();
@@ -46,11 +47,7 @@ public class InGameListener implements Listener {
                             var score = boards.get(uuid);
                             instance.getBingoManager().updateBoard(score, table);
 
-                            //var itemName = item.getType().toString().replace('_', ' ').toLowerCase();
-                            instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
-                            instance.broadcastMessage("");
-
-                            table.checkBingoFull();
+                            instance.getBingoManager().checkBingo(table, slot, player);
                             return;
                         }
                     }
@@ -58,6 +55,15 @@ public class InGameListener implements Listener {
             }
         }
 
+    }
+
+    @EventHandler
+    public void onItem(FoundItemEvent e){
+        var game = instance.getGame();
+        var slot = e.getSlot();
+        var player = e.getPlayer();
+        instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
+        instance.broadcastMessage("");
     }
 
     @EventHandler
@@ -81,7 +87,11 @@ public class InGameListener implements Listener {
     @EventHandler
     public void onBingo(BingoEvent e) {
         Bukkit.getScheduler().runTask(instance, () -> {
-            instance.broadcastMessage(ChatColor.of("#e39c16") + "" + e.getWinners().toString());
+            Bukkit.getOnlinePlayers().forEach(p ->{
+                var player = (Player) p;
+                e.getFoundItemEvent().getTable().sendTableDisplay(player);
+            });
+
         });
 
     }

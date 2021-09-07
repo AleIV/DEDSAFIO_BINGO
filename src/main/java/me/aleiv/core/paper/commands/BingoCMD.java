@@ -1,5 +1,6 @@
 package me.aleiv.core.paper.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,6 +50,13 @@ public class BingoCMD extends BaseCommand {
             instance.getBingoManager().startGame();
 
         }
+
+    }
+
+    @Subcommand("mix")
+    public void mix(Player sender){
+        Bukkit.dispatchCommand(sender, "bingo remove-play " + sender.getName());
+        Bukkit.dispatchCommand(sender, "bingo add-play " + sender.getName());
 
     }
 
@@ -154,8 +162,8 @@ public class BingoCMD extends BaseCommand {
         var boards = game.getBoards();
 
         for (var board : boards.values()) {
-            var uuid = board.getPlayer().getUniqueId().toString();
-            var table = game.getTables().get(uuid);
+            var uuid = board.getPlayer().getUniqueId();
+            var table = instance.getBingoManager().findTable(uuid);
 
             board.updateTitle(" " + title);
             instance.getBingoManager().updateBoard(board, table);
@@ -211,24 +219,24 @@ public class BingoCMD extends BaseCommand {
     @CommandCompletion("@players")
     public void addPlay(CommandSender sender, @Flags("other") Player target) {
         var game = instance.getGame();
-        var uuid = target.getUniqueId().toString();
-        var players = game.getPlayers();
-        var bingoPlayer = players.get(uuid);
+        var uuid = target.getUniqueId();
         var tables = game.getTables();
+        var manager = instance.getBingoManager();
 
-        var table = tables.get(uuid);
+        var table = manager.findTable(uuid);
 
-        if(bingoPlayer == null){
+        /*if(bingoPlayer == null){
             sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " doesn't exist.");
 
-        }else if(table != null){
+        }else */if(table != null){
             sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already playing.");
 
         }else{
             table = new Table();
             
-            bingoPlayer.setTable(table);
-            tables.put(uuid, table);
+            table.getMembers().add(uuid);
+            
+            tables.add(table);
             instance.getBingoManager().selectItems(table);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
@@ -240,24 +248,23 @@ public class BingoCMD extends BaseCommand {
     @CommandCompletion("@players")
     public void removePlay(CommandSender sender, @Flags("other") Player target) {
         var game = instance.getGame();
-        var uuid = target.getUniqueId().toString();
-        var players = game.getPlayers();
-        var bingoPlayer = players.get(uuid);
+        var uuid = target.getUniqueId();
 
         var tables = game.getTables();
-        var table = tables.get(uuid);
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(uuid);
         
-        if(bingoPlayer == null){
+        /*if(bingoPlayer == null){
             sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " doesn't exist.");
 
-        }else if(table == null){
+        }else */if(table == null){
 
             sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already not playing.");
 
         }else{
 
-            bingoPlayer.setTable(null);
-            tables.remove(uuid);
+            tables.remove(table);
+            table.getMembers().clear();
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
         }
@@ -266,25 +273,22 @@ public class BingoCMD extends BaseCommand {
 
     @Subcommand("table")
     @CommandCompletion("@players")
-    public void checkPlayer(CommandSender sender, @Flags("other") Player target) {
+    public void checkPlayer(Player sender, @Flags("other") Player target) {
         var game = instance.getGame();
-        var uuid = target.getUniqueId().toString();
-        var players = game.getPlayers();
-        var bingoPlayer = players.get(uuid);
+        var uuid = target.getUniqueId();
 
-        if(bingoPlayer == null){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " doesn't exist.");
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(uuid);
+
+        if(table == null){
+            sender.sendMessage(ChatColor.of(game.getColor3()) + "" + target.getName() + " table doesn't exist.");
 
         }else{
             
             sender.sendMessage("");
             sender.sendMessage(ChatColor.of(game.getColor1()) + target.getName() + " Table");
-            if(bingoPlayer.getTable() == null){
-                sender.sendMessage(ChatColor.of(game.getColor3()) + target.getName() + " is not playing.");
-
-            }else{
-                bingoPlayer.getTable().sendTableDisplay(sender);
-            }
+            
+            table.sendTableDisplay(sender);
         }
 
     }
