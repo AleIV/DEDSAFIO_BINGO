@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.BingoDifficulty;
+import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
@@ -40,8 +42,6 @@ public class BingoManager implements Listener {
 
     public void selectItems(Table table) {
 
-        // TODO: TEST
-
         //var options = instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
         /*
         for (int i = 0; i < 5; i++) {
@@ -61,7 +61,6 @@ public class BingoManager implements Listener {
             instance.broadcastMessage(str.toString());
         }*/
 
-        
         var game = instance.getGame();
         var difficulty = game.getBingoDifficulty();
 
@@ -73,6 +72,21 @@ public class BingoManager implements Listener {
 
             case EASY: {
                 diff = game.getClassEasy().stream().collect(Collectors.toList());
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+        
+                        var options = diff.get(random.nextInt(diff.size()));
+                        diff.remove(options);
+        
+                        var material = options.get(random.nextInt(options.size()));
+        
+                        table.getBoard()[i][j] = null;
+                        table.getBoard()[i][j] = new Slot(material);
+                        table.getSelectedItems().add(material);
+        
+                    }
+                }
+
             }
                 break;
 
@@ -94,16 +108,29 @@ public class BingoManager implements Listener {
             default:
                 break;
         }
+        
+        if(difficulty == BingoDifficulty.EASY) return;
+
+        instance.broadcastMessage(ChatColor.LIGHT_PURPLE + diff.toString());
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
 
-                var options = diff.get(random.nextInt(diff.size()));
-                diff.remove(options);
+                var diffRand = random.nextInt(diff.size());
 
-                var material = options.get(random.nextInt(options.size()));
+                var options = diff.get(diffRand);
+                instance.broadcastMessage(ChatColor.GREEN + options.toString());
 
-                table.getBoard()[i][j] = new Slot(instance, material);
+                var optRand = random.nextInt(options.size());
+
+                var material = options.get(optRand);
+                instance.broadcastMessage(ChatColor.YELLOW + material.toString());
+
+                options.remove(optRand);
+                if(options.isEmpty())
+                    diff.remove(diffRand);
+                
+                table.getBoard()[i][j] = new Slot(material);
                 table.getSelectedItems().add(material);
 
             }
@@ -124,16 +151,18 @@ public class BingoManager implements Listener {
     }
 
     public void checkBingo(Table table, Slot slot, Player player){
-        
-        var game = instance.getGame();
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task->{
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
         
-            if(table.isBingoFull() || table.isBingoLine()){
-                Bukkit.getPluginManager().callEvent(new BingoEvent(found, game.getBingoType(), true));
+            if(table.isBingoFull()){
+                Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
+
+            }else if(table.isBingoLine()){
+                Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
             }
+
         });
 
     }
@@ -191,40 +220,37 @@ public class BingoManager implements Listener {
     }
 
     public String getTitle() {
-        var game = instance.getGame();
+        var neg2 = instance.getNegativeSpaces().get(instance.getGame().getNeg2());
+        var neg3 = instance.getNegativeSpaces().get(instance.getGame().getNeg3());
+        String t = Character.toString('\uE001') + neg2 + neg3 + Character.toString('\uE000');
 
-        if (game.isNormalMode()) {
-
-            String t = Character.toString('\uE001');
-            return t;
-
-        } else {
-
-            String t = Character.toString('\uE000');
-            return t;
-        }
+        return t;
     }
 
     public void updateBoard(FastBoard board, Table table) {
+
+        board.updateTitle(getTitle());
+        var neg = instance.getNegativeSpaces().get(instance.getGame().getNeg());
 
         if (table == null) {
             board.updateLines("", "WAITING BOARD");
 
         } else {
             board.updateLines("",
-                    " " + table.getPosDisplay(0, 0) + table.getPosDisplay(0, 1) + table.getPosDisplay(0, 2)
-                            + table.getPosDisplay(0, 3) + table.getPosDisplay(0, 4),
+                    "" + table.getPosDisplay(0, 0) + table.getPosDisplay(0, 1) + table.getPosDisplay(0, 2)
+                            + table.getPosDisplay(0, 3) + table.getPosDisplay(0, 4) + neg,
                     "",
-                    " " + table.getPosDisplay(1, 0) + table.getPosDisplay(1, 1) + table.getPosDisplay(1, 2)
-                            + table.getPosDisplay(1, 3) + table.getPosDisplay(1, 4),
+                    "" + table.getPosDisplay(1, 0) + table.getPosDisplay(1, 1) + table.getPosDisplay(1, 2)
+                            + table.getPosDisplay(1, 3) + table.getPosDisplay(1, 4) + neg,
                     "",
-                    " " + table.getPosDisplay(2, 0) + table.getPosDisplay(2, 1) + table.getPosDisplay(2, 2)
-                            + table.getPosDisplay(2, 3) + table.getPosDisplay(2, 4),
+                    "" + table.getPosDisplay(2, 0) + table.getPosDisplay(2, 1) + table.getPosDisplay(2, 2)
+                            + table.getPosDisplay(2, 3) + table.getPosDisplay(2, 4) + neg,
                     "",
-                    " " + table.getPosDisplay(3, 0) + table.getPosDisplay(3, 1) + table.getPosDisplay(3, 2)
-                            + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4),
-                    "", " " + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
-                            + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4),
+                    "" + table.getPosDisplay(3, 0) + table.getPosDisplay(3, 1) + table.getPosDisplay(3, 2)
+                            + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4) + neg,
+                    "", 
+                    "" + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
+                            + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4) + neg,
                     "");
         }
 

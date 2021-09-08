@@ -30,6 +30,10 @@ public class Game extends BukkitRunnable {
         BingoType bingoType;
         BingoGamemode bingoGamemode;
 
+        int neg = -4;
+        int neg2 = 0;
+        int neg3 = 0;
+
         String color1 = "#f31b2d"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR
         String color3 = "#ac1133"; // ERROR COLOR
@@ -107,11 +111,8 @@ public class Game extends BukkitRunnable {
                                 Material.STONECUTTER, Material.BELL, Material.LECTERN, Material.CRAFTING_TABLE));
                 classEasy.add(List.of(Material.DRIED_KELP_BLOCK, Material.HAY_BLOCK, Material.DRIED_KELP,
                                 Material.BREAD));
-                classEasy.add(List.of(Material.FLOWER_POT));
-                classEasy.add(List.of(Material.LADDER));
-                classEasy.add(List.of(Material.PAINTING, Material.ITEM_FRAME));
-                classEasy.add(List.of(Material.ANVIL));
-                classEasy.add(List.of(Material.CHAIN, Material.IRON_BARS));
+                classEasy.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT));
+                classEasy.add(List.of(Material.CHAIN, Material.IRON_BARS, Material.ANVIL));
                 classEasy.add(List.of(Material.SALMON_BUCKET, Material.COD_BUCKET));
                 classEasy.add(List.of(Material.CAMPFIRE, Material.TORCH, Material.LANTERN, Material.SOUL_CAMPFIRE,
                                 Material.SOUL_TORCH, Material.SOUL_LANTERN));
@@ -119,7 +120,7 @@ public class Game extends BukkitRunnable {
                 classEasy.add(List.of(Material.DISPENSER, Material.NOTE_BLOCK, Material.PISTON, Material.DROPPER,
                                 Material.OBSERVER, Material.REDSTONE_BLOCK, Material.TNT, Material.TARGET));
                 classEasy.add(List.of(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.COMPARATOR, Material.REPEATER,
-                                Material.DAYLIGHT_DETECTOR, Material.HOPPER, Material.TRIPWIRE_HOOK,
+                                Material.DAYLIGHT_DETECTOR, Material.HOPPER,
                                 Material.REDSTONE_TORCH, Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
                                 Material.IRON_TRAPDOOR));
                 classEasy.add(List.of(Material.ACTIVATOR_RAIL, Material.RAIL, Material.DETECTOR_RAIL,
@@ -130,8 +131,7 @@ public class Game extends BukkitRunnable {
                                 Material.OAK_SAPLING, Material.SPRUCE_SAPLING, Material.JUNGLE_SAPLING));
                 classEasy.add(List.of(Material.AZURE_BLUET, Material.ALLIUM, Material.RED_TULIP, Material.ORANGE_TULIP,
                                 Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
-                                Material.LILY_OF_THE_VALLEY, Material.DANDELION, Material.POPPY, Material.SUGAR_CANE,
-                                Material.LILAC));
+                                Material.LILY_OF_THE_VALLEY, Material.DANDELION, Material.POPPY));
                 classEasy.add(List.of(Material.KELP, Material.TWISTING_VINES, Material.WEEPING_VINES,
                                 Material.CRIMSON_ROOTS, Material.WARPED_ROOTS));
                 classEasy.add(List.of(Material.GRASS, Material.FERN, Material.VINE, Material.SEAGRASS,
@@ -161,10 +161,8 @@ public class Game extends BukkitRunnable {
                                 Material.CYAN_CONCRETE, Material.PURPLE_CONCRETE, Material.BLUE_CONCRETE,
                                 Material.BROWN_CONCRETE, Material.GREEN_CONCRETE, Material.RED_CONCRETE,
                                 Material.BLACK_CONCRETE));
-                classEasy.add(List.of(Material.DIRT, Material.GRAVEL, Material.CLAY, Material.SNOW_BLOCK,
-                                Material.COARSE_DIRT));
-                classEasy.add(List.of(Material.STONE, Material.GRANITE, Material.POLISHED_GRANITE, Material.DIORITE,
-                                Material.POLISHED_DIORITE, Material.ANDESITE, Material.POLISHED_ANDESITE,
+                classEasy.add(List.of(Material.GRAVEL, Material.CLAY, Material.SNOW_BLOCK));
+                classEasy.add(List.of(Material.STONE,
                                 Material.COBBLESTONE, Material.MOSSY_COBBLESTONE, Material.STONE_BRICKS,
                                 Material.CRACKED_STONE_BRICKS, Material.MOSSY_STONE_BRICKS,
                                 Material.CHISELED_STONE_BRICKS, Material.SMOOTH_STONE, Material.BRICKS));
@@ -172,7 +170,6 @@ public class Game extends BukkitRunnable {
                                 Material.SMOOTH_RED_SANDSTONE, Material.CHISELED_RED_SANDSTONE, Material.SAND,
                                 Material.SANDSTONE, Material.CUT_SANDSTONE, Material.SMOOTH_SANDSTONE,
                                 Material.CHISELED_SANDSTONE));
-                classEasy.add(List.of(Material.OBSIDIAN));
                 classEasy.add(List.of(Material.OAK_LOG, Material.BIRCH_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG,
                                 Material.ACACIA_LOG, Material.CRIMSON_STEM, Material.WARPED_STEM));
                 classEasy.add(List.of(Material.OAK_LEAVES, Material.BIRCH_LEAVES, Material.SPRUCE_LEAVES,
@@ -213,7 +210,7 @@ public class Game extends BukkitRunnable {
                 classEasy.add(List.of(Material.BRICK, Material.INK_SAC, Material.LEATHER, Material.BONE_MEAL,
                                 Material.SNOWBALL));
                 classEasy.add(List.of(Material.CHARCOAL, Material.COAL, Material.IRON_INGOT, Material.GOLD_INGOT,
-                                Material.EMERALD, Material.LAPIS_LAZULI, Material.DIAMOND));
+                                Material.EMERALD, Material.LAPIS_LAZULI, Material.DIAMOND, Material.OBSIDIAN));
                 classEasy.add(List.of(Material.QUARTZ, Material.REDSTONE, Material.IRON_BLOCK, Material.GOLD_BLOCK,
                                 Material.EMERALD_BLOCK, Material.LAPIS_BLOCK, Material.DIAMOND_BLOCK));
                 classEasy.add(List.of(Material.APPLE, Material.CARROT, Material.COOKED_BEEF, Material.COOKED_MUTTON,
@@ -462,7 +459,7 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.NETHER_WART_BLOCK, new ItemCode('\uEB79'));
                 materials.put(Material.WARPED_WART_BLOCK, new ItemCode('\uEB80'));
                 materials.put(Material.NETHERRACK, new ItemCode('\uEB81'));
-                materials.put(Material.NETHER_BRICK, new ItemCode('\uEB82'));
+                materials.put(Material.NETHER_BRICKS, new ItemCode('\uEB82'));
                 materials.put(Material.CRACKED_NETHER_BRICKS, new ItemCode('\uEB83'));
                 materials.put(Material.CHISELED_NETHER_BRICKS, new ItemCode('\uEB84'));
                 materials.put(Material.BLACKSTONE, new ItemCode('\uEB85'));

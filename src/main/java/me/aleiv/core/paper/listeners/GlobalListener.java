@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.aleiv.core.paper.Core;
@@ -65,5 +66,10 @@ public class GlobalListener implements Listener{
         if (board != null) {
             board.delete();
         }
+    }
+
+    //@EventHandler
+    public void onMove(PlayerMoveEvent e){
+        Bukkit.dispatchCommand(e.getPlayer(), "bingo mix");
     }
 }

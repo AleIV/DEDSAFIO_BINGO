@@ -8,7 +8,6 @@ import me.aleiv.core.paper.Core;
 @Data
 public class Slot {
 
-    Core instance;
     boolean isFound;
     ItemCode itemCode;
     Material material;
@@ -19,12 +18,17 @@ public class Slot {
     public static String found = Character.toString('\uE009');
 
 
-    public Slot(Core instance, Material material) {
-        this.instance = instance;
+    public Slot(Material material) {
         this.material = material;
         this.isFound = false;
 
+        var instance = Core.getInstance();
         var game = instance.getGame();
+
+        if(!game.getMaterials().containsKey(material)){
+            instance.broadcastMessage("DOESNT CONTAIN " + material.toString());
+        }
+
         var itemCode = game.getMaterials().get(material);
 
         this.itemCode = itemCode;
@@ -33,7 +37,7 @@ public class Slot {
     }
 
     public String getDisplay(){
-        var game = instance.getGame();
+        var game = Core.getInstance().getGame();
 
         int code = itemCode.getCode();
         String c = Character.toString(code);

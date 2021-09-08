@@ -18,7 +18,6 @@ import me.aleiv.core.paper.Game.BingoDifficulty;
 import me.aleiv.core.paper.Game.BingoMode;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
-import me.aleiv.core.paper.game.Slot;
 import me.aleiv.core.paper.game.Table;
 import net.md_5.bungee.api.ChatColor;
 
@@ -109,7 +108,19 @@ public class BingoCMD extends BaseCommand {
 
     @Subcommand("neg")
     public void neg(CommandSender sender, Integer neg){
-        Slot.negativeSpace  = instance.getNegativeSpaces().get(neg);
+        instance.getGame().setNeg(neg);
+
+    }
+
+    @Subcommand("neg2")
+    public void neg2(CommandSender sender, Integer neg){
+        instance.getGame().setNeg2(neg);
+
+    }
+
+    @Subcommand("neg3")
+    public void neg3(CommandSender sender, Integer neg){
+        instance.getGame().setNeg3(neg);
 
     }
 
