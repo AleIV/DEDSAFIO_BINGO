@@ -30,9 +30,9 @@ public class Game extends BukkitRunnable {
         BingoType bingoType;
         BingoGamemode bingoGamemode;
 
-        int neg = -4;
+        int neg = -8;
         int neg2 = 0;
-        int neg3 = 0;
+        int neg3 = -2;
 
         String color1 = "#f31b2d"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR
@@ -221,19 +221,21 @@ public class Game extends BukkitRunnable {
         }
 
         public void registerClassMedium() {
-                classMedium.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.BEETROOT_SOUP,
-                                Material.COOKIE, Material.SWEET_BERRIES, Material.COOKED_RABBIT,
-                                Material.POISONOUS_POTATO, Material.SEA_PICKLE, Material.HONEY_BOTTLE, Material.EGG,
+                classMedium.add(List.of(Material.BEETROOT_SOUP,
+                                Material.COOKIE, Material.SWEET_BERRIES, Material.COOKED_RABBIT, Material.EGG,
                                 Material.PUMPKIN_PIE));
-                classMedium.add(List.of(Material.TROPICAL_FISH, Material.TROPICAL_FISH_BUCKET, Material.MELON_SLICE,
-                                Material.ENDER_PEARL));
-                classMedium.add(List.of(Material.SADDLE, Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE,
-                                Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE, Material.ENCHANTING_TABLE,
-                                Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.CAKE, Material.SUNFLOWER));
-                classMedium.add(List.of(Material.COCOA_BEANS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS,
-                                Material.NETHER_WART));
-                classMedium.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER,
-                                Material.PUFFERFISH_BUCKET, Material.NAME_TAG, Material.HEART_OF_THE_SEA));
+                classMedium.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
+                classMedium.add(List.of(Material.SEA_PICKLE, Material.HONEY_BOTTLE));
+                classMedium.add(List.of(Material.TROPICAL_FISH, Material.TROPICAL_FISH_BUCKET, Material.MELON_SLICE));
+                classMedium.add(List.of(Material.ENDER_PEARL, Material.SADDLE));
+                classMedium.add(List.of(Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.CAKE, Material.SUNFLOWER));
+                classMedium.add(List.of(Material.COCOA_BEANS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS));
+                classMedium.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER));
+                classMedium.add(List.of(Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE));
+                classMedium.add(List.of(Material.PUFFERFISH_BUCKET, Material.HEART_OF_THE_SEA));
+                classMedium.add(List.of(Material.NETHER_WART));
+                classMedium.add(List.of(Material.NAME_TAG));
+                classMedium.add(List.of(Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE, Material.ENCHANTING_TABLE));
 
         }
 
@@ -246,8 +248,6 @@ public class Game extends BukkitRunnable {
                 classHard.add(List.of(Material.DEAD_HORN_CORAL_BLOCK, Material.DEAD_FIRE_CORAL_BLOCK,
                                 Material.DEAD_TUBE_CORAL_BLOCK, Material.DEAD_BRAIN_CORAL_BLOCK,
                                 Material.DEAD_BUBBLE_CORAL_BLOCK));
-                classHard.add(List.of(Material.HORN_CORAL_BLOCK, Material.FIRE_CORAL_BLOCK, Material.TUBE_CORAL_BLOCK,
-                                Material.BRAIN_CORAL_BLOCK, Material.BUBBLE_CORAL_BLOCK));
                 classHard.add(List.of(Material.SCUTE, Material.PHANTOM_MEMBRANE, Material.GHAST_TEAR,
                                 Material.END_CRYSTAL, Material.MUSIC_DISC_PIGSTEP, Material.RESPAWN_ANCHOR,
                                 Material.BAMBOO, Material.SCAFFOLDING, Material.TURTLE_EGG));
@@ -634,11 +634,6 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.DEAD_TUBE_CORAL_BLOCK, new ItemCode('\uED54'));
                 materials.put(Material.DEAD_BRAIN_CORAL_BLOCK, new ItemCode('\uED55'));
                 materials.put(Material.DEAD_BUBBLE_CORAL_BLOCK, new ItemCode('\uED56'));
-                materials.put(Material.HORN_CORAL_BLOCK, new ItemCode('\uED52'));
-                materials.put(Material.FIRE_CORAL_BLOCK, new ItemCode('\uED53'));
-                materials.put(Material.TUBE_CORAL_BLOCK, new ItemCode('\uED54'));
-                materials.put(Material.BRAIN_CORAL_BLOCK, new ItemCode('\uED55'));
-                materials.put(Material.BUBBLE_CORAL_BLOCK, new ItemCode('\uED56'));
                 materials.put(Material.PUFFERFISH, new ItemCode('\uED57'));
                 materials.put(Material.HONEYCOMB, new ItemCode('\uED58'));
                 materials.put(Material.HONEYCOMB_BLOCK, new ItemCode('\uED59'));

@@ -32,7 +32,7 @@ public class BingoManager implements Listener {
         this.instance = instance;
     }
 
-    public Table findTable(UUID player){
+    public Table findTable(UUID player) {
         var game = instance.getGame();
         var tables = game.getTables();
 
@@ -40,26 +40,30 @@ public class BingoManager implements Listener {
 
     }
 
+    public int getRand(List<?> list) {
+        return random.nextInt(list.size());
+    }
+
     public void selectItems(Table table) {
 
-        //var options = instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
+        // var options =
+        // instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
         /*
-        for (int i = 0; i < 5; i++) {
-            var str = new StringBuilder();
-            for (int j = 0; j < 5; j++) {
-
-                var material = options.get(random.nextInt(options.size()));
-
-                options.remove(material);
-
-                table.getBoard()[i][j] = new Slot(instance, material);
-                table.getSelectedItems().add(material);
-                str.append(ChatColor.GREEN + material.toString() + ChatColor.YELLOW + "-");
-
-            }
-
-            instance.broadcastMessage(str.toString());
-        }*/
+         * for (int i = 0; i < 5; i++) { var str = new StringBuilder(); for (int j = 0;
+         * j < 5; j++) {
+         * 
+         * var material = options.get(random.nextInt(options.size()));
+         * 
+         * options.remove(material);
+         * 
+         * table.getBoard()[i][j] = new Slot(instance, material);
+         * table.getSelectedItems().add(material); str.append(ChatColor.GREEN +
+         * material.toString() + ChatColor.YELLOW + "-");
+         * 
+         * }
+         * 
+         * instance.broadcastMessage(str.toString()); }
+         */
 
         var game = instance.getGame();
         var difficulty = game.getBingoDifficulty();
@@ -68,70 +72,48 @@ public class BingoManager implements Listener {
 
         table.getSelectedItems().clear();
 
-        switch (difficulty) {
+        var currentDiff = difficulty;
 
-            case EASY: {
-                diff = game.getClassEasy().stream().collect(Collectors.toList());
-                for (int i = 0; i < 5; i++) {
-                    for (int j = 0; j < 5; j++) {
-        
-                        var options = diff.get(random.nextInt(diff.size()));
-                        diff.remove(options);
-        
-                        var material = options.get(random.nextInt(options.size()));
-        
-                        table.getBoard()[i][j] = null;
-                        table.getBoard()[i][j] = new Slot(material);
-                        table.getSelectedItems().add(material);
-        
-                    }
-                }
-
-            }
-                break;
-
-            case MEDIUM: {
-                diff = game.getClassMedium().stream().collect(Collectors.toList());
-            }
-                break;
-
-            case HARD: {
-                diff = game.getClassHard().stream().collect(Collectors.toList());
-            }
-                break;
-
-            case EXPERT: {
-                diff = game.getClassExpert().stream().collect(Collectors.toList());
-            }
-                break;
-
-            default:
-                break;
+        switch (currentDiff) {
+            case EASY: diff = game.getClassEasy().stream().collect(Collectors.toList()); break;
+            case MEDIUM: diff = game.getClassMedium().stream().collect(Collectors.toList()); break;
+            case HARD: diff = game.getClassHard().stream().collect(Collectors.toList()); break;
+            case EXPERT: diff = game.getClassExpert().stream().collect(Collectors.toList()); break;
+            default: break;
         }
-        
-        if(difficulty == BingoDifficulty.EASY) return;
-
-        instance.broadcastMessage(ChatColor.LIGHT_PURPLE + diff.toString());
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
 
-                var diffRand = random.nextInt(diff.size());
-
+                var diffRand = getRand(diff);
                 var options = diff.get(diffRand);
-                instance.broadcastMessage(ChatColor.GREEN + options.toString());
+                diff.remove(diffRand);
 
-                var optRand = random.nextInt(options.size());
-
-                var material = options.get(optRand);
-                instance.broadcastMessage(ChatColor.YELLOW + material.toString());
-
-                options.remove(optRand);
-                if(options.isEmpty())
-                    diff.remove(diffRand);
+                var material = options.get(getRand(options));
+                instance.broadcastMessage(ChatColor.LIGHT_PURPLE + material.toString());
                 
                 table.getBoard()[i][j] = new Slot(material);
                 table.getSelectedItems().add(material);
+
+                if(diff.isEmpty()){
+                    switch (currentDiff) {
+                        case MEDIUM: {
+                            currentDiff = BingoDifficulty.EASY;
+                            diff = game.getClassEasy().stream().collect(Collectors.toList());
+                        } break;
+                        case HARD: {
+                            currentDiff = BingoDifficulty.MEDIUM;
+                            diff = game.getClassMedium().stream().collect(Collectors.toList());
+                        } break;
+                        case EXPERT: {
+                            currentDiff = BingoDifficulty.HARD;
+                            diff = game.getClassHard().stream().collect(Collectors.toList());
+                        } break;
+
+                        default: 
+                            break;
+                    }
+                }
 
             }
         }
@@ -150,16 +132,16 @@ public class BingoManager implements Listener {
         game.getTables().clear();
     }
 
-    public void checkBingo(Table table, Slot slot, Player player){
+    public void checkBingo(Table table, Slot slot, Player player) {
 
-        Bukkit.getScheduler().runTaskAsynchronously(instance, task->{
+        Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
-        
-            if(table.isBingoFull()){
+
+            if (table.isBingoFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
 
-            }else if(table.isBingoLine()){
+            } else if (table.isBingoLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
             }
 
@@ -179,10 +161,10 @@ public class BingoManager implements Listener {
         var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 
         var teamManager = instance.getTeamManager();
-        if(teamManager.getTeamSize() == 1){
-            //FFA CASE
+        if (teamManager.getTeamSize() == 1) {
+            // FFA CASE
 
-            Bukkit.getOnlinePlayers().forEach(p ->{
+            Bukkit.getOnlinePlayers().forEach(p -> {
                 var player = (Player) p;
                 var table = new Table();
                 game.getTables().add(table);
@@ -191,21 +173,19 @@ public class BingoManager implements Listener {
 
                 player.teleport(loc);
                 table.sendTableDisplay(player);
-                
+
             });
 
+        } else {
+            // TEAM CASE
 
-        }else{
-            //TEAM CASE
-
-            teamManager.getTeamMap().values().forEach(team ->{
+            teamManager.getTeamMap().values().forEach(team -> {
 
                 var table = new Table();
                 game.getTables().add(table);
                 instance.getBingoManager().selectItems(table);
 
-
-                team.getMembers().forEach(member ->{
+                team.getMembers().forEach(member -> {
                     table.getMembers().add(member);
                     var player = Bukkit.getPlayer(member);
                     if (player != null) {
@@ -213,7 +193,6 @@ public class BingoManager implements Listener {
                     }
                 });
 
-                
             });
         }
 
@@ -222,7 +201,7 @@ public class BingoManager implements Listener {
     public String getTitle() {
         var neg2 = instance.getNegativeSpaces().get(instance.getGame().getNeg2());
         var neg3 = instance.getNegativeSpaces().get(instance.getGame().getNeg3());
-        String t = Character.toString('\uE001') + neg2 + neg3 + Character.toString('\uE000');
+        String t = Character.toString('\uE001') + neg2 + Character.toString('\uE000') + neg3;
 
         return t;
     }
@@ -248,8 +227,7 @@ public class BingoManager implements Listener {
                     "",
                     "" + table.getPosDisplay(3, 0) + table.getPosDisplay(3, 1) + table.getPosDisplay(3, 2)
                             + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4) + neg,
-                    "", 
-                    "" + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
+                    "", "" + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
                             + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4) + neg,
                     "");
         }
