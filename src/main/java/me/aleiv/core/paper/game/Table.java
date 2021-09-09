@@ -16,13 +16,26 @@ public class Table implements Cloneable{
     List<Material> selectedItems;
     Slot[][] board = new Slot[5][5];
     List<UUID> members;
+
+    boolean foundLine;
+    boolean foundFull;
+
+    int points = 0;
+    static int mutiplier = 1;
     
     public Table(){
         this.uuid = UUID.randomUUID();
         this.selectedItems = new ArrayList<>();
         this.members = new ArrayList<>();
+        this.foundLine = false;
+        this.foundFull = false;
 
     }
+
+    public void addPoints(int i){
+        points += i;
+    }
+
 
     public boolean isPlaying(UUID uuid) {
         return members.stream().anyMatch(member -> member.getMostSignificantBits() == uuid.getMostSignificantBits());

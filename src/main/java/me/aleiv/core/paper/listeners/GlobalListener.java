@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.events.GameTickEvent;
@@ -68,8 +68,14 @@ public class GlobalListener implements Listener{
         }
     }
 
-    //@EventHandler
-    public void onMove(PlayerMoveEvent e){
-        Bukkit.dispatchCommand(e.getPlayer(), "bingo mix");
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e){
+        var player = e.getPlayer();
+        var world = Bukkit.getWorld("lobby");
+        if(player.getWorld() == world){
+            player.teleport(world.getSpawnLocation());
+        }
     }
+
+    
 }

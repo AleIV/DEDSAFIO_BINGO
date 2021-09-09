@@ -135,14 +135,20 @@ public class BingoManager implements Listener {
     public void checkBingo(Table table, Slot slot, Player player) {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
+            var multiplier = Table.mutiplier;
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
+            table.addPoints(1*multiplier);
 
-            if (table.isBingoFull()) {
+            if (table.isBingoFull() && !table.isFoundFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
+                table.setFoundFull(true);
+                table.addPoints(10*multiplier);
 
-            } else if (table.isBingoLine()) {
+            } else if (table.isBingoLine() && !table.isFoundLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
+                table.setFoundLine(true);
+                table.addPoints(5*multiplier);
             }
 
         });

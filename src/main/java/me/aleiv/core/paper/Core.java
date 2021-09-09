@@ -5,6 +5,7 @@ import java.time.Duration;
 import com.google.common.collect.ImmutableList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import co.aikar.commands.PaperCommandManager;
 import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
+import me.aleiv.core.paper.commands.AdminBingoCMD;
 import me.aleiv.core.paper.commands.BingoCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.listeners.GlobalListener;
@@ -65,13 +67,22 @@ public class Core extends JavaPlugin {
             return ImmutableList.of("LOBBY", "STARTING", "INGAME", "POSTGAME");
         });
 
+        commandManager.registerCommand(new AdminBingoCMD(this));
         commandManager.registerCommand(new BingoCMD(this));
 
         Bukkit.getScheduler().runTaskLater(this, task->{
             WorldCreator worldCreator = new WorldCreator("lobby");
             worldCreator.environment(Environment.NORMAL);
             worldCreator.createWorld();
+
+            Bukkit.getWorlds().forEach(world ->{
+                world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+                world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+                world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
+                world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            });
         }, 20);
+
 
     }
 

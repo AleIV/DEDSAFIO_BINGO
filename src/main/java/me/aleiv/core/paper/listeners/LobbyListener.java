@@ -27,12 +27,16 @@ public class LobbyListener implements Listener {
         notInGameMSG = ChatColor.of(instance.getGame().getColor1()) + "Game must start.";
     }
 
+    public boolean shouldInteract(Player player){
+        var game = instance.getGame();
+        var world = Bukkit.getWorld("lobby");
+        return (player.getWorld() == world && player.hasPermission("admin.perm")) || (player.getWorld() != world && game.getGameStage() != GameStage.INGAME && !player.hasPermission("admin.perm"));
+    }
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         var player = e.getPlayer();
-        var game = instance.getGame();
-        if (game.getGameStage() != GameStage.INGAME) {
+        if (shouldInteract(player)) {
             e.setCancelled(true);
             instance.sendActionBar(player, notInGameMSG);
         }
@@ -41,8 +45,7 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         var player = e.getPlayer();
-        var game = instance.getGame();
-        if (game.getGameStage() != GameStage.INGAME) {
+        if (shouldInteract(player)) {
             e.setCancelled(true);
             instance.sendActionBar(player, notInGameMSG);
         }
@@ -51,8 +54,7 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onInventory(InventoryOpenEvent e) {
         var player = (Player) e.getPlayer();
-        var game = instance.getGame();
-        if (game.getGameStage() != GameStage.INGAME) {
+        if (shouldInteract(player)) {
             e.setCancelled(true);
             instance.sendActionBar(player, notInGameMSG);
         }
@@ -63,8 +65,7 @@ public class LobbyListener implements Listener {
         var entity = e.getEntity();
         if (entity instanceof Player) {
             var player = (Player) entity;
-            var game = instance.getGame();
-            if (game.getGameStage() != GameStage.INGAME) {
+            if (shouldInteract(player)) {
                 e.setCancelled(true);
                 instance.sendActionBar(player, notInGameMSG);
             }
@@ -78,8 +79,7 @@ public class LobbyListener implements Listener {
 
         if (damager instanceof Player) {
             var player = (Player) damager;
-            var game = instance.getGame();
-            if (game.getGameStage() != GameStage.INGAME) {
+            if (shouldInteract(player)) {
                 e.setCancelled(true);
                 instance.sendActionBar(player, notInGameMSG);
             }

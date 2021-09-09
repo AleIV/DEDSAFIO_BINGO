@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.aleiv.core.paper.Core;
@@ -34,7 +36,7 @@ public class InGameListener implements Listener {
             var board = table.getBoard();
             var selectedItems = table.getSelectedItems();
 
-            if (game.getGameStage() == GameStage.INGAME && selectedItems.contains(item.getType())) {
+            if (item != null && game.getGameStage() == GameStage.INGAME && selectedItems.contains(item.getType())) {
 
                 var boards = game.getBoards();
 
@@ -77,6 +79,16 @@ public class InGameListener implements Listener {
     }
 
     @EventHandler
+    public void onInteract(PlayerInteractEvent e){
+        var action = e.getAction();
+        var item = e.getItem();
+        if(item != null && action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR){
+            var player = e.getPlayer();
+            attempToFind(player, item);
+        }
+    }
+
+    @EventHandler
     public void clickInv(InventoryClickEvent e) {
         var player = (Player) e.getWhoClicked();
         var item = e.getCurrentItem();
@@ -86,11 +98,10 @@ public class InGameListener implements Listener {
 
     @EventHandler
     public void onBingo(BingoEvent e) {
+        var game = instance.getGame();
         Bukkit.getScheduler().runTask(instance, () -> {
-            Bukkit.getOnlinePlayers().forEach(p ->{
-                var player = (Player) p;
-                e.getFoundItemEvent().getTable().sendTableDisplay(player);
-            });
+            instance.broadcastMessage(ChatColor.of(game.getColor2()) + "BINGO " + e.getBingoType() + " found " + ChatColor.RESET + e.getFoundItemEvent().getSlot().getDisplay());
+            instance.broadcastMessage("");
 
         });
 
