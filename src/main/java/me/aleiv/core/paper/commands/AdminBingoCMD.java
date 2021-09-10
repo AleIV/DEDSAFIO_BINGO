@@ -9,7 +9,6 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
@@ -30,11 +29,6 @@ public class AdminBingoCMD extends BaseCommand {
 
     public AdminBingoCMD(Core instance) {
         this.instance = instance;
-
-    }
-
-    @Default
-    public void bingoMenu(CommandSender sender){
 
     }
 
@@ -121,6 +115,12 @@ public class AdminBingoCMD extends BaseCommand {
     @Subcommand("neg3")
     public void neg3(CommandSender sender, Integer neg){
         instance.getGame().setNeg3(neg);
+
+    }
+
+    @Subcommand("blank")
+    public void blank(CommandSender sender, Boolean bool){
+        instance.getBingoManager().setBlankTab(bool);
 
     }
 

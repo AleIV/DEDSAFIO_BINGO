@@ -6,11 +6,18 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoDifficulty;
 import me.aleiv.core.paper.Game.BingoType;
@@ -20,16 +27,35 @@ import me.aleiv.core.paper.events.FoundItemEvent;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
+@Data
 public class BingoManager implements Listener {
 
     Core instance;
 
     Table globalTable;
-
     Random random = new Random();
+
+    boolean blankTab = true;
 
     public BingoManager(Core instance) {
         this.instance = instance;
+
+        instance.getProtocolManager().addPacketListener(
+                new PacketAdapter(instance, ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO) {
+                    @Override
+                    public void onPacketSending(PacketEvent event) {
+                        if (blankTab && event.getPacketType() == PacketType.Play.Server.PLAYER_INFO) {
+                            var packet = event.getPacket();
+                            // Reference https://wiki.vg/Protocol#Player_Info
+                            var action = packet.getPlayerInfoAction().read(0);
+                            if (action.compareTo(PlayerInfoAction.ADD_PLAYER) == 0) {
+
+                                event.setCancelled(true);
+
+                            }
+                        }
+                    }
+                });
     }
 
     public Table findTable(UUID player) {

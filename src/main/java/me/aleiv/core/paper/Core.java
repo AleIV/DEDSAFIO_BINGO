@@ -2,6 +2,8 @@ package me.aleiv.core.paper;
 
 import java.time.Duration;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.google.common.collect.ImmutableList;
 
 import org.bukkit.Bukkit;
@@ -37,14 +39,18 @@ public class Core extends JavaPlugin {
     private @Getter BingoManager bingoManager;
     private @Getter NegativeSpaces negativeSpaces;
     private @Getter TeamManager teamManager;
+    private @Getter ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        
         game = new Game(this);
         game.runTaskTimerAsynchronously(this, 0L, 20L);
 
+        
         RapidInvManager.register(this);
 
         bingoManager = new BingoManager(this);
@@ -83,7 +89,6 @@ public class Core extends JavaPlugin {
             });
         }, 20);
 
-
     }
 
     @Override
@@ -101,6 +106,14 @@ public class Core extends JavaPlugin {
 
     public void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut){
         player.showTitle(Title.title(miniMessage.parse(title), miniMessage.parse(subtitle), Times.of(Duration.ofMillis(50*fadeIn), Duration.ofMillis(50*stay), Duration.ofMillis(50*fadeIn))));
+    }
+
+    public void sendHeader(Player player, String text){
+        player.sendPlayerListHeader(miniMessage.parse(text));
+    }
+
+    public void sendFooter(Player player, String text){
+        player.sendPlayerListFooter(miniMessage.parse(text));
     }
 
 }

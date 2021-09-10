@@ -53,6 +53,8 @@ public class GlobalListener implements Listener{
         instance.getBingoManager().updateBoard(board, table);
         boards.put(uuid, board);
 
+        instance.sendHeader(player, "<gradient:#5e4fa2:#f79459>Welcome to BINGOOOO!</gradient>");
+
     }
 
     @EventHandler
