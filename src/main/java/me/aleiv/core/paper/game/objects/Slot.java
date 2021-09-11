@@ -1,9 +1,10 @@
-package me.aleiv.core.paper.game;
+package me.aleiv.core.paper.game.objects;
 
 import org.bukkit.Material;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
 
 @Data
 public class Slot {
@@ -11,11 +12,12 @@ public class Slot {
     boolean isFound;
     ItemCode itemCode;
     Material material;
-    public static String negativeSpace;
+    public static String negativeSpace = NegativeSpaces.get(-18);
     
-    public static String twitch = Character.toString('\uE007');
-    public static String normal = Character.toString('\uE008');
-    public static String found = Character.toString('\uE009');
+    public static String interrogation = Character.toString('\uEAA0');
+    public static String normal = Character.toString('\uEAA2');
+    public static String found = Character.toString('\uEAA3');
+    
 
 
     public Slot(Material material) {
@@ -25,32 +27,25 @@ public class Slot {
         var instance = Core.getInstance();
         var game = instance.getGame();
 
-        if(!game.getMaterials().containsKey(material)){
-            instance.broadcastMessage("DOESNT CONTAIN " + material.toString());
-        }
-
         var itemCode = game.getMaterials().get(material);
-
         this.itemCode = itemCode;
-
-        negativeSpace = instance.getNegativeSpaces().get(-18);
     }
 
     public String getDisplay(){
-        var game = Core.getInstance().getGame();
-
         int code = itemCode.getCode();
         String c = Character.toString(code);
 
         if(isFound){
             return found + negativeSpace + c;
 
-        }else if(game.isNormalMode()){
+        }else{
             return normal + negativeSpace + c;
 
-        }else{
-            return twitch + negativeSpace + c;
         }
+    }
+
+    public static String getFakeDisplay(){
+        return normal + negativeSpace + interrogation;
         
     }
 

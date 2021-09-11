@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.game;
+package me.aleiv.core.paper.game.objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;

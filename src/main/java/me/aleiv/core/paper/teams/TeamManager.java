@@ -23,6 +23,10 @@ public class TeamManager implements Listener{
         this.instance = instance;
     }
 
+    public boolean isTeams(){
+        return teamSize != 1;
+    }
+
     public Team getPlayerTeam(final UUID uuid) {
         if (teamMap.isEmpty()) return null;
 

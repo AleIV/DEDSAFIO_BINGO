@@ -19,6 +19,7 @@ import lombok.Getter;
 import me.aleiv.core.paper.commands.AdminBingoCMD;
 import me.aleiv.core.paper.commands.BingoCMD;
 import me.aleiv.core.paper.game.BingoManager;
+import me.aleiv.core.paper.game.ScatterManager;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
@@ -38,9 +39,9 @@ public class Core extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private @Getter BingoManager bingoManager;
-    private @Getter NegativeSpaces negativeSpaces;
     private @Getter TeamManager teamManager;
     private @Getter ProtocolManager protocolManager;
+    private @Getter ScatterManager scatterManager;
 
     @Override
     public void onEnable() {
@@ -54,10 +55,11 @@ public class Core extends JavaPlugin {
         
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
+        NegativeSpaces.registerCodes();
 
         bingoManager = new BingoManager(this);
-        negativeSpaces = new NegativeSpaces();
         teamManager = new TeamManager(this);
+        scatterManager = new ScatterManager(this);
 
         //LISTENERS
 

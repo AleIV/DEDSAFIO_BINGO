@@ -25,7 +25,8 @@ import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
 import me.aleiv.core.paper.events.GameStartedEvent;
-import me.aleiv.core.paper.teams.objects.Team;
+import me.aleiv.core.paper.game.objects.Slot;
+import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -162,9 +163,10 @@ public class BingoManager implements Listener {
     public void checkBingo(Table table, Slot slot, Player player) {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
-            var multiplier = Team.mutiplier;
+            //var multiplier = Team.mutiplier;
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
+            table.addItemFound();
             //table.addPoints(1*multiplier);
 
             if (table.isBingoFull() && !table.isFoundFull()) {
@@ -230,37 +232,42 @@ public class BingoManager implements Listener {
 
     }
 
-    public String getTitle() {
-        var neg2 = instance.getNegativeSpaces().get(instance.getGame().getNeg2());
-        var neg3 = instance.getNegativeSpaces().get(instance.getGame().getNeg3());
-        String t = Character.toString('\uE001') + neg2 + Character.toString('\uE000') + neg3;
-
-        return t;
-    }
-
     public void updateBoard(FastBoard board, Table table) {
-
-        board.updateTitle(getTitle());
-        var neg = instance.getNegativeSpaces().get(instance.getGame().getNeg());
-
-        if (table == null) {
-            board.updateLines("", "WAITING BOARD");
+        
+        if (table == null){
+            board.updateTitle(Table.getNullTitle());
+            board.updateLines("",
+                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
+                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
+                    "",
+                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
+                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
+                    "",
+                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
+                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
+                    "",
+                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
+                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
+                    "", "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
+                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
+                    "");
 
         } else {
+            board.updateTitle(table.getTitle());
             board.updateLines("",
                     "" + table.getPosDisplay(0, 0) + table.getPosDisplay(0, 1) + table.getPosDisplay(0, 2)
-                            + table.getPosDisplay(0, 3) + table.getPosDisplay(0, 4) + neg,
+                            + table.getPosDisplay(0, 3) + table.getPosDisplay(0, 4),
                     "",
                     "" + table.getPosDisplay(1, 0) + table.getPosDisplay(1, 1) + table.getPosDisplay(1, 2)
-                            + table.getPosDisplay(1, 3) + table.getPosDisplay(1, 4) + neg,
+                            + table.getPosDisplay(1, 3) + table.getPosDisplay(1, 4),
                     "",
                     "" + table.getPosDisplay(2, 0) + table.getPosDisplay(2, 1) + table.getPosDisplay(2, 2)
-                            + table.getPosDisplay(2, 3) + table.getPosDisplay(2, 4) + neg,
+                            + table.getPosDisplay(2, 3) + table.getPosDisplay(2, 4),
                     "",
                     "" + table.getPosDisplay(3, 0) + table.getPosDisplay(3, 1) + table.getPosDisplay(3, 2)
-                            + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4) + neg,
+                            + table.getPosDisplay(3, 3) + table.getPosDisplay(3, 4),
                     "", "" + table.getPosDisplay(4, 0) + table.getPosDisplay(4, 1) + table.getPosDisplay(4, 2)
-                            + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4) + neg,
+                            + table.getPosDisplay(4, 3) + table.getPosDisplay(4, 4),
                     "");
         }
 

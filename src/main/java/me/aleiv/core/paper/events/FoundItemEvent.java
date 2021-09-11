@@ -5,8 +5,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
-import me.aleiv.core.paper.game.Slot;
-import me.aleiv.core.paper.game.Table;
+import me.aleiv.core.paper.game.objects.Slot;
+import me.aleiv.core.paper.game.objects.Table;
 
 public class FoundItemEvent extends Event {
     /*

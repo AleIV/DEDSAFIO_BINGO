@@ -11,9 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.GameTickEvent;
-import me.aleiv.core.paper.game.ItemCode;
-import me.aleiv.core.paper.game.Table;
-import me.aleiv.core.paper.game.Timer;
+import me.aleiv.core.paper.game.objects.ItemCode;
+import me.aleiv.core.paper.game.objects.Table;
+import me.aleiv.core.paper.game.objects.Timer;
 import me.aleiv.core.paper.utilities.FastBoard;
 
 @Data

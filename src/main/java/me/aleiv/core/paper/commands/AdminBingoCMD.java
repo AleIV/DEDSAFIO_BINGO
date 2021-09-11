@@ -20,12 +20,13 @@ import me.aleiv.core.paper.Game.BingoDifficulty;
 import me.aleiv.core.paper.Game.BingoMode;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
-import me.aleiv.core.paper.game.Table;
-import me.aleiv.core.paper.game.Timer;
+import me.aleiv.core.paper.game.objects.Table;
+import me.aleiv.core.paper.game.objects.Timer;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("admin-bingo")
+@CommandAlias("admin-bingo|bd|admin")
 @CommandPermission("admin.perm")
 public class AdminBingoCMD extends BaseCommand {
 
@@ -70,7 +71,8 @@ public class AdminBingoCMD extends BaseCommand {
                 @Override
                 public void run() {
                     instance.broadcastMessage("TEST " + u);
-                    sender.teleport(Bukkit.getWorld("world").getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
+                    var world = Bukkit.getWorlds().get(0);
+                    sender.teleport(world.getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
                 }
                 
             }, 1000);
@@ -129,19 +131,19 @@ public class AdminBingoCMD extends BaseCommand {
 
     @Subcommand("neg")
     public void neg(CommandSender sender, Integer neg){
-        instance.getGame().setNeg(neg);
+        Table.setNeg2(NegativeSpaces.get(neg));
 
     }
 
     @Subcommand("neg2")
     public void neg2(CommandSender sender, Integer neg){
-        instance.getGame().setNeg2(neg);
+        Table.setNeg2(NegativeSpaces.get(neg));
 
     }
 
     @Subcommand("neg3")
     public void neg3(CommandSender sender, Integer neg){
-        instance.getGame().setNeg3(neg);
+        Table.setNeg3(NegativeSpaces.get(neg));
 
     }
 
@@ -160,7 +162,7 @@ public class AdminBingoCMD extends BaseCommand {
     @Subcommand("test")
     public void neg2(CommandSender sender, Material material, Integer neg){
         var mat = instance.getGame().getMaterials();
-        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + instance.getNegativeSpaces().get(neg) + Character.toString('\uE008'));
+        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + NegativeSpaces.get(neg) + Character.toString('\uE008'));
         instance.broadcastMessage("");
         instance.broadcastMessage("");
 
@@ -202,14 +204,13 @@ public class AdminBingoCMD extends BaseCommand {
 
         }
 
-        var title = instance.getBingoManager().getTitle();
         var boards = game.getBoards();
 
         for (var board : boards.values()) {
             var uuid = board.getPlayer().getUniqueId();
             var table = instance.getBingoManager().findTable(uuid);
 
-            board.updateTitle("" + title);
+            board.updateTitle(table.getTitle());
             instance.getBingoManager().updateBoard(board, table);
         }
 

@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.game;
+package me.aleiv.core.paper.game.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import lombok.Data;
+import lombok.Setter;
+import me.aleiv.core.paper.utilities.Frames;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
 
 @Data
 public class Table implements Cloneable{
@@ -19,6 +22,13 @@ public class Table implements Cloneable{
 
     boolean foundLine;
     boolean foundFull;
+    int itemsFound;
+
+    public @Setter static String neg2 = NegativeSpaces.get(-8);
+    public @Setter static String neg3 = NegativeSpaces.get(-6);
+    
+    public static String logo = Character.toString('\uEAA1');
+    public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 18);
     
     public Table(){
         this.uuid = UUID.randomUUID();
@@ -26,7 +36,29 @@ public class Table implements Cloneable{
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
+        this.itemsFound = 0;
 
+    }
+
+    public void addItemFound(){
+        this.itemsFound++;
+    }
+    
+    public String getPosDisplay(int x, int z){
+        var slot = board[x][z];
+        return slot.getDisplay();
+    }
+
+    public String getTitle(){
+        var barN = (int) (100/barFrames.size())*itemsFound;
+
+        var bar = barFrames.get(barN);
+
+        return logo + neg2 + bar + neg3;
+    }
+
+    public static String getNullTitle(){
+        return logo + neg2 + barFrames.get(0) + neg3;
     }
 
 
@@ -35,7 +67,6 @@ public class Table implements Cloneable{
     }
 
     
-
     public boolean isBingoFull(){
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -118,11 +149,6 @@ public class Table implements Cloneable{
         }
 
         return matchOne || matchTwo;
-    }
-
-    public String getPosDisplay(int x, int z){
-        var slot = board[x][z];
-        return slot.getDisplay();
     }
 
     public void sendTableDisplay(Player sender){

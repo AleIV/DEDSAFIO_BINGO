@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.game;
+package me.aleiv.core.paper.game.objects;
 
 import lombok.Data;
 

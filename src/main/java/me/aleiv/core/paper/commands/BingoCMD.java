@@ -11,7 +11,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.game.BingoTableGUI;
+import me.aleiv.core.paper.game.objects.BingoTableGUI;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("bingo")

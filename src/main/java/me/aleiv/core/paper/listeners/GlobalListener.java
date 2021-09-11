@@ -11,6 +11,7 @@ import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.events.GameTickEvent;
+import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -53,12 +54,16 @@ public class GlobalListener implements Listener{
         var boards = game.getBoards();
         var board = new FastBoard(player);
         var manager = instance.getBingoManager();
-        var title = manager.getTitle();
 
-        
         var table = manager.findTable(player.getUniqueId());
 
-        board.updateTitle("" + title);
+        if(table == null){
+            board.updateTitle(Table.getNullTitle());
+    
+        }else{
+            board.updateTitle(table.getTitle());
+        }
+
         instance.getBingoManager().updateBoard(board, table);
         boards.put(uuid, board);
 
