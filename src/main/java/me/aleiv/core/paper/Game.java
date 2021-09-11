@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.game.ItemCode;
 import me.aleiv.core.paper.game.Table;
+import me.aleiv.core.paper.game.Timer;
 import me.aleiv.core.paper.utilities.FastBoard;
 
 @Data
@@ -30,9 +31,11 @@ public class Game extends BukkitRunnable {
         BingoType bingoType;
         BingoGamemode bingoGamemode;
 
-        int neg = -8;
-        int neg2 = 0;
-        int neg3 = -2;
+        Timer timer;
+
+        int neg = 0;
+        int neg2 = -8;
+        int neg3 = -6;
 
         String color1 = "#f31b2d"; // INFO COLOR
         String color2 = "#a6e316"; // AWARD COLOR

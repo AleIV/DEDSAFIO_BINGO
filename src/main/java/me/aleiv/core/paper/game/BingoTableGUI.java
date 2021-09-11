@@ -2,9 +2,11 @@ package me.aleiv.core.paper.game;
 
 import java.util.List;
 
+import lombok.Data;
 import us.jcedeno.libs.rapidinv.ItemBuilder;
 import us.jcedeno.libs.rapidinv.RapidInv;
 
+@Data
 public class BingoTableGUI {
     RapidInv gui;
 
@@ -20,7 +22,9 @@ public class BingoTableGUI {
             for (int j = 0; j < 5; j++) {
                 var material = table.getBoard()[i][j].getMaterial();
                 var item = new ItemBuilder(material).build();
-                gui.setItem(positions.get(count), item);
+                gui.setItem(positions.get(count), item, handler ->{
+                    handler.setCancelled(true);
+                });
                 count++;
             }
         }

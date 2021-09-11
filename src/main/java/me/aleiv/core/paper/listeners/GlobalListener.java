@@ -8,8 +8,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.GameStage;
+import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.utilities.FastBoard;
+import net.md_5.bungee.api.ChatColor;
 
 public class GlobalListener implements Listener{
     
@@ -31,8 +34,13 @@ public class GlobalListener implements Listener{
                 var table = instance.getBingoManager().findTable(uuid);
                 
                 instance.getBingoManager().updateBoard(board, table);
-
             }
+
+            var timer = game.getTimer();
+                if(timer != null && game.getGameStage() == GameStage.INGAME){
+                    timer.refresh(game.getGameTime());
+                }
+                
         });
     }
 
@@ -47,6 +55,7 @@ public class GlobalListener implements Listener{
         var manager = instance.getBingoManager();
         var title = manager.getTitle();
 
+        
         var table = manager.findTable(player.getUniqueId());
 
         board.updateTitle("" + title);
@@ -54,6 +63,11 @@ public class GlobalListener implements Listener{
         boards.put(uuid, board);
 
         instance.sendHeader(player, "<gradient:#5e4fa2:#f79459>Welcome to BINGOOOO!</gradient>");
+
+        var timer = game.getTimer();
+        if(timer != null)
+            timer.getBossbar().addPlayer(player);
+        
 
     }
 
@@ -77,6 +91,19 @@ public class GlobalListener implements Listener{
         if(player.getWorld() == world){
             player.teleport(world.getSpawnLocation());
         }
+    }
+
+    @EventHandler
+    public void onStart(GameStartedEvent e){
+        var game = instance.getGame();
+
+        var timer = game.getTimer();
+        if(timer != null){
+            timer.setStartTime((int) game.getGameTime());
+        }
+
+        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
+        
     }
 
     

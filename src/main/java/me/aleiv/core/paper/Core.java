@@ -24,6 +24,7 @@ import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
 import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
@@ -52,6 +53,7 @@ public class Core extends JavaPlugin {
 
         
         RapidInvManager.register(this);
+        BukkitTCT.registerPlugin(this);
 
         bingoManager = new BingoManager(this);
         negativeSpaces = new NegativeSpaces();

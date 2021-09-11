@@ -1,9 +1,12 @@
 package me.aleiv.core.paper.commands;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -18,14 +21,18 @@ import me.aleiv.core.paper.Game.BingoMode;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.Table;
+import me.aleiv.core.paper.game.Timer;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("bingo")
+@CommandAlias("admin-bingo")
 @CommandPermission("admin.perm")
 public class AdminBingoCMD extends BaseCommand {
 
     private @NonNull Core instance;
     String adminPerm = "admin.perm";
+
+    Random random = new Random();
 
     public AdminBingoCMD(Core instance) {
         this.instance = instance;
@@ -50,6 +57,26 @@ public class AdminBingoCMD extends BaseCommand {
     public void mix(Player sender){
         Bukkit.dispatchCommand(sender, "bingo remove-play " + sender.getName());
         Bukkit.dispatchCommand(sender, "bingo add-play " + sender.getName());
+
+    }
+
+    @Subcommand("test")
+    public void test(Player sender){
+        var task = new BukkitTCT();
+
+        for (int i = 0; i < 5; i++) {
+            final var u = i;
+            task.addWithDelay(new BukkitRunnable(){
+                @Override
+                public void run() {
+                    instance.broadcastMessage("TEST " + u);
+                    sender.teleport(Bukkit.getWorld("world").getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
+                }
+                
+            }, 1000);
+        }
+
+        task.execute();
 
     }
 
@@ -121,6 +148,12 @@ public class AdminBingoCMD extends BaseCommand {
     @Subcommand("blank")
     public void blank(CommandSender sender, Boolean bool){
         instance.getBingoManager().setBlankTab(bool);
+
+    }
+
+    @Subcommand("timer")
+    public void timer(CommandSender sender, Integer i){
+        instance.getGame().setTimer(new Timer(instance, i));
 
     }
 
@@ -278,28 +311,6 @@ public class AdminBingoCMD extends BaseCommand {
             table.getMembers().clear();
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
-        }
-
-    }
-
-    @Subcommand("table")
-    @CommandCompletion("@players")
-    public void checkPlayer(Player sender, @Flags("other") Player target) {
-        var game = instance.getGame();
-        var uuid = target.getUniqueId();
-
-        var manager = instance.getBingoManager();
-        var table = manager.findTable(uuid);
-
-        if(table == null){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "" + target.getName() + " table doesn't exist.");
-
-        }else{
-            
-            sender.sendMessage("");
-            sender.sendMessage(ChatColor.of(game.getColor1()) + target.getName() + " Table");
-            
-            table.sendTableDisplay(sender);
         }
 
     }

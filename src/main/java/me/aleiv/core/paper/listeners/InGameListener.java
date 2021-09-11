@@ -68,7 +68,7 @@ public class InGameListener implements Listener {
         instance.broadcastMessage("");
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPick(EntityPickupItemEvent e) {
         var entity = e.getEntity();
         if (entity instanceof Player) {
@@ -78,7 +78,7 @@ public class InGameListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e){
         var action = e.getAction();
         var item = e.getItem();
@@ -88,7 +88,7 @@ public class InGameListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void clickInv(InventoryClickEvent e) {
         var player = (Player) e.getWhoClicked();
         var item = e.getCurrentItem();

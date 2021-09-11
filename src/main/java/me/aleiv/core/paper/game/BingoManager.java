@@ -24,6 +24,7 @@ import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
+import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -116,8 +117,7 @@ public class BingoManager implements Listener {
                 diff.remove(diffRand);
 
                 var material = options.get(getRand(options));
-                instance.broadcastMessage(ChatColor.LIGHT_PURPLE + material.toString());
-                
+
                 table.getBoard()[i][j] = new Slot(material);
                 table.getSelectedItems().add(material);
 
@@ -188,7 +188,6 @@ public class BingoManager implements Listener {
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game starting...");
 
         game.setGameStage(GameStage.INGAME);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
 
         var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 
@@ -204,8 +203,7 @@ public class BingoManager implements Listener {
                 table.getMembers().add(player.getUniqueId());
 
                 player.teleport(loc);
-                table.sendTableDisplay(player);
-
+                
             });
 
         } else {
@@ -227,6 +225,7 @@ public class BingoManager implements Listener {
 
             });
         }
+        Bukkit.getPluginManager().callEvent(new GameStartedEvent());
 
     }
 

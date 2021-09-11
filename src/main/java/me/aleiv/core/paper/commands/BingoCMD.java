@@ -11,6 +11,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.game.BingoTableGUI;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("bingo")
@@ -26,7 +27,18 @@ public class BingoCMD extends BaseCommand {
 
     @Default
     public void checkPlayer(Player sender){
-        
+        var game = instance.getGame();
+        var uuid = sender.getUniqueId();
+
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(uuid);
+
+        if(table == null){
+            sender.sendMessage(ChatColor.of(game.getColor3()) + "" + sender.getName() + " table doesn't exist.");
+        }else{
+            var gui = new BingoTableGUI(table).getGui();
+            gui.open(sender);
+        }
     }
 
     @Subcommand("table")
@@ -41,15 +53,10 @@ public class BingoCMD extends BaseCommand {
 
         if(table == null){
             sender.sendMessage(ChatColor.of(game.getColor3()) + "" + target.getName() + " table doesn't exist.");
-
         }else{
-            
-            sender.sendMessage("");
-            sender.sendMessage(ChatColor.of(game.getColor1()) + target.getName() + " Table");
-            
-            table.sendTableDisplay(sender);
+            var gui = new BingoTableGUI(table).getGui();
+            gui.open(target);
         }
-
     }
 
 }
