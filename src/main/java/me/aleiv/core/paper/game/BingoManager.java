@@ -25,6 +25,7 @@ import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
 import me.aleiv.core.paper.events.GameStartedEvent;
+import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -161,20 +162,20 @@ public class BingoManager implements Listener {
     public void checkBingo(Table table, Slot slot, Player player) {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
-            var multiplier = Table.mutiplier;
+            var multiplier = Team.mutiplier;
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
-            table.addPoints(1*multiplier);
+            //table.addPoints(1*multiplier);
 
             if (table.isBingoFull() && !table.isFoundFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
                 table.setFoundFull(true);
-                table.addPoints(10*multiplier);
+                //table.addPoints(10*multiplier);
 
             } else if (table.isBingoLine() && !table.isFoundLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
                 table.setFoundLine(true);
-                table.addPoints(5*multiplier);
+                //table.addPoints(5*multiplier);
             }
 
         });
@@ -203,7 +204,7 @@ public class BingoManager implements Listener {
                 table.getMembers().add(player.getUniqueId());
 
                 player.teleport(loc);
-                
+
             });
 
         } else {

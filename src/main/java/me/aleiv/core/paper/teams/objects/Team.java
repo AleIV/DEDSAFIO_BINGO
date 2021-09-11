@@ -24,6 +24,8 @@ public class Team {
 
     int points;
 
+    public static int mutiplier = 1;
+
     static int globalTeamNumber = 0;
 
     public Team(UUID leaderUUID){
@@ -35,6 +37,10 @@ public class Team {
         this.displayName = "";
         this.teamNumber = globalTeamNumber++;
         
+    }
+
+    public void addPoints(int i){
+        points += i;
     }
 
     public boolean isMember(UUID uuid) {

@@ -19,9 +19,6 @@ public class Table implements Cloneable{
 
     boolean foundLine;
     boolean foundFull;
-
-    int points = 0;
-    static int mutiplier = 1;
     
     public Table(){
         this.uuid = UUID.randomUUID();
@@ -30,10 +27,6 @@ public class Table implements Cloneable{
         this.foundLine = false;
         this.foundFull = false;
 
-    }
-
-    public void addPoints(int i){
-        points += i;
     }
 
 
