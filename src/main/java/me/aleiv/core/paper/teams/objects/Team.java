@@ -22,6 +22,8 @@ public class Team {
     String displayName;
     int teamNumber;
 
+    int points;
+
     static int globalTeamNumber = 0;
 
     public Team(UUID leaderUUID){
