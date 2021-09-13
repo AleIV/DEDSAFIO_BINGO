@@ -3,7 +3,6 @@ package me.aleiv.core.paper.game;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,6 +12,7 @@ import org.bukkit.block.BlockFace;
 import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.teams.objects.Team;
+import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class ScatterManager {
@@ -26,7 +26,6 @@ public class ScatterManager {
 
     public ScatterManager(Core instance){
         this.instance = instance;
-
         
     }
 
@@ -34,22 +33,34 @@ public class ScatterManager {
         return null;
     }
 
-    public void runScatter(boolean teamScatter){
+    public void runScatter(){
 
         var manager = instance.getTeamManager();
+        var game = instance.getGame();
 
         if(manager.isTeams()){
 
         }else{
-            var players = Bukkit.getOnlinePlayers();
-            var size = players.size();
-            generateLocations(size*2);
-            instance.broadcastMessage("GENERATED " + players + " LOCATIONS");
 
+            if(safeLocations.isEmpty()){
+                instance.broadcastMessage(ChatColor.of(game.getColor3()) + "Not generated locations.");
+            }
+
+            var players = Bukkit.getOnlinePlayers();
+
+            
             var count = 0;
-            for (var loc : safeLocations) {
-                var playerList = players.stream().collect(Collectors.toList());
-                playerList.get(count).teleport(loc);
+            for (var player : players) {
+                Location loc;
+
+                if(count < safeLocations.size()){
+                    loc = safeLocations.get(count);
+
+                }else{
+                    loc = generateLocation();
+                }
+
+                player.teleport(loc);
                 count++;
             }
             
@@ -87,7 +98,6 @@ public class ScatterManager {
     }
 
     public void generateLocations(int i){
-
         var world = Bukkit.getWorlds().get(0);
         for (int j = 0; j < i; j++) {
             var loc = genLoc(world);
@@ -98,6 +108,11 @@ public class ScatterManager {
         }
     }
 
+    public Location generateLocation(){
+        var world = Bukkit.getWorlds().get(0);
+        return genLoc(world);
+    }
+
     public int getR(int i){
         var neg = random.nextBoolean();
         var rand = random.nextInt(i)+1;
@@ -105,7 +120,7 @@ public class ScatterManager {
     }
 
     public Location genLoc(final World world){
-        var worldBorder = (int) world.getWorldBorder().getSize();
+        var worldBorder = (int) world.getWorldBorder().getSize()/2;
         var loc = new Location(world, getR(worldBorder), 0, getR(worldBorder));
         loc.setY(world.getHighestBlockYAt(loc));
         return loc;

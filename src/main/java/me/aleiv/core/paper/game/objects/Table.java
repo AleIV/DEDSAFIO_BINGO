@@ -28,7 +28,7 @@ public class Table implements Cloneable{
     public @Setter static String neg3 = NegativeSpaces.get(-6);
     
     public static String logo = Character.toString('\uEAA1');
-    public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 18);
+    public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 19);
     
     public Table(){
         this.uuid = UUID.randomUUID();
@@ -36,7 +36,7 @@ public class Table implements Cloneable{
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
-        this.itemsFound = 0;
+        this.itemsFound = -1;
 
     }
 
@@ -50,9 +50,10 @@ public class Table implements Cloneable{
     }
 
     public String getTitle(){
-        var barN = (int) (100/barFrames.size())*itemsFound;
+        var percent = (itemsFound*100)/25;
+        var barN = (int) ((percent*barFrames.size())/100);
 
-        var bar = barFrames.get(barN);
+        var bar = itemsFound < 0 ? barFrames.get(0) : barFrames.get(barN);
 
         return logo + neg2 + bar + neg3;
     }

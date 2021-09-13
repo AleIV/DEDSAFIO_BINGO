@@ -2,11 +2,8 @@ package me.aleiv.core.paper.commands;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -16,22 +13,16 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.Game.BingoDifficulty;
-import me.aleiv.core.paper.Game.BingoMode;
-import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.game.objects.Timer;
-import me.aleiv.core.paper.utilities.NegativeSpaces;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("admin-bingo|bd|admin")
+@CommandAlias("admin-bingo|ab|admin|ad")
 @CommandPermission("admin.perm")
 public class AdminBingoCMD extends BaseCommand {
 
     private @NonNull Core instance;
-    String adminPerm = "admin.perm";
 
     Random random = new Random();
 
@@ -54,34 +45,6 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
-    @Subcommand("mix")
-    public void mix(Player sender){
-        Bukkit.dispatchCommand(sender, "bingo remove-play " + sender.getName());
-        Bukkit.dispatchCommand(sender, "bingo add-play " + sender.getName());
-
-    }
-
-    @Subcommand("test")
-    public void test(Player sender){
-        var task = new BukkitTCT();
-
-        for (int i = 0; i < 5; i++) {
-            final var u = i;
-            task.addWithDelay(new BukkitRunnable(){
-                @Override
-                public void run() {
-                    instance.broadcastMessage("TEST " + u);
-                    var world = Bukkit.getWorlds().get(0);
-                    sender.teleport(world.getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
-                }
-                
-            }, 1000);
-        }
-
-        task.execute();
-
-    }
-
     @Subcommand("restart")
     public void restart(CommandSender sender){
         var game = instance.getGame();
@@ -96,122 +59,74 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
-    @Subcommand("difficulty")
-    public void difficulty(CommandSender sender){
+    @Subcommand("locations")
+    public void generateLocations(CommandSender sender, Integer i) {
         var game = instance.getGame();
-        var difficulty = game.getBingoDifficulty();
+        var manager = instance.getScatterManager();
 
-        if(difficulty == BingoDifficulty.EASY){
-
-            game.setBingoDifficulty(BingoDifficulty.MEDIUM);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo difficulty switched to MEDIUM.");
-
-        }else if(difficulty == BingoDifficulty.MEDIUM){
-
-            game.setBingoDifficulty(BingoDifficulty.HARD);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo difficulty switched to HARD.");
-    
-        }else if(difficulty == BingoDifficulty.HARD){
-
-            game.setBingoDifficulty(BingoDifficulty.EXPERT);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo difficulty switched to EXPERT.");
-    
-        }else if(difficulty == BingoDifficulty.EXPERT){
-
-            game.setBingoDifficulty(BingoDifficulty.EASY);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo difficulty switched to EASY.");
-    
-        }
-
-    }
-
-    @Subcommand("neg")
-    public void neg(CommandSender sender, Integer neg){
-        Table.setNeg2(NegativeSpaces.get(neg));
-
-    }
-
-    @Subcommand("neg2")
-    public void neg2(CommandSender sender, Integer neg){
-        Table.setNeg2(NegativeSpaces.get(neg));
-
-    }
-
-    @Subcommand("neg3")
-    public void neg3(CommandSender sender, Integer neg){
-        Table.setNeg3(NegativeSpaces.get(neg));
-
-    }
-
-    @Subcommand("blank")
-    public void blank(CommandSender sender, Boolean bool){
-        instance.getBingoManager().setBlankTab(bool);
+        manager.generateLocations(i);
+        sender.sendMessage(ChatColor.of(game.getColor1()) + "LOCATIONS GENERATED " + i);
 
     }
 
     @Subcommand("timer")
-    public void timer(CommandSender sender, Integer i){
-        instance.getGame().setTimer(new Timer(instance, i));
-
-    }
-
-    @Subcommand("test")
-    public void neg2(CommandSender sender, Material material, Integer neg){
-        var mat = instance.getGame().getMaterials();
-        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + NegativeSpaces.get(neg) + Character.toString('\uE008'));
-        instance.broadcastMessage("");
-        instance.broadcastMessage("");
-
-    }
-
-    @Subcommand("type")
-    public void type(CommandSender sender){
+    public void setTimer(CommandSender sender, Integer seconds) {
         var game = instance.getGame();
-        var isFullBingo = game.isBingoTypeFull();
 
-        if(isFullBingo){
-            game.setBingoType(BingoType.LINE);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo type switched to LINE.");
+        if(game.getTimer() != null){
+            game.getTimer().delete();
+        }else{
+            game.setTimer(new Timer(instance, seconds));
+        }
+
+    }
+
+    @Subcommand("add-play")
+    @CommandCompletion("@players")
+    public void addPlay(CommandSender sender, @Flags("other") Player target) {
+        var game = instance.getGame();
+        var uuid = target.getUniqueId();
+        var tables = game.getTables();
+        var manager = instance.getBingoManager();
+
+        var table = manager.findTable(uuid);
+
+        if(table != null){
+            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already playing.");
 
         }else{
-            game.setBingoType(BingoType.FULL);
+            table = new Table();
+            
+            table.getMembers().add(uuid);
+            
+            tables.add(table);
+            instance.getBingoManager().selectItems(table);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo type switched to FULL.");
-    
+            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
         }
 
     }
 
-    @Subcommand("mode")
-    public void mode(CommandSender sender) {
+    @Subcommand("remove-play")
+    @CommandCompletion("@players")
+    public void removePlay(CommandSender sender, @Flags("other") Player target) {
         var game = instance.getGame();
-        var normalMode = game.isNormalMode();
+        var uuid = target.getUniqueId();
 
-        if (normalMode) {
-            game.setBingoMode(BingoMode.TWITCH);
+        var tables = game.getTables();
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(uuid);
+        
+        if(table == null){
+
+            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already not playing.");
+
+        }else{
+
+            tables.remove(table);
+            table.getMembers().clear();
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.DARK_PURPLE + "Twitch Rivals mode Enabled.");
-
-        } else {
-            game.setBingoMode(BingoMode.NORMAL);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor1()) + "Normal mode Enabled.");
-
-        }
-
-        var boards = game.getBoards();
-
-        for (var board : boards.values()) {
-            var uuid = board.getPlayer().getUniqueId();
-            var table = instance.getBingoManager().findTable(uuid);
-
-            board.updateTitle(table.getTitle());
-            instance.getBingoManager().updateBoard(board, table);
+            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
         }
 
     }
@@ -256,62 +171,6 @@ public class AdminBingoCMD extends BaseCommand {
 
             }
                 break;
-        }
-
-    }
-
-    @Subcommand("add-play")
-    @CommandCompletion("@players")
-    public void addPlay(CommandSender sender, @Flags("other") Player target) {
-        var game = instance.getGame();
-        var uuid = target.getUniqueId();
-        var tables = game.getTables();
-        var manager = instance.getBingoManager();
-
-        var table = manager.findTable(uuid);
-
-        /*if(bingoPlayer == null){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " doesn't exist.");
-
-        }else */if(table != null){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already playing.");
-
-        }else{
-            table = new Table();
-            
-            table.getMembers().add(uuid);
-            
-            tables.add(table);
-            instance.getBingoManager().selectItems(table);
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
-        }
-
-    }
-
-    @Subcommand("remove-play")
-    @CommandCompletion("@players")
-    public void removePlay(CommandSender sender, @Flags("other") Player target) {
-        var game = instance.getGame();
-        var uuid = target.getUniqueId();
-
-        var tables = game.getTables();
-        var manager = instance.getBingoManager();
-        var table = manager.findTable(uuid);
-        
-        /*if(bingoPlayer == null){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " doesn't exist.");
-
-        }else */if(table == null){
-
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "Bingo player " + target.getName() + " is already not playing.");
-
-        }else{
-
-            tables.remove(table);
-            table.getMembers().clear();
-            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
         }
 
     }

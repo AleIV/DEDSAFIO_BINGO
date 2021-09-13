@@ -2,6 +2,7 @@ package me.aleiv.core.paper.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -21,6 +23,8 @@ public class LobbyListener implements Listener {
     Core instance;
     String notInGameMSG;
 
+    World world = Bukkit.getWorld("lobby");
+    
     public LobbyListener(Core instance) {
         this.instance = instance;
 
@@ -29,13 +33,21 @@ public class LobbyListener implements Listener {
 
     public boolean shouldInteract(Player player){
         var game = instance.getGame();
-        var world = Bukkit.getWorld("lobby");
         return (player.getWorld() == world && player.hasPermission("admin.perm")) || (player.getWorld() != world && game.getGameStage() != GameStage.INGAME && !player.hasPermission("admin.perm"));
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         var player = e.getPlayer();
+        if (shouldInteract(player)) {
+            e.setCancelled(true);
+            instance.sendActionBar(player, notInGameMSG);
+        }
+    }
+
+    @EventHandler
+    public void onHunger(FoodLevelChangeEvent e){
+        var player = (Player) e.getEntity();
         if (shouldInteract(player)) {
             e.setCancelled(true);
             instance.sendActionBar(player, notInGameMSG);

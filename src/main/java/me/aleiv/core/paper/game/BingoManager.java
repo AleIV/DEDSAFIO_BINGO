@@ -38,7 +38,7 @@ public class BingoManager implements Listener {
     Table globalTable;
     Random random = new Random();
 
-    boolean blankTab = true;
+    boolean blankTab = false;
 
     public BingoManager(Core instance) {
         this.instance = instance;
@@ -61,6 +61,76 @@ public class BingoManager implements Listener {
                 });
     }
 
+    public void startGame() {
+        var game = instance.getGame();
+
+        game.setGameStage(GameStage.STARTING);
+        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game starting...");
+
+        game.setGameStage(GameStage.INGAME);
+
+        var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+
+        var teamManager = instance.getTeamManager();
+        var scatterManager = instance.getScatterManager();
+        if (teamManager.getTeamSize() == 1) {
+            // FFA CASE
+
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                var player = (Player) p;
+                var table = new Table();
+                game.getTables().add(table);
+                instance.getBingoManager().selectItems(table);
+                table.getMembers().add(player.getUniqueId());
+
+            });
+
+            scatterManager.runScatter();
+
+        } else {
+            // TEAM CASE
+
+            teamManager.getTeamMap().values().forEach(team -> {
+
+                var table = new Table();
+                game.getTables().add(table);
+                instance.getBingoManager().selectItems(table);
+
+                team.getMembers().forEach(member -> {
+                    table.getMembers().add(member);
+                    var player = Bukkit.getPlayer(member);
+                    if (player != null) {
+                        player.teleport(loc);
+                    }
+                });
+
+            });
+        }
+
+        Bukkit.getPluginManager().callEvent(new GameStartedEvent());
+
+    }
+
+    public void restartGame() {
+        var game = instance.getGame();
+
+        game.setGameStage(GameStage.POSTGAME);
+        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarting...");
+
+        game.setGameStage(GameStage.LOBBY);
+        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
+
+        var loc = Bukkit.getWorld("lobby").getSpawnLocation();
+
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            player.teleport(loc);
+            player.getInventory().clear();
+
+        });
+
+        game.getTables().clear();
+    }
+
     public Table findTable(UUID player) {
         var game = instance.getGame();
         var tables = game.getTables();
@@ -74,25 +144,6 @@ public class BingoManager implements Listener {
     }
 
     public void selectItems(Table table) {
-
-        // var options =
-        // instance.getGame().getMaterials().keySet().stream().collect(Collectors.toList());
-        /*
-         * for (int i = 0; i < 5; i++) { var str = new StringBuilder(); for (int j = 0;
-         * j < 5; j++) {
-         * 
-         * var material = options.get(random.nextInt(options.size()));
-         * 
-         * options.remove(material);
-         * 
-         * table.getBoard()[i][j] = new Slot(instance, material);
-         * table.getSelectedItems().add(material); str.append(ChatColor.GREEN +
-         * material.toString() + ChatColor.YELLOW + "-");
-         * 
-         * }
-         * 
-         * instance.broadcastMessage(str.toString()); }
-         */
 
         var game = instance.getGame();
         var difficulty = game.getBingoDifficulty();
@@ -148,18 +199,6 @@ public class BingoManager implements Listener {
 
     }
 
-    public void restartGame() {
-        var game = instance.getGame();
-
-        game.setGameStage(GameStage.POSTGAME);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarting...");
-
-        game.setGameStage(GameStage.LOBBY);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
-
-        game.getTables().clear();
-    }
-
     public void checkBingo(Table table, Slot slot, Player player) {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
@@ -181,54 +220,6 @@ public class BingoManager implements Listener {
             }
 
         });
-
-    }
-
-    public void startGame() {
-        var game = instance.getGame();
-
-        game.setGameStage(GameStage.STARTING);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game starting...");
-
-        game.setGameStage(GameStage.INGAME);
-
-        var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
-
-        var teamManager = instance.getTeamManager();
-        if (teamManager.getTeamSize() == 1) {
-            // FFA CASE
-
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                var player = (Player) p;
-                var table = new Table();
-                game.getTables().add(table);
-                instance.getBingoManager().selectItems(table);
-                table.getMembers().add(player.getUniqueId());
-
-                player.teleport(loc);
-
-            });
-
-        } else {
-            // TEAM CASE
-
-            teamManager.getTeamMap().values().forEach(team -> {
-
-                var table = new Table();
-                game.getTables().add(table);
-                instance.getBingoManager().selectItems(table);
-
-                team.getMembers().forEach(member -> {
-                    table.getMembers().add(member);
-                    var player = Bukkit.getPlayer(member);
-                    if (player != null) {
-                        player.teleport(loc);
-                    }
-                });
-
-            });
-        }
-        Bukkit.getPluginManager().callEvent(new GameStartedEvent());
 
     }
 

@@ -18,8 +18,9 @@ public class Timer {
     BossBar bossbar;
 
     public Timer(Core instance, int seconds){
+        var game = instance.getGame();
         this.seconds = seconds;
-        this.startTime = (int) instance.getGame().getGameTime();
+        this.startTime = (int) game.getGameTime();
         this.bossbar = Bukkit.createBossBar(new NamespacedKey(instance, "TIMER"), timeConvert(seconds), BarColor.WHITE, BarStyle.SOLID);
         bossbar.setVisible(true);
 
@@ -51,6 +52,11 @@ public class Timer {
             bossbar.setTitle(timeConvert((int) time));
 
         }
+    }
+
+    public void delete(){
+        bossbar.setVisible(false);
+        Core.getInstance().getGame().setTimer(null);
     }
 
 

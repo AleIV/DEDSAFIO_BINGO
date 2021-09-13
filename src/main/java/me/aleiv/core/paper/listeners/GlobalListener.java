@@ -107,7 +107,14 @@ public class GlobalListener implements Listener{
             timer.setStartTime((int) game.getGameTime());
         }
 
+
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            player.getInventory().clear();
+        });
+        
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
+
+
         
     }
 

@@ -18,7 +18,6 @@ import net.md_5.bungee.api.ChatColor;
 public class BingoCMD extends BaseCommand {
 
     private @NonNull Core instance;
-    String adminPerm = "admin.perm";
 
     public BingoCMD(Core instance) {
         this.instance = instance;

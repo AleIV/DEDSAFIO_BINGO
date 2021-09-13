@@ -18,6 +18,8 @@ import kr.entree.spigradle.annotations.SpigotPlugin;
 import lombok.Getter;
 import me.aleiv.core.paper.commands.AdminBingoCMD;
 import me.aleiv.core.paper.commands.BingoCMD;
+import me.aleiv.core.paper.commands.ConfigCMD;
+import me.aleiv.core.paper.commands.TestCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
 import me.aleiv.core.paper.listeners.GlobalListener;
@@ -79,6 +81,8 @@ public class Core extends JavaPlugin {
 
         commandManager.registerCommand(new AdminBingoCMD(this));
         commandManager.registerCommand(new BingoCMD(this));
+        commandManager.registerCommand(new ConfigCMD(this));
+        commandManager.registerCommand(new TestCMD(this));
 
         Bukkit.getScheduler().runTaskLater(this, task->{
             WorldCreator worldCreator = new WorldCreator("lobby");
@@ -90,6 +94,8 @@ public class Core extends JavaPlugin {
                 world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
                 world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
                 world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+                world.getWorldBorder().setCenter(0, 0);
+                world.getWorldBorder().setSize(10000);
             });
         }, 20);
 
