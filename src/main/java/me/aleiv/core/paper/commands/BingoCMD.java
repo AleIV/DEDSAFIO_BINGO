@@ -54,7 +54,7 @@ public class BingoCMD extends BaseCommand {
             sender.sendMessage(ChatColor.of(game.getColor3()) + "" + target.getName() + " table doesn't exist.");
         }else{
             var gui = new BingoTableGUI(table).getGui();
-            gui.open(target);
+            gui.open(sender);
         }
     }
 

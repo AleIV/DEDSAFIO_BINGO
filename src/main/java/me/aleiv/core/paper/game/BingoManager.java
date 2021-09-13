@@ -19,7 +19,7 @@ import org.bukkit.event.Listener;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.Game.BingoDifficulty;
+import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
@@ -148,19 +148,20 @@ public class BingoManager implements Listener {
     public void selectItems(Table table) {
 
         var game = instance.getGame();
-        var difficulty = game.getBingoDifficulty();
+        var round = game.getBingoRound();
+        var rounds = game.getRounds();
 
         List<List<Material>> diff = new ArrayList<>();
 
         table.getSelectedItems().clear();
 
-        var currentDiff = difficulty;
+        var currentRound = round;
 
-        switch (currentDiff) {
-            case EASY: diff = game.getClassEasy().stream().collect(Collectors.toList()); break;
-            case MEDIUM: diff = game.getClassMedium().stream().collect(Collectors.toList()); break;
-            case HARD: diff = game.getClassHard().stream().collect(Collectors.toList()); break;
-            case EXPERT: diff = game.getClassExpert().stream().collect(Collectors.toList()); break;
+        switch (currentRound) {
+            case ITEMS_1: diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList()); break;
+            case ITEMS_2: diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList()); break;
+            case ITEMS_3: diff = rounds.get(BingoRound.ITEMS_3).stream().collect(Collectors.toList()); break;
+            case ITEMS_4: diff = rounds.get(BingoRound.ITEMS_4).stream().collect(Collectors.toList()); break;
             default: break;
         }
 
@@ -177,18 +178,18 @@ public class BingoManager implements Listener {
                 table.getSelectedItems().add(material);
 
                 if(diff.isEmpty()){
-                    switch (currentDiff) {
-                        case MEDIUM: {
-                            currentDiff = BingoDifficulty.EASY;
-                            diff = game.getClassEasy().stream().collect(Collectors.toList());
+                    switch (currentRound) {
+                        case ITEMS_2: {
+                            currentRound = BingoRound.ITEMS_1;
+                            diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList());
                         } break;
-                        case HARD: {
-                            currentDiff = BingoDifficulty.MEDIUM;
-                            diff = game.getClassMedium().stream().collect(Collectors.toList());
+                        case ITEMS_3: {
+                            currentRound = BingoRound.ITEMS_2;
+                            diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList());
                         } break;
-                        case EXPERT: {
-                            currentDiff = BingoDifficulty.HARD;
-                            diff = game.getClassHard().stream().collect(Collectors.toList());
+                        case ITEMS_4: {
+                            currentRound = BingoRound.ITEMS_3;
+                            diff = rounds.get(BingoRound.ITEMS_3).stream().collect(Collectors.toList());
                         } break;
 
                         default: 

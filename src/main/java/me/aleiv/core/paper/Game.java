@@ -26,10 +26,7 @@ public class Game extends BukkitRunnable {
 
         long gameStartTime = 0;
         GameStage gameStage;
-        BingoMode bingoMode;
-        BingoDifficulty bingoDifficulty;
-        BingoType bingoType;
-        BingoGamemode bingoGamemode;
+        BingoRound bingoRound;
 
         Timer timer;
 
@@ -46,26 +43,20 @@ public class Game extends BukkitRunnable {
         HashMap<String, FastBoard> boards = new HashMap<>();
         HashMap<Material, ItemCode> materials = new HashMap<>();
 
-        List<List<Material>> classEasy = new ArrayList<>();
-        List<List<Material>> classMedium = new ArrayList<>();
-        List<List<Material>> classHard = new ArrayList<>();
-        List<List<Material>> classExpert = new ArrayList<>();
+        HashMap<BingoRound, List<List<Material>>> rounds = new HashMap<>();
 
         public Game(Core instance) {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameStage = GameStage.LOBBY;
-                this.bingoMode = BingoMode.NORMAL;
-                this.bingoDifficulty = BingoDifficulty.EASY;
-                this.bingoType = BingoType.LINE;
-                this.bingoGamemode = BingoGamemode.ITEM;
+                this.bingoRound = BingoRound.ITEMS_1;
 
                 registerMaterials();
 
-                registerClassEasy();
-                registerClassMedium();
-                registerClassHard();
-                registerClassExpert();
+                registerItems_1();
+                registerItems_2();
+                registerItems_3();
+                registerItems_4();
 
         }
 
@@ -79,111 +70,93 @@ public class Game extends BukkitRunnable {
                 Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
         }
 
-        public enum BingoMode {
-                NORMAL, TWITCH;
-        }
-
-        public enum BingoGamemode {
-                ITEM, CHALLENGE;
-        }
-
-        public enum BingoDifficulty {
-                EASY, MEDIUM, HARD, EXPERT;
+        public enum BingoRound {
+                ITEMS_1, ITEMS_2, ITEMS_3, ITEMS_4, CHALLENGE_1, CHALLENGE_2, CHALLENGE_3, CHALLENGE_4, FINAL_CHALLENGE;
         }
 
         public enum BingoType {
-                LINE, FULL;
+                FULL, LINE;
         }
 
         public enum GameStage {
                 LOBBY, STARTING, INGAME, POSTGAME;
         }
 
-        public boolean isNormalMode() {
-                return bingoMode == BingoMode.NORMAL;
-        }
+        public void registerItems_1() {
+                var items_1 = rounds.get(BingoRound.ITEMS_1);
 
-        public boolean isBingoTypeFull() {
-                return bingoType == BingoType.FULL;
-        }
-
-        public void registerClassEasy() {
-                classEasy.add(List.of(Material.COMPOSTER, Material.FURNACE, Material.BARREL, Material.LOOM,
+                items_1.add(List.of(Material.COMPOSTER, Material.FURNACE, Material.BARREL, Material.LOOM,
                                 Material.SMOKER, Material.BLAST_FURNACE, Material.CARTOGRAPHY_TABLE,
                                 Material.FLETCHING_TABLE, Material.GRINDSTONE, Material.SMITHING_TABLE,
                                 Material.STONECUTTER, Material.BELL, Material.LECTERN, Material.CRAFTING_TABLE));
-                classEasy.add(List.of(Material.DRIED_KELP_BLOCK, Material.HAY_BLOCK, Material.DRIED_KELP,
+                items_1.add(List.of(Material.DRIED_KELP_BLOCK, Material.HAY_BLOCK, Material.DRIED_KELP,
                                 Material.BREAD));
-                classEasy.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT));
-                classEasy.add(List.of(Material.CHAIN, Material.IRON_BARS, Material.ANVIL));
-                classEasy.add(List.of(Material.SALMON_BUCKET, Material.COD_BUCKET));
-                classEasy.add(List.of(Material.CAMPFIRE, Material.TORCH, Material.LANTERN));
-                classEasy.add(List.of(Material.FIREWORK_STAR, Material.FIREWORK_ROCKET));
-                classEasy.add(List.of(Material.DISPENSER, Material.NOTE_BLOCK, Material.PISTON, Material.DROPPER,
+                items_1.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT));
+                items_1.add(List.of(Material.CHAIN, Material.IRON_BARS));
+
+                items_1.add(List.of(Material.CAMPFIRE, Material.TORCH, Material.LANTERN));
+                items_1.add(List.of(Material.FIREWORK_STAR, Material.FIREWORK_ROCKET));
+                items_1.add(List.of(Material.DISPENSER, Material.NOTE_BLOCK, Material.PISTON, Material.DROPPER,
                                 Material.OBSERVER, Material.REDSTONE_BLOCK, Material.TNT, Material.TARGET));
-                classEasy.add(List.of(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.COMPARATOR, Material.REPEATER,
+                items_1.add(List.of(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.COMPARATOR, Material.REPEATER,
                                 Material.DAYLIGHT_DETECTOR, Material.HOPPER,
                                 Material.REDSTONE_TORCH, Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
                                 Material.IRON_TRAPDOOR));
-                classEasy.add(List.of(Material.ACTIVATOR_RAIL, Material.RAIL, Material.DETECTOR_RAIL,
+                items_1.add(List.of(Material.ACTIVATOR_RAIL, Material.RAIL, Material.DETECTOR_RAIL,
                                 Material.POWERED_RAIL));
-                classEasy.add(List.of(Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART,
+                items_1.add(List.of(Material.CHEST_MINECART, Material.HOPPER_MINECART, Material.FURNACE_MINECART,
                                 Material.TNT_MINECART, Material.MINECART));
-                classEasy.add(List.of(Material.BIRCH_SAPLING, Material.ACACIA_SAPLING, Material.DARK_OAK_SAPLING,
+                items_1.add(List.of(Material.BIRCH_SAPLING, Material.ACACIA_SAPLING, Material.DARK_OAK_SAPLING,
                                 Material.OAK_SAPLING, Material.SPRUCE_SAPLING));
-                classEasy.add(List.of(Material.AZURE_BLUET, Material.ALLIUM, Material.RED_TULIP, Material.ORANGE_TULIP,
-                                Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
-                                Material.LILY_OF_THE_VALLEY, Material.DANDELION, Material.POPPY));
-                classEasy.add(List.of(Material.GRASS, Material.FERN, Material.VINE, Material.SEAGRASS,
+                items_1.add(List.of(Material.GRASS, Material.FERN, Material.VINE, Material.SEAGRASS,
                                 Material.NETHER_SPROUTS, Material.DEAD_BUSH, Material.KELP));
-                classEasy.add(List.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS,
-                                Material.LEATHER_BOOTS,  
-                                 Material.DIAMOND_SHOVEL));
-                classEasy.add(List.of(Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS,
+                items_1.add(List.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS,
+                                Material.LEATHER_BOOTS));
+                items_1.add(List.of(Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS,
                                 Material.GOLDEN_BOOTS, Material.GOLDEN_SWORD, Material.GOLDEN_PICKAXE,
                                 Material.GOLDEN_AXE, Material.GOLDEN_SHOVEL, Material.GOLDEN_HOE));
-                classEasy.add(List.of(Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS,
+                items_1.add(List.of(Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS,
                                 Material.IRON_BOOTS, Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE,
                                 Material.IRON_SHOVEL, Material.IRON_HOE));
-                classEasy.add(List.of(Material.SHEARS, Material.FISHING_ROD));
-                classEasy.add(List.of(Material.BOW, Material.CROSSBOW, Material.SHIELD));
-                classEasy.add(List.of(Material.DARK_OAK_BOAT, Material.SPRUCE_BOAT, Material.BIRCH_BOAT,
+                items_1.add(List.of(Material.SHEARS, Material.FISHING_ROD));
+                items_1.add(List.of(Material.BOW, Material.CROSSBOW, Material.SHIELD));
+                items_1.add(List.of(Material.DARK_OAK_BOAT, Material.SPRUCE_BOAT, Material.BIRCH_BOAT,
                                 Material.OAK_BOAT, Material.ACACIA_BOAT));
-                classEasy.add(List.of(Material.WHITE_WOOL, Material.ORANGE_WOOL, Material.PINK_WOOL,
+                items_1.add(List.of(Material.WHITE_WOOL, Material.ORANGE_WOOL, Material.PINK_WOOL,
                                 Material.LIGHT_BLUE_WOOL, Material.YELLOW_WOOL, Material.LIME_WOOL,
                                 Material.MAGENTA_WOOL, Material.GRAY_WOOL, Material.LIGHT_GRAY_WOOL, Material.CYAN_WOOL,
                                 Material.PURPLE_WOOL, Material.BLUE_WOOL,  Material.GREEN_WOOL,
                                 Material.RED_WOOL, Material.BLACK_WOOL));
-                classEasy.add(List.of(Material.WHITE_CONCRETE, Material.ORANGE_CONCRETE, Material.PINK_CONCRETE,
+                items_1.add(List.of(Material.WHITE_CONCRETE, Material.ORANGE_CONCRETE, Material.PINK_CONCRETE,
                                 Material.LIGHT_BLUE_CONCRETE, Material.YELLOW_CONCRETE, Material.LIME_CONCRETE,
                                 Material.MAGENTA_CONCRETE, Material.GRAY_CONCRETE, Material.LIGHT_GRAY_CONCRETE,
                                 Material.CYAN_CONCRETE, Material.PURPLE_CONCRETE, Material.BLUE_CONCRETE,
                                  Material.GREEN_CONCRETE, Material.RED_CONCRETE,
                                 Material.BLACK_CONCRETE));
-                classEasy.add(List.of(Material.GRAVEL, Material.CLAY, Material.SNOW_BLOCK));
-                classEasy.add(List.of(Material.STONE,
+                items_1.add(List.of(Material.GRAVEL, Material.CLAY, Material.SNOW_BLOCK));
+                items_1.add(List.of(Material.STONE,
                                 Material.COBBLESTONE, Material.MOSSY_COBBLESTONE, Material.STONE_BRICKS,
                                 Material.CRACKED_STONE_BRICKS, Material.MOSSY_STONE_BRICKS,
                                 Material.CHISELED_STONE_BRICKS, Material.SMOOTH_STONE, Material.BRICKS));
-                classEasy.add(List.of(Material.RED_SAND, Material.RED_SANDSTONE, Material.CUT_RED_SANDSTONE,
+                items_1.add(List.of(Material.RED_SAND, Material.RED_SANDSTONE, Material.CUT_RED_SANDSTONE,
                                 Material.SMOOTH_RED_SANDSTONE, Material.CHISELED_RED_SANDSTONE, Material.SAND,
                                 Material.SANDSTONE, Material.CUT_SANDSTONE, Material.SMOOTH_SANDSTONE,
                                 Material.CHISELED_SANDSTONE));
-                classEasy.add(List.of(Material.OAK_LOG, Material.BIRCH_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG,
+                items_1.add(List.of(Material.OAK_LOG, Material.BIRCH_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG,
                                 Material.ACACIA_LOG));
-                classEasy.add(List.of(Material.OAK_LEAVES, Material.BIRCH_LEAVES, Material.SPRUCE_LEAVES,
+                items_1.add(List.of(Material.OAK_LEAVES, Material.BIRCH_LEAVES, Material.SPRUCE_LEAVES,
                                 Material.DARK_OAK_LEAVES, Material.ACACIA_LEAVES));
-                classEasy.add(List.of(Material.WHITE_BED, Material.ORANGE_BED, Material.MAGENTA_BED,
+                items_1.add(List.of(Material.WHITE_BED, Material.ORANGE_BED, Material.MAGENTA_BED,
                                 Material.YELLOW_BED, Material.LIGHT_BLUE_BED, Material.LIME_BED, Material.PINK_BED,
                                 Material.GRAY_BED, Material.LIGHT_GRAY_BED, Material.CYAN_BED, Material.PURPLE_BED,
                                 Material.BLUE_BED,  Material.GREEN_BED, Material.RED_BED,
                                 Material.BLACK_BED));
-                classEasy.add(List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
+                items_1.add(List.of(Material.WHITE_BANNER, Material.ORANGE_BANNER, Material.MAGENTA_BANNER,
                                 Material.YELLOW_BANNER, Material.LIGHT_BLUE_BANNER, Material.LIME_BANNER,
                                 Material.PINK_BANNER, Material.GRAY_BANNER, Material.LIGHT_GRAY_BANNER,
                                 Material.CYAN_BANNER, Material.PURPLE_BANNER, Material.BLUE_BANNER, Material.GREEN_BANNER, Material.RED_BANNER,
                                 Material.BLACK_BANNER));
-                classEasy.add(List.of(Material.WHITE_STAINED_GLASS, Material.ORANGE_STAINED_GLASS,
+                items_1.add(List.of(Material.WHITE_STAINED_GLASS, Material.ORANGE_STAINED_GLASS,
                                 Material.MAGENTA_STAINED_GLASS, Material.YELLOW_STAINED_GLASS,
                                 Material.LIGHT_BLUE_STAINED_GLASS, Material.LIME_STAINED_GLASS,
                                 Material.PINK_STAINED_GLASS, Material.GRAY_STAINED_GLASS,
@@ -191,88 +164,100 @@ public class Game extends BukkitRunnable {
                                 Material.PURPLE_STAINED_GLASS, Material.BLUE_STAINED_GLASS,
                                  Material.GREEN_STAINED_GLASS, Material.RED_STAINED_GLASS,
                                 Material.BLACK_STAINED_GLASS, Material.GLASS));
-                classEasy.add(List.of(Material.WHITE_TERRACOTTA, Material.ORANGE_TERRACOTTA,
+                items_1.add(List.of(Material.WHITE_TERRACOTTA, Material.ORANGE_TERRACOTTA,
                                 Material.MAGENTA_TERRACOTTA, Material.YELLOW_TERRACOTTA, Material.LIGHT_BLUE_TERRACOTTA,
                                 Material.LIME_TERRACOTTA, Material.PINK_TERRACOTTA, Material.GRAY_TERRACOTTA,
                                 Material.LIGHT_GRAY_TERRACOTTA, Material.CYAN_TERRACOTTA, Material.PURPLE_TERRACOTTA,
                                 Material.BLUE_TERRACOTTA, Material.BROWN_TERRACOTTA, Material.GREEN_TERRACOTTA,
                                 Material.RED_TERRACOTTA, Material.BLACK_TERRACOTTA, Material.TERRACOTTA));
-                classEasy.add(List.of(Material.BRICK, Material.INK_SAC, Material.LEATHER, Material.BONE_MEAL,
+                items_1.add(List.of(Material.BRICK, Material.INK_SAC, Material.LEATHER, Material.BONE_MEAL,
                                 Material.SNOWBALL));
-                classEasy.add(List.of(Material.CHARCOAL, Material.COAL, Material.IRON_INGOT, Material.GOLD_INGOT,
+                items_1.add(List.of(Material.CHARCOAL, Material.COAL, Material.IRON_INGOT, Material.GOLD_INGOT,
                                 Material.EMERALD, Material.LAPIS_LAZULI, Material.DIAMOND, Material.OBSIDIAN));
-                classEasy.add(List.of(Material.APPLE, Material.CARROT, Material.COOKED_BEEF, Material.COOKED_MUTTON,
+                                
+                items_1.add(List.of(Material.APPLE, Material.CARROT, Material.COOKED_BEEF, Material.COOKED_MUTTON,
                                 Material.COOKED_PORKCHOP, Material.COOKED_COD, Material.COOKED_SALMON,
                                 Material.COOKED_CHICKEN, Material.SPIDER_EYE, Material.ROTTEN_FLESH,
                                 Material.MUSHROOM_STEW, Material.BAKED_POTATO));
 
         }
 
-        public void registerClassMedium() {
-                classMedium.add(List.of(Material.QUARTZ, Material.REDSTONE, Material.IRON_BLOCK, Material.GOLD_BLOCK,
+        public void registerItems_2() {
+
+                var items_2 = rounds.get(BingoRound.ITEMS_2);
+
+                items_2.add(List.of(Material.AZURE_BLUET, Material.ALLIUM, Material.RED_TULIP, Material.ORANGE_TULIP,
+                                Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
+                                Material.LILY_OF_THE_VALLEY, Material.DANDELION, Material.POPPY));
+                items_2.add(List.of(Material.QUARTZ, Material.REDSTONE, Material.IRON_BLOCK, Material.GOLD_BLOCK,
                                 Material.EMERALD_BLOCK, Material.LAPIS_BLOCK, Material.DIAMOND_BLOCK));
-                classMedium.add(List.of(Material.NETHERRACK, Material.NETHER_BRICKS, Material.CRACKED_NETHER_BRICKS,
+                items_2.add(List.of(Material.NETHERRACK, Material.NETHER_BRICKS, Material.CRACKED_NETHER_BRICKS,
                                 Material.CHISELED_NETHER_BRICKS, Material.BLACKSTONE, Material.POLISHED_BLACKSTONE,
                                 Material.POLISHED_BLACKSTONE_BRICKS, Material.CRACKED_POLISHED_BLACKSTONE_BRICKS,
                                 Material.CHISELED_POLISHED_BLACKSTONE, Material.BASALT, Material.POLISHED_BASALT,
                                 Material.SOUL_SAND, Material.SOUL_SOIL, Material.QUARTZ_BLOCK, Material.SMOOTH_QUARTZ,
                                 Material.QUARTZ_BRICKS, Material.QUARTZ_PILLAR, Material.CHISELED_QUARTZ_BLOCK,
                                 Material.MAGMA_BLOCK, Material.BONE_BLOCK, Material.GLOWSTONE, Material.SHROOMLIGHT));
-                classMedium.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
-                classMedium.add(List.of(Material.TWISTING_VINES, Material.WEEPING_VINES,
+                items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
+                items_2.add(List.of(Material.TWISTING_VINES, Material.WEEPING_VINES,
                 Material.CRIMSON_ROOTS, Material.WARPED_ROOTS, Material.CRIMSON_STEM, Material.WARPED_STEM, Material.NETHER_WART_BLOCK,
                 Material.WARPED_WART_BLOCK));
-                classMedium.add(List.of(Material.SOUL_CAMPFIRE, Material.SOUL_TORCH, Material.SOUL_LANTERN));
-                classMedium.add(List.of(Material.BEETROOT_SOUP,
+                items_2.add(List.of(Material.SOUL_CAMPFIRE, Material.SOUL_TORCH, Material.SOUL_LANTERN));
+                items_2.add(List.of(Material.BEETROOT_SOUP,
                                 Material.COOKIE, Material.SWEET_BERRIES, Material.COOKED_RABBIT, Material.EGG,
                                 Material.PUMPKIN_PIE));
-                classMedium.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
-                classMedium.add(List.of(Material.SEA_PICKLE, Material.HONEY_BOTTLE));
-                classMedium.add(List.of(Material.TROPICAL_FISH, Material.TROPICAL_FISH_BUCKET, Material.MELON_SLICE));
-                classMedium.add(List.of(Material.ENDER_PEARL, Material.SADDLE));
-                classMedium.add(List.of(Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.CAKE, Material.SUNFLOWER));
-                classMedium.add(List.of(Material.COCOA_BEANS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.JUNGLE_SAPLING));
-                classMedium.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER));
-                classMedium.add(List.of(Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE));
-                classMedium.add(List.of(Material.PUFFERFISH_BUCKET, Material.HEART_OF_THE_SEA));
-                classMedium.add(List.of(Material.NETHER_WART));
-                classMedium.add(List.of(Material.NAME_TAG));
-                classMedium.add(List.of(Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE, Material.ENCHANTING_TABLE, Material.FIRE_CHARGE, Material.BROWN_WOOL,Material.BROWN_CONCRETE
+                items_2.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
+                items_2.add(List.of(Material.SEA_PICKLE, Material.HONEY_BOTTLE));
+                items_2.add(List.of(Material.TROPICAL_FISH, Material.TROPICAL_FISH_BUCKET, Material.MELON_SLICE));
+                items_2.add(List.of(Material.ENDER_PEARL, Material.SADDLE));
+                items_2.add(List.of(Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.CAKE, Material.SUNFLOWER));
+                items_2.add(List.of(Material.COCOA_BEANS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.JUNGLE_SAPLING));
+                items_2.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER));
+                items_2.add(List.of(Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE));
+                items_2.add(List.of(Material.PUFFERFISH_BUCKET, Material.HEART_OF_THE_SEA));
+                items_2.add(List.of(Material.NETHER_WART, Material.NAME_TAG));
+                items_2.add(List.of(Material.ANVIL, Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE, Material.ENCHANTING_TABLE, Material.FIRE_CHARGE, Material.BROWN_WOOL,Material.BROWN_CONCRETE
                 ,Material.BROWN_BED, Material.BROWN_BANNER,Material.BROWN_STAINED_GLASS,Material.DIAMOND_PICKAXE,Material.DIAMOND_AXE,Material.DIAMOND_SWORD,Material.DIAMOND_HOE));
 
         }
 
-        public void registerClassHard() {
-                classHard.add(List.of(Material.GRASS_BLOCK, Material.NETHER_GOLD_ORE, Material.COAL_ORE,
+        public void registerItems_3() {
+
+                var items_3 = rounds.get(BingoRound.ITEMS_3);
+
+                items_3.add(List.of(Material.GRASS_BLOCK, Material.NETHER_GOLD_ORE, Material.COAL_ORE,
                                 Material.REDSTONE_ORE, Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.EMERALD_ORE,
                                 Material.BEE_NEST, Material.MUSHROOM_STEM, Material.RED_MUSHROOM_BLOCK,
                                 Material.BROWN_MUSHROOM_BLOCK, Material.PODZOL, Material.NETHER_QUARTZ_ORE,
                                 Material.NETHERITE_SCRAP, Material.JUKEBOX));
-                classHard.add(List.of(Material.DEAD_HORN_CORAL_BLOCK, Material.DEAD_FIRE_CORAL_BLOCK,
+                items_3.add(List.of(Material.DEAD_HORN_CORAL_BLOCK, Material.DEAD_FIRE_CORAL_BLOCK,
                                 Material.DEAD_TUBE_CORAL_BLOCK, Material.DEAD_BRAIN_CORAL_BLOCK,
                                 Material.DEAD_BUBBLE_CORAL_BLOCK));
-                classHard.add(List.of(Material.SCUTE, Material.PHANTOM_MEMBRANE, Material.GHAST_TEAR,
+                items_3.add(List.of(Material.SCUTE, Material.PHANTOM_MEMBRANE, Material.GHAST_TEAR,
                                 Material.END_CRYSTAL, Material.MUSIC_DISC_PIGSTEP, Material.RESPAWN_ANCHOR,
                                 Material.BAMBOO, Material.SCAFFOLDING, Material.TURTLE_EGG));
-                classHard.add(List.of(Material.SLIME_BLOCK, Material.HONEY_BLOCK, Material.STICKY_PISTON));
-                classHard.add(List.of(Material.NETHERITE_INGOT, Material.LODESTONE, Material.NETHERITE_HOE,
+                items_3.add(List.of(Material.SLIME_BLOCK, Material.HONEY_BLOCK, Material.STICKY_PISTON));
+                items_3.add(List.of(Material.NETHERITE_INGOT, Material.LODESTONE, Material.NETHERITE_HOE,
                                 Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL));
-                classHard.add(List.of(Material.SEA_LANTERN, Material.DARK_PRISMARINE, Material.PRISMARINE_BRICKS,
+                items_3.add(List.of(Material.SEA_LANTERN, Material.DARK_PRISMARINE, Material.PRISMARINE_BRICKS,
                                 Material.PRISMARINE, Material.SPONGE, Material.MYCELIUM, Material.ICE,
                                 Material.PACKED_ICE, Material.BLUE_ICE, Material.PRISMARINE_SHARD,
                                 Material.PRISMARINE_CRYSTALS, Material.BEEHIVE));
 
         }
 
-        public void registerClassExpert() {
-                classExpert.add(List.of(Material.NETHERITE_HELMET, Material.NETHERITE_CHESTPLATE,
+        public void registerItems_4() {
+
+                var items_4 = rounds.get(BingoRound.ITEMS_4);
+
+                items_4.add(List.of(Material.NETHERITE_HELMET, Material.NETHERITE_CHESTPLATE,
                                 Material.NETHERITE_LEGGINGS, Material.NETHERITE_BOOTS, Material.TURTLE_HELMET,
                                 Material.WITHER_SKELETON_SKULL, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL,
                                 Material.CREEPER_HEAD, Material.TRIDENT));
-                classExpert.add(List.of(Material.CHORUS_FRUIT, Material.POPPED_CHORUS_FRUIT, Material.SHULKER_BOX,
+                items_4.add(List.of(Material.CHORUS_FRUIT, Material.POPPED_CHORUS_FRUIT, Material.SHULKER_BOX,
                                 Material.SHULKER_SHELL, Material.ELYTRA, Material.END_ROD, Material.CHORUS_FLOWER,
                                 Material.PURPUR_PILLAR, Material.PURPUR_BLOCK, Material.RABBIT_FOOT));
-                classExpert.add(List.of(Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE,
+                items_4.add(List.of(Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE,
                                 Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS, Material.CONDUIT,
                                 Material.BEACON, Material.ENCHANTED_GOLDEN_APPLE));
 
