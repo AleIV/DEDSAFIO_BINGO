@@ -60,12 +60,6 @@ public class TestCMD extends BaseCommand {
 
     }
 
-    @Subcommand("neg")
-    public void neg(CommandSender sender, Integer neg){
-        Table.setNeg2(NegativeSpaces.get(neg));
-
-    }
-
     @Subcommand("neg2")
     public void neg2(CommandSender sender, Integer neg){
         Table.setNeg2(NegativeSpaces.get(neg));

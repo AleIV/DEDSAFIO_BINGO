@@ -11,7 +11,6 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoDifficulty;
-import me.aleiv.core.paper.Game.BingoType;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("config")
@@ -60,7 +59,7 @@ public class ConfigCMD extends BaseCommand {
 
     }
 
-    @Subcommand("type")
+    /*@Subcommand("type")
     public void type(CommandSender sender){
         var game = instance.getGame();
         var isFullBingo = game.isBingoTypeFull();
@@ -77,7 +76,7 @@ public class ConfigCMD extends BaseCommand {
     
         }
 
-    }
+    }*/
 
     /*@Subcommand("mode")
     public void mode(CommandSender sender) {

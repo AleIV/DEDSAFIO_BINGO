@@ -75,6 +75,7 @@ public class AdminBingoCMD extends BaseCommand {
 
         if(game.getTimer() != null){
             game.getTimer().delete();
+            game.setTimer(new Timer(instance, seconds));
         }else{
             game.setTimer(new Timer(instance, seconds));
         }

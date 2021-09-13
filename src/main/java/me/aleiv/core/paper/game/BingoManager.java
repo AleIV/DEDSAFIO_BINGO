@@ -71,9 +71,11 @@ public class BingoManager implements Listener {
 
         var loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 
+        game.getTables().clear();
+
         var teamManager = instance.getTeamManager();
         var scatterManager = instance.getScatterManager();
-        if (teamManager.getTeamSize() == 1) {
+        if (!teamManager.isTeams()) {
             // FFA CASE
 
             Bukkit.getOnlinePlayers().forEach(p -> {
@@ -124,11 +126,11 @@ public class BingoManager implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(player ->{
             player.teleport(loc);
-            player.getInventory().clear();
+            var table = findTable(player.getUniqueId());
+            instance.broadcastMessage(ChatColor.DARK_RED + player.getName() + ChatColor.GOLD + " POINTS: " + table.getItemsFound());
 
         });
 
-        game.getTables().clear();
     }
 
     public Table findTable(UUID player) {
