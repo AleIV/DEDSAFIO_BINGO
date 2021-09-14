@@ -155,13 +155,10 @@ public class BingoManager implements Listener {
 
         table.getSelectedItems().clear();
 
-        var currentRound = round;
-
-        switch (currentRound) {
+        switch (round) {
             case ITEMS_1: diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList()); break;
             case ITEMS_2: diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList()); break;
             case ITEMS_3: diff = rounds.get(BingoRound.ITEMS_3).stream().collect(Collectors.toList()); break;
-            case ITEMS_4: diff = rounds.get(BingoRound.ITEMS_4).stream().collect(Collectors.toList()); break;
             default: break;
         }
 
@@ -176,26 +173,6 @@ public class BingoManager implements Listener {
 
                 table.getBoard()[i][j] = new Slot(material);
                 table.getSelectedItems().add(material);
-
-                if(diff.isEmpty()){
-                    switch (currentRound) {
-                        case ITEMS_2: {
-                            currentRound = BingoRound.ITEMS_1;
-                            diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList());
-                        } break;
-                        case ITEMS_3: {
-                            currentRound = BingoRound.ITEMS_2;
-                            diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList());
-                        } break;
-                        case ITEMS_4: {
-                            currentRound = BingoRound.ITEMS_3;
-                            diff = rounds.get(BingoRound.ITEMS_3).stream().collect(Collectors.toList());
-                        } break;
-
-                        default: 
-                            break;
-                    }
-                }
 
             }
         }
