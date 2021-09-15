@@ -25,7 +25,7 @@ import me.aleiv.core.paper.game.ScatterManager;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
-import me.aleiv.core.paper.teams.TeamManager;
+import me.aleiv.core.paper.teams.deprecated.TeamManager;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -50,29 +50,26 @@ public class Core extends JavaPlugin {
         instance = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-        
+
         game = new Game(this);
         game.runTaskTimerAsynchronously(this, 0L, 20L);
 
-        
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         NegativeSpaces.registerCodes();
 
         bingoManager = new BingoManager(this);
-        teamManager = new TeamManager(this);
         scatterManager = new ScatterManager(this);
 
-        //LISTENERS
+        // LISTENERS
 
         Bukkit.getPluginManager().registerEvents(bingoManager, this);
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getPluginManager().registerEvents(new InGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new LobbyListener(this), this);
 
+        // COMMANDS
 
-        //COMMANDS
-        
         commandManager = new PaperCommandManager(this);
 
         commandManager.getCommandCompletions().registerCompletion("stages", c -> {
@@ -84,12 +81,12 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new ConfigCMD(this));
         commandManager.registerCommand(new TestCMD(this));
 
-        Bukkit.getScheduler().runTaskLater(this, task->{
+        Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
             worldCreator.environment(Environment.NORMAL);
             worldCreator.createWorld();
 
-            Bukkit.getWorlds().forEach(world ->{
+            Bukkit.getWorlds().forEach(world -> {
                 world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
                 world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
                 world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
@@ -106,23 +103,24 @@ public class Core extends JavaPlugin {
 
     }
 
-    public void broadcastMessage(String text){
+    public void broadcastMessage(String text) {
         Bukkit.broadcast(miniMessage.parse(text));
     }
 
-    public void sendActionBar(Player player, String text){
+    public void sendActionBar(Player player, String text) {
         player.sendActionBar(miniMessage.parse(text));
     }
 
-    public void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut){
-        player.showTitle(Title.title(miniMessage.parse(title), miniMessage.parse(subtitle), Times.of(Duration.ofMillis(50*fadeIn), Duration.ofMillis(50*stay), Duration.ofMillis(50*fadeIn))));
+    public void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.showTitle(Title.title(miniMessage.parse(title), miniMessage.parse(subtitle), Times
+                .of(Duration.ofMillis(50 * fadeIn), Duration.ofMillis(50 * stay), Duration.ofMillis(50 * fadeIn))));
     }
 
-    public void sendHeader(Player player, String text){
+    public void sendHeader(Player player, String text) {
         player.sendPlayerListHeader(miniMessage.parse(text));
     }
 
-    public void sendFooter(Player player, String text){
+    public void sendFooter(Player player, String text) {
         player.sendPlayerListFooter(miniMessage.parse(text));
     }
 

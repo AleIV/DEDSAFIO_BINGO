@@ -30,20 +30,6 @@ public class BaseTeam {
      * 
      * @return A new team object.
      */
-    public BaseTeam(UUID teamID, UUID[] uuid, String teamName) {
-        this.teamID = teamID;
-        this.members = Arrays.asList(uuid);
-        this.teamName = teamName;
-    }
-
-    /**
-     * 
-     * @param teamID   A provided team ID.
-     * @param teamName A provided name for a team.
-     * @param uuid     A provided id for a member of a team.
-     * 
-     * @return A new team object.
-     */
     public BaseTeam(UUID teamID, String teamName, UUID... uuid) {
         this.teamID = teamID;
         this.members = Arrays.asList(uuid);
@@ -56,8 +42,8 @@ public class BaseTeam {
      * @param uuid     A provided id for a member of a team.
      * @return A new team object.
      */
-    public BaseTeam createTeam(String teamName, UUID... uuid) {
-        return new BaseTeam(teamID, teamName, uuid);
+    public static BaseTeam createBaseTeam(String teamName, UUID... uuid) {
+        return new BaseTeam(UUID.randomUUID(), teamName, uuid);
     }
 
     /**
@@ -68,7 +54,6 @@ public class BaseTeam {
     }
 
     /**
-     * 
      * @return The list of members of a team.
      */
     public List<UUID> getMembers() {
