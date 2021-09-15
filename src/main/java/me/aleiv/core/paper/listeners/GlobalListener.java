@@ -95,7 +95,7 @@ public class GlobalListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         var player = e.getPlayer();
         var world = Bukkit.getWorld("lobby");
-        var loc = new Location(world, 0, 126, 0);
+        var loc = new Location(world, 71, 126, 0, 90, -0);
         if (player.getWorld() == world) {
             player.teleport(loc);
         }

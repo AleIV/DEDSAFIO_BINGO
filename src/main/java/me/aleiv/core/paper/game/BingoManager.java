@@ -120,7 +120,7 @@ public class BingoManager implements Listener {
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
 
         var world = Bukkit.getWorld("lobby");
-        var loc = new Location(world, 0, 126, 0);
+        var loc = new Location(world, 71, 126, 0, 90, -0);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.teleport(loc);
