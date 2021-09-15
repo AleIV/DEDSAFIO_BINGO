@@ -118,7 +118,7 @@ public class ScatterManager {
         while(!isSafeLocation(loc)){
             loc = genLoc(world);
         }
-        loc.setY(250);
+        loc.setY(200f);
 
         return loc;
     }
