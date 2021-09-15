@@ -192,7 +192,6 @@ public class Table{
 
     public boolean is5of(List<Integer> list, Integer i){
         var ns = list.stream().filter(n -> n == i).collect(Collectors.toList());
-        Core.getInstance().broadcastMessage(ns.toString());
         return ns.size() == 5;
     }
 

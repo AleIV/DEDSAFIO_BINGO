@@ -30,7 +30,7 @@ public class ChallengeSlot extends Slot{
     @Override
     public ItemStack getItem(){
         ItemStack item;
-        var name = material.toString().replace("_", "");
+        var name = material.toString().replace("_", " ");
 
         if(isFound){
             item = new ItemBuilder(material).name(ChatColor.of("#38db1f") + name)

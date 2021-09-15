@@ -39,7 +39,7 @@ public class Slot {
 
     public ItemStack getItem(){
         ItemStack item;
-        var name = material.toString().replace("_", "");
+        var name = material.toString().replace("_", " ");
 
         if(isFound){
             item = new ItemBuilder(material).name(ChatColor.of("#38db1f") + name).enchant(Enchantment.MENDING).flags(ItemFlag.HIDE_ATTRIBUTES).flags(ItemFlag.HIDE_ENCHANTS).build();
