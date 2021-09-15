@@ -86,7 +86,7 @@ public class Core extends JavaPlugin {
 
         Bukkit.getScheduler().runTaskLater(this, task->{
             WorldCreator worldCreator = new WorldCreator("lobby");
-            worldCreator.environment(Environment.NORMAL);
+            worldCreator.environment(Environment.THE_END);
             worldCreator.createWorld();
 
             Bukkit.getWorlds().forEach(world ->{

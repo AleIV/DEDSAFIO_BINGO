@@ -10,6 +10,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -118,7 +119,8 @@ public class BingoManager implements Listener {
         game.setGameStage(GameStage.LOBBY);
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
 
-        var loc = Bukkit.getWorld("lobby").getSpawnLocation();
+        var world = Bukkit.getWorld("lobby");
+        var loc = new Location(world, 0, 126, 0);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.teleport(loc);

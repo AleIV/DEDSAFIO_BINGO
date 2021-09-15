@@ -2,6 +2,7 @@ package me.aleiv.core.paper.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -106,9 +107,10 @@ public class LobbyListener implements Listener {
         var manager = instance.getBingoManager();
         var table = manager.findTable(player.getUniqueId());
         var lobby = Bukkit.getWorld("lobby");
+        var loc = new Location(lobby, 0, 126, 0);
 
         if(game.getGameStage() != GameStage.INGAME){
-            player.teleport(lobby.getSpawnLocation());
+            player.teleport(loc);
 
         }else if(player.getWorld() == lobby || table == null){
             

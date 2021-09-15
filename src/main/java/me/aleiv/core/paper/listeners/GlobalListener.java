@@ -2,6 +2,7 @@ package me.aleiv.core.paper.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
@@ -94,8 +95,9 @@ public class GlobalListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         var player = e.getPlayer();
         var world = Bukkit.getWorld("lobby");
+        var loc = new Location(world, 0, 126, 0);
         if (player.getWorld() == world) {
-            player.teleport(world.getSpawnLocation());
+            player.teleport(loc);
         }
     }
 
