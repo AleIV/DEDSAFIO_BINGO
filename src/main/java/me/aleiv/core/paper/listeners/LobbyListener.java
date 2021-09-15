@@ -28,7 +28,7 @@ public class LobbyListener implements Listener {
     public LobbyListener(Core instance) {
         this.instance = instance;
 
-        notInGameMSG = ChatColor.of(instance.getGame().getColor1()) + "Game must start.";
+        notInGameMSG = ChatColor.of(instance.getGame().getColor1()) + "El juego no ha iniciado.";
     }
 
     public boolean shouldInteract(Player player){
@@ -48,7 +48,7 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onHunger(FoodLevelChangeEvent e){
         var player = (Player) e.getEntity();
-        if (shouldInteract(player)) {
+        if (player.getWorld() == world) {
             e.setCancelled(true);
             instance.sendActionBar(player, notInGameMSG);
         }

@@ -47,6 +47,7 @@ public class Timer {
         if(time < 0){
             bossbar.setVisible(false);
             Core.getInstance().getGame().setTimer(null);
+            Core.getInstance().getBingoManager().restartGame();
 
         }else{
             bossbar.setTitle(timeConvert((int) time));
@@ -57,6 +58,7 @@ public class Timer {
     public void delete(){
         bossbar.setVisible(false);
         Core.getInstance().getGame().setTimer(null);
+
     }
 
 

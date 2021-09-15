@@ -14,7 +14,6 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.game.objects.Slot;
 import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
@@ -79,9 +78,9 @@ public class TestCMD extends BaseCommand {
     }
 
     @Subcommand("test-item")
-    public void neg2(CommandSender sender, Material material, Integer neg){
+    public void neg2(CommandSender sender, Material material){
         var mat = instance.getGame().getMaterials();
-        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + NegativeSpaces.get(neg) + Slot.normal);
+        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + material.toString());
         instance.broadcastMessage("");
         instance.broadcastMessage("");
 

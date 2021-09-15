@@ -7,14 +7,13 @@ import java.util.stream.Collectors;
 
 public class NegativeSpaces {
 
-    public static HashMap<Integer, String> negativeSpaces = new HashMap<>();
+    private static HashMap<Integer, String> negativeSpaces = new HashMap<>();
     
     private static int getMax(int i){
         var nums = negativeSpaces.keySet().stream().filter(ne -> ne > 0 && ne <= i).mapToInt(v -> v).max();
 
         return nums.isPresent() ? nums.getAsInt() : 0;
     }
-
 
     public static String get(int number){
 
@@ -54,6 +53,7 @@ public class NegativeSpaces {
     }
 
     public static void registerCodes(){
+        negativeSpaces.clear();
         negativeSpaces.put(-1, Character.toString('\uF801'));
         negativeSpaces.put(-2, Character.toString('\uF802'));
         negativeSpaces.put(-3, Character.toString('\uF803'));

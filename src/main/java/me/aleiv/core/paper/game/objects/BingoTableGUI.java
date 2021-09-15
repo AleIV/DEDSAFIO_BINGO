@@ -2,8 +2,9 @@ package me.aleiv.core.paper.game.objects;
 
 import java.util.List;
 
+import org.bukkit.inventory.ItemStack;
+
 import lombok.Data;
-import us.jcedeno.libs.rapidinv.ItemBuilder;
 import us.jcedeno.libs.rapidinv.RapidInv;
 
 @Data
@@ -20,8 +21,14 @@ public class BingoTableGUI {
         var count = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                var material = table.getBoard()[i][j].getMaterial();
-                var item = new ItemBuilder(material).build();
+                var slot = table.getBoard()[i][j];
+                ItemStack item;
+                if(slot instanceof ChallengeSlot){
+                    var challengeSlot = (ChallengeSlot) slot;
+                    item = challengeSlot.getItem();
+                }else{
+                    item = slot.getItem();
+                }
                 gui.setItem(positions.get(count), item, handler ->{
                     handler.setCancelled(true);
                 });

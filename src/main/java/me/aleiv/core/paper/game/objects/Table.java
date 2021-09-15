@@ -2,46 +2,158 @@ package me.aleiv.core.paper.game.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
+import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.BingoFase;
+import me.aleiv.core.paper.Game.BingoRound;
+import me.aleiv.core.paper.Game.Challenge;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 
-@Data
-public class Table implements Cloneable{
+public class Table{
     
-    UUID uuid;
-    List<Material> selectedItems;
-    Slot[][] board = new Slot[5][5];
-    List<UUID> members;
+    @Getter UUID uuid;
+    @Getter List<Material> selectedItems;
+    @Getter List<Challenge> selectedChallenge;
 
-    boolean foundLine;
-    boolean foundFull;
-    int itemsFound;
+    @Getter Slot[][] board = new Slot[5][5];
+    @Getter List<UUID> members;
+
+    @Getter @Setter boolean foundLine;
+    @Getter @Setter boolean foundFull;
+    @Getter int objectsFound;
 
     public @Setter static String neg2 = NegativeSpaces.get(-8);
     public @Setter static String neg3 = NegativeSpaces.get(-6);
     
     public static String logo = Character.toString('\uEAA1');
     public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 19);
+
+    Random random = new Random();
     
     public Table(){
         this.uuid = UUID.randomUUID();
         this.selectedItems = new ArrayList<>();
+        this.selectedChallenge = new ArrayList<>();
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
-        this.itemsFound = -1;
+        this.objectsFound = -1;
 
     }
 
+    public void selectItems(Core instance) {
+
+        var game = instance.getGame();
+        var round = game.getBingoRound();
+        var table = this;
+
+        var fase = game.getBingoFase();
+
+        if(fase == BingoFase.ITEMS){
+            var rounds = game.getItemRounds();
+
+            List<List<Material>> diff = new ArrayList<>();
+
+            table.getSelectedItems().clear();
+    
+            var currentRound = round;
+    
+            switch (round) {
+                case ONE: diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList()); break;
+                case TWO: diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList()); break;
+                default: break;
+            }
+    
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+    
+                    var diffRand = getRand(diff);
+                    var options = diff.get(diffRand);
+                    diff.remove(diffRand);
+    
+                    var material = options.get(getRand(options));
+    
+                    table.getBoard()[i][j] = new Slot(material);
+                    table.getSelectedItems().add(material);
+    
+                    if(diff.isEmpty()){
+                        switch (currentRound) {
+                            case TWO: {
+                                currentRound = BingoRound.ONE;
+                                diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList());
+                            } break;
+    
+                            default: 
+                                break;
+                        }
+                    }
+    
+                }
+            }
+            
+        }else if(fase == BingoFase.CHALLENGE){
+            var rounds = game.getChallengeRounds();
+
+            List<Challenge> diff = new ArrayList<>();
+
+            table.getSelectedChallenge().clear();
+    
+            var currentRound = round;
+    
+            switch (round) {
+                case ONE: diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList()); break;
+                case TWO: diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList()); break;
+                case THREE: diff = rounds.get(BingoRound.THREE).stream().collect(Collectors.toList()); break;
+                default: break;
+            }
+    
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+    
+                    var diffRand = getRand(diff);
+                    var challenge = diff.get(diffRand);
+                    diff.remove(diffRand);
+    
+                    table.getBoard()[i][j] = new ChallengeSlot(challenge);
+                    table.getSelectedChallenge().add(challenge);
+    
+                    if(diff.isEmpty()){
+                        switch (currentRound) {
+                            case TWO: {
+                                currentRound = BingoRound.ONE;
+                                diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList());
+                            } break;
+                            case THREE: {
+                                currentRound = BingoRound.TWO;
+                                diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList());
+                            } break;
+    
+                            default: 
+                                break;
+                        }
+                    }
+    
+                }
+            }
+        }
+
+    }
+
+    public int getRand(List<?> list) {
+        return random.nextInt(list.size());
+    }
+
     public void addItemFound(){
-        this.itemsFound++;
+        this.objectsFound++;
     }
     
     public String getPosDisplay(int x, int z){
@@ -49,11 +161,46 @@ public class Table implements Cloneable{
         return slot.getDisplay();
     }
 
+    public boolean checkLine(){
+
+        List<Integer> list = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            var count = 0;
+            for (int j = 0; j < 5; j++) {
+                var slot = board[i][j];
+
+                if(slot.isFound()){
+                    list.add(j);
+                    count++;
+                }
+            }
+
+            if(count == 5) {
+                return true;
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if(is5of(list, i)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public boolean is5of(List<Integer> list, Integer i){
+        var ns = list.stream().filter(n -> n == i).collect(Collectors.toList());
+        Core.getInstance().broadcastMessage(ns.toString());
+        return ns.size() == 5;
+    }
+
     public String getTitle(){
-        var percent = (itemsFound*100)/25;
+        var percent = (objectsFound*100)/25;
         var barN = (int) ((percent*barFrames.size())/100);
 
-        var bar = itemsFound < 0 ? barFrames.get(0) : barFrames.get(barN);
+        var bar = objectsFound < 0 ? barFrames.get(0) : barFrames.get(barN);
 
         return logo + neg2 + bar + neg3;
     }
@@ -67,7 +214,6 @@ public class Table implements Cloneable{
         return members.stream().anyMatch(member -> member.getMostSignificantBits() == uuid.getMostSignificantBits());
     }
 
-    
     public boolean isBingoFull(){
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -84,19 +230,8 @@ public class Table implements Cloneable{
 
     public boolean isBingoLine() {
 
-        var length = board[0].length;
-        var width = board.length;
-
-        for (var i = 0; i < length; i++) {
-            if (checkColumn(board, i)) {
-                return true;
-            }
-        }
-
-        for (var i = 0; i < width; i++) {
-            if (checkRow(board, i)) {
-                return true;
-            }
+        if(checkLine()){
+            return true;
         }
 
         if (checkDiagonal(board)) {
@@ -104,28 +239,6 @@ public class Table implements Cloneable{
         }
 
         return false;
-    }
-
-    // Method to check if all values in the column are the same
-    public boolean checkColumn(final Slot[][] matrix, final int column) {
-        var width = matrix.length;
-        for (var i = 1; i < width; i++) {
-            if (!matrix[i][column].isFound()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Method to check if all values in the row are the same
-    public boolean checkRow(final Slot[][] matrix, final int row) {
-        var length = matrix[0].length;
-        for (var i = 1; i < length; i++) {
-            if (!matrix[row][i].isFound()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     // Check if all values in the diagonal are the same

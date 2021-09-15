@@ -4,10 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.aleiv.core.paper.Core;
@@ -43,7 +41,7 @@ public class InGameListener implements Listener {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
                         var slot = board[i][j];
-                        if (slot.getMaterial() == item.getType() && !slot.isFound()) {
+                        if (slot.getItem().getType() == item.getType() && !slot.isFound()) {
                             slot.setFound(true);
 
                             var score = boards.get(uuid);
@@ -74,16 +72,6 @@ public class InGameListener implements Listener {
         if (entity instanceof Player) {
             var player = (Player) entity;
             var item = e.getItem().getItemStack();
-            attempToFind(player, item);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onInteract(PlayerInteractEvent e){
-        var action = e.getAction();
-        var item = e.getItem();
-        if(item != null && action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR){
-            var player = e.getPlayer();
             attempToFind(player, item);
         }
     }

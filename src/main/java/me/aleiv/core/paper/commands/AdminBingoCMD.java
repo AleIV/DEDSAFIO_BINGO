@@ -101,7 +101,7 @@ public class AdminBingoCMD extends BaseCommand {
             table.getMembers().add(uuid);
             
             tables.add(table);
-            instance.getBingoManager().selectItems(table);
+            table.selectItems(instance);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
         }

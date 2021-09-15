@@ -10,6 +10,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.BingoFase;
 import me.aleiv.core.paper.Game.BingoRound;
 import net.md_5.bungee.api.ChatColor;
 
@@ -26,13 +27,23 @@ public class ConfigCMD extends BaseCommand {
 
     }
 
-    @Subcommand("difficulty")
-    public void difficulty(CommandSender sender, BingoRound round){
+    @Subcommand("round")
+    public void round(CommandSender sender, BingoRound round){
         var game = instance.getGame();
 
         game.setBingoRound(round);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo round switched to " + round.toString());
+
+    }
+
+    @Subcommand("fase")
+    public void fase(CommandSender sender, BingoFase fase){
+        var game = instance.getGame();
+
+        game.setBingoFase(fase);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo fase switched to " + fase.toString());
 
     }
 

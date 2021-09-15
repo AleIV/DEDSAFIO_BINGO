@@ -7,7 +7,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
@@ -61,6 +62,8 @@ public class ScatterManager {
                 }
 
                 player.teleport(loc);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*30, 20));
                 count++;
             }
             
@@ -69,8 +72,8 @@ public class ScatterManager {
     }
 
     public boolean isSafe(final Location loc) {
-        return !(loc.getBlock().isLiquid() || loc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
-                || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid());
+        var biome = loc.getBlock().getBiome().toString();
+        return !biome.contains("OCEAN");
     }
 
     public boolean isSafeDistance(final Location loc){
@@ -110,7 +113,14 @@ public class ScatterManager {
 
     public Location generateLocation(){
         var world = Bukkit.getWorlds().get(0);
-        return genLoc(world);
+
+        var loc = genLoc(world);
+        while(!isSafeLocation(loc)){
+            loc = genLoc(world);
+        }
+        loc.setY(250);
+
+        return loc;
     }
 
     public int getR(int i){

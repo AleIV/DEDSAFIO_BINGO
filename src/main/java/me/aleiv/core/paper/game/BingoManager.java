@@ -1,10 +1,7 @@
 package me.aleiv.core.paper.game;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -13,13 +10,11 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
@@ -75,6 +70,7 @@ public class BingoManager implements Listener {
 
         var teamManager = instance.getTeamManager();
         var scatterManager = instance.getScatterManager();
+
         if (!teamManager.isTeams()) {
             // FFA CASE
 
@@ -82,7 +78,7 @@ public class BingoManager implements Listener {
                 var player = (Player) p;
                 var table = new Table();
                 game.getTables().add(table);
-                instance.getBingoManager().selectItems(table);
+                table.selectItems(instance);
                 table.getMembers().add(player.getUniqueId());
 
             });
@@ -96,7 +92,7 @@ public class BingoManager implements Listener {
 
                 var table = new Table();
                 game.getTables().add(table);
-                instance.getBingoManager().selectItems(table);
+                table.selectItems(instance);
 
                 team.getMembers().forEach(member -> {
                     table.getMembers().add(member);
@@ -124,10 +120,13 @@ public class BingoManager implements Listener {
 
         var loc = Bukkit.getWorld("lobby").getSpawnLocation();
 
-        Bukkit.getOnlinePlayers().forEach(player ->{
+        Bukkit.getOnlinePlayers().forEach(player -> {
             player.teleport(loc);
             var table = findTable(player.getUniqueId());
-            instance.broadcastMessage(ChatColor.DARK_RED + player.getName() + ChatColor.GOLD + " POINTS: " + table.getItemsFound());
+            if (table != null) {
+                instance.broadcastMessage(ChatColor.DARK_RED + player.getName() + ChatColor.GOLD + " POINTS: "
+                        + table.getObjectsFound() + 1);
+            }
 
         });
 
@@ -141,80 +140,24 @@ public class BingoManager implements Listener {
 
     }
 
-    public int getRand(List<?> list) {
-        return random.nextInt(list.size());
-    }
-
-    public void selectItems(Table table) {
-
-        var game = instance.getGame();
-        var round = game.getBingoRound();
-        var rounds = game.getRounds();
-
-        List<List<Material>> diff = new ArrayList<>();
-
-        table.getSelectedItems().clear();
-
-        var currentRound = round;
-
-        switch (round) {
-            case ITEMS_1: diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList()); break;
-            case ITEMS_2: diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList()); break;
-            case ITEMS_3: diff = rounds.get(BingoRound.ITEMS_3).stream().collect(Collectors.toList()); break;
-            default: break;
-        }
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-
-                var diffRand = getRand(diff);
-                var options = diff.get(diffRand);
-                diff.remove(diffRand);
-
-                var material = options.get(getRand(options));
-
-                table.getBoard()[i][j] = new Slot(material);
-                table.getSelectedItems().add(material);
-
-                if(diff.isEmpty()){
-                    switch (currentRound) {
-                        case ITEMS_2: {
-                            currentRound = BingoRound.ITEMS_1;
-                            diff = rounds.get(BingoRound.ITEMS_1).stream().collect(Collectors.toList());
-                        } break;
-                        case ITEMS_3: {
-                            currentRound = BingoRound.ITEMS_2;
-                            diff = rounds.get(BingoRound.ITEMS_2).stream().collect(Collectors.toList());
-                        } break;
-
-                        default: 
-                            break;
-                    }
-                }
-
-            }
-        }
-
-    }
-
     public void checkBingo(Table table, Slot slot, Player player) {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
-            //var multiplier = Team.mutiplier;
+            // var multiplier = Team.mutiplier;
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
             table.addItemFound();
-            //table.addPoints(1*multiplier);
+            // table.addPoints(1*multiplier);
 
             if (table.isBingoFull() && !table.isFoundFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
                 table.setFoundFull(true);
-                //table.addPoints(10*multiplier);
+                // table.addPoints(10*multiplier);
 
             } else if (table.isBingoLine() && !table.isFoundLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
                 table.setFoundLine(true);
-                //table.addPoints(5*multiplier);
+                // table.addPoints(5*multiplier);
             }
 
         });
@@ -222,24 +165,13 @@ public class BingoManager implements Listener {
     }
 
     public void updateBoard(FastBoard board, Table table) {
-        
-        if (table == null){
+
+        if (table == null) {
+            var fake = Slot.getFakeDisplay();
             board.updateTitle(Table.getNullTitle());
-            board.updateLines("",
-                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
-                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
-                    "",
-                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
-                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
-                    "",
-                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
-                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
-                    "",
-                    "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
-                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
-                    "", "" + Slot.getFakeDisplay() + Slot.getFakeDisplay() + Slot.getFakeDisplay()
-                            + Slot.getFakeDisplay() + Slot.getFakeDisplay(),
-                    "");
+            board.updateLines("", "" + fake + fake + fake + fake + fake, "", "" + fake + fake + fake + fake + fake, "",
+                    "" + fake + fake + fake + fake + fake, "", "" + fake + fake + fake + fake + fake, "",
+                    "" + fake + fake + fake + fake + fake, "");
 
         } else {
             board.updateTitle(table.getTitle());

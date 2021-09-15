@@ -27,6 +27,7 @@ public class Game extends BukkitRunnable {
         long gameStartTime = 0;
         GameStage gameStage;
         BingoRound bingoRound;
+        BingoFase bingoFase;
 
         Timer timer;
 
@@ -42,25 +43,25 @@ public class Game extends BukkitRunnable {
         List<Table> tables = new ArrayList<>();
         HashMap<String, FastBoard> boards = new HashMap<>();
         HashMap<Material, ItemCode> materials = new HashMap<>();
+        HashMap<Challenge, ItemCode> challenges = new HashMap<>();
 
-        HashMap<BingoRound, List<List<Material>>> rounds = new HashMap<>();
+        HashMap<BingoRound, List<List<Material>>> itemRounds = new HashMap<>();
+        HashMap<BingoRound, List<Challenge>> challengeRounds = new HashMap<>();
 
         public Game(Core instance) {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameStage = GameStage.LOBBY;
-                this.bingoRound = BingoRound.ITEMS_1;
+                this.bingoRound = BingoRound.ONE;
+                this.bingoFase = BingoFase.ITEMS;
 
                 registerMaterials();
 
-                rounds.put(BingoRound.ITEMS_1, new ArrayList<>());
+                itemRounds.put(BingoRound.ONE, new ArrayList<>());
                 registerItems_1();
 
-                rounds.put(BingoRound.ITEMS_2, new ArrayList<>());
+                itemRounds.put(BingoRound.TWO, new ArrayList<>());
                 registerItems_2();
-
-                rounds.put(BingoRound.ITEMS_3, new ArrayList<>());
-                registerItems_3();
 
         }
 
@@ -74,20 +75,29 @@ public class Game extends BukkitRunnable {
                 Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
         }
 
+
         public enum BingoRound {
-                ITEMS_1, ITEMS_2, ITEMS_3, CHALLENGE_1, CHALLENGE_2, CHALLENGE_3;
+                ONE, TWO, THREE;
         }
 
         public enum BingoType {
                 FULL, LINE;
         }
 
+        public enum BingoFase {
+                ITEMS, CHALLENGE;
+        }
+
         public enum GameStage {
                 LOBBY, STARTING, INGAME, POSTGAME;
         }
 
+        public enum Challenge {
+                JUMP_BED;
+        }
+
         public void registerItems_1() {
-                var items_1 = rounds.get(BingoRound.ITEMS_1);
+                var items_1 = itemRounds.get(BingoRound.ONE);
 
                 items_1.add(List.of(Material.DIAMOND, Material.GOLD_BLOCK, Material.LAPIS_BLOCK));
 
@@ -187,7 +197,7 @@ public class Game extends BukkitRunnable {
 
         public void registerItems_2() {
 
-                var items_2 = rounds.get(BingoRound.ITEMS_2);
+                var items_2 = itemRounds.get(BingoRound.TWO);
 
                 items_2.add(List.of(Material.SOUL_CAMPFIRE, Material.SOUL_TORCH, Material.SOUL_LANTERN));
 
@@ -221,8 +231,6 @@ public class Game extends BukkitRunnable {
 
                 items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
 
-                items_2.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
-
                 items_2.add(List.of(Material.BEETROOT_SOUP, Material.COOKIE, Material.EGG, Material.PUMPKIN_PIE,
                                 Material.COOKED_RABBIT));
 
@@ -236,14 +244,6 @@ public class Game extends BukkitRunnable {
                 items_2.add(List.of(Material.CAKE));
 
                 items_2.add(List.of(Material.COMPARATOR, Material.DAYLIGHT_DETECTOR, Material.POWERED_RAIL, Material.TNT_MINECART));
-
-        }
-
-        public void registerItems_3() {
-
-                var items_3 = rounds.get(BingoRound.ITEMS_3);
-
-                items_3.add(List.of(Material.BEE_NEST));
 
         }
 
