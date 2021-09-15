@@ -36,18 +36,20 @@ repositories {
     maven { url 'https://plugins.gradle.org/m2' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    // SonaType repo for redis dependency
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 
 dependencies {
     //Paper
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    //Lombok
+    
     // Use Protocol Lib
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0";
     // MiniMessage
     implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
-
+    // Lombok
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
@@ -56,7 +58,10 @@ dependencies {
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     //GUIs
     implementation 'com.github.noobstersmc:RapidInv:v0.0.1'
-
+    // Redis
+    implementation 'io.lettuce:lettuce-core:6.0.7.RELEASE'
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.8'
 }
 
 spigot {
