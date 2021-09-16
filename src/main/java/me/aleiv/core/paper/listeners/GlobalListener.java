@@ -14,7 +14,6 @@ import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.game.objects.Table;
-import me.aleiv.core.paper.game.objects.Timer;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -40,8 +39,8 @@ public class GlobalListener implements Listener {
             }
 
             var timer = game.getTimer();
-            if (timer != null && game.getGameStage() == GameStage.INGAME) {
-                timer.refresh(game.getGameTime());
+            if (timer.isActive()) {
+                timer.refreshTime((int) game.getGameTime());
             }
 
         });
@@ -72,8 +71,7 @@ public class GlobalListener implements Listener {
         instance.sendHeader(player, "<gradient:#5e4fa2:#f79459>Welcome to BINGOOOO!</gradient>");
 
         var timer = game.getTimer();
-        if (timer != null)
-            timer.getBossbar().addPlayer(player);
+        timer.getBossbar().addPlayer(player);
 
     }
 
@@ -125,38 +123,21 @@ public class GlobalListener implements Listener {
         switch (round) {
             case ONE: {
 
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 1200));
-
-                } else {
-                    game.setTimer(new Timer(instance, 1200));
-                }
+                timer.start(1200, (int) game.getGameTime());
 
             }
                 break;
 
             case TWO: {
 
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 1800));
-
-                } else {
-                    game.setTimer(new Timer(instance, 1800));
-                }
+                timer.start(1800, (int) game.getGameTime());
 
             }
                 break;
 
             case THREE: {
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 3600));
+                timer.start(3600, (int) game.getGameTime());
 
-                } else {
-                    game.setTimer(new Timer(instance, 3600));
-                }
             }
                 break;
 

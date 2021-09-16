@@ -16,7 +16,6 @@ import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.objects.Table;
-import me.aleiv.core.paper.game.objects.Timer;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("admin-bingo|ab|admin|ad")
@@ -55,12 +54,7 @@ public class AdminBingoCMD extends BaseCommand {
     public void setTimer(CommandSender sender, Integer seconds) {
         var game = instance.getGame();
 
-        if(game.getTimer() != null){
-            game.getTimer().delete();
-            game.setTimer(new Timer(instance, seconds));
-        }else{
-            game.setTimer(new Timer(instance, seconds));
-        }
+        game.getTimer().start(seconds, (int) game.getGameTime());
 
     }
 
