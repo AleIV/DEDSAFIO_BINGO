@@ -12,6 +12,7 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.teams.objects.Team;
+import me.aleiv.core.paper.teams.sync.RedisSyncPipeline;
 
 public class TeamManager {
     /** Static Variables */
@@ -24,19 +25,19 @@ public class TeamManager {
     private RedisClient redisClient;
     private StatefulRedisConnection<String, String> redisConnection;
     private ConcurrentHashMap<UUID, Team> teams;
+    /** Synchronisation pipeline */
+    private RedisSyncPipeline syncPipeline;
 
     public TeamManager() {
         this.teams = new ConcurrentHashMap<>();
         this.redisClient = RedisClient.create("redis://localhost");
         this.redisConnection = this.redisClient.connect();
+        this.syncPipeline = new RedisSyncPipeline(this);
     }
 
     public static void main(String[] args) throws Exception {
         var teamManager = new TeamManager();
-        // teamManager.createTeam("Pinche", UUID.randomUUID(), UUID.randomUUID(),
-        // UUID.randomUUID());
-        // teamManager.changeDataset("otherSet");
-        teamManager.restoreOldDataset("ffa");
+        // teamManager.restoreOldDataset("ffa");
 
     }
 
@@ -159,6 +160,10 @@ public class TeamManager {
      */
     private boolean validateTeam(Team team) {
         // TODO: Validate if the team is not already present elsewhere.
+        /**
+         * Should check locally, then remotely. Also, ensure a user is not present in
+         * two teams at once.
+         */
         return team != null;
     }
 
