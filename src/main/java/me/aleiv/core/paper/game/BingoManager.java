@@ -13,14 +13,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoType;
+import me.aleiv.core.paper.Game.Challenge;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
 import me.aleiv.core.paper.events.GameStartedEvent;
+import me.aleiv.core.paper.game.objects.ChallengeSlot;
 import me.aleiv.core.paper.game.objects.Slot;
 import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
@@ -56,6 +59,77 @@ public class BingoManager implements Listener {
                     }
                 });
     }
+
+    public void attempToFind(Player player, ItemStack item) {
+        var uuid = player.getUniqueId().toString();
+        var game = instance.getGame();
+
+        var manager = instance.getBingoManager();
+
+        var table = manager.findTable(player.getUniqueId());
+
+        if (table != null) {
+            var board = table.getBoard();
+            var selectedItems = table.getSelectedItems();
+
+            if (item != null && game.getGameStage() == GameStage.INGAME && selectedItems.contains(item.getType())) {
+
+                var boards = game.getBoards();
+
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        var slot = board[i][j];
+                        if (!slot.isFound() && slot.getItem().getType() == item.getType()) {
+                            slot.setFound(true);
+
+                            var score = boards.get(uuid);
+                            instance.getBingoManager().updateBoard(score, table);
+
+                            instance.getBingoManager().checkBingo(table, slot, player);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void attempToFind(Player player, Challenge challenge) {
+        var uuid = player.getUniqueId().toString();
+        var game = instance.getGame();
+
+        var manager = instance.getBingoManager();
+
+        var table = manager.findTable(player.getUniqueId());
+
+        if (table != null) {
+            var board = table.getBoard();
+            var selectedChallenges = table.getSelectedChallenge();
+
+            if (game.getGameStage() == GameStage.INGAME && selectedChallenges.contains(challenge)) {
+
+                var boards = game.getBoards();
+
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        var slot = board[i][j];
+                        if (!slot.isFound() && slot instanceof ChallengeSlot slotC && slotC.getChallenge() == challenge) {
+                            slot.setFound(true);
+
+                            var score = boards.get(uuid);
+                            instance.getBingoManager().updateBoard(score, table);
+
+                            instance.getBingoManager().checkBingo(table, slot, player);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    
 
     public void startGame() {
         var game = instance.getGame();
@@ -151,12 +225,12 @@ public class BingoManager implements Listener {
             table.addItemFound();
             // table.addPoints(1*multiplier);
 
-            if (table.isBingoFull() && !table.isFoundFull()) {
+            if (!table.isFoundFull() && table.isBingoFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
                 table.setFoundFull(true);
                 // table.addPoints(10*multiplier);
 
-            } else if (table.isBingoLine() && !table.isFoundLine()) {
+            } else if (!table.isFoundLine() && table.isBingoLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
                 table.setFoundLine(true);
                 // table.addPoints(5*multiplier);

@@ -56,12 +56,21 @@ public class Game extends BukkitRunnable {
                 this.bingoFase = BingoFase.ITEMS;
 
                 registerMaterials();
+                registerChallenges();
 
                 itemRounds.put(BingoRound.ONE, new ArrayList<>());
-                registerItems_1();
-
                 itemRounds.put(BingoRound.TWO, new ArrayList<>());
+
+                registerItems_1();
                 registerItems_2();
+
+                challengeRounds.put(BingoRound.ONE, new ArrayList<>());
+                challengeRounds.put(BingoRound.TWO, new ArrayList<>());
+                challengeRounds.put(BingoRound.THREE, new ArrayList<>());
+
+                register_challenge_1();
+                register_challenge_2();
+                register_challenge_3();
 
         }
 
@@ -681,4 +690,32 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.COD_BUCKET, new ItemCode('\uEE38'));
 
         }
+
+        public void registerChallenges(){
+                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE39', 1, "Todos los miembros deben brincar en una cama."));
+
+        }
+
+        public void register_challenge_1(){
+                var challenge_1 = challengeRounds.get(BingoRound.ONE);
+
+                challenge_1.add(Challenge.JUMP_BED);
+
+        }
+
+        public void register_challenge_2(){
+                var challenge_2 = challengeRounds.get(BingoRound.TWO);
+
+                challenge_2.add(Challenge.JUMP_BED);
+                
+        }
+
+        public void register_challenge_3(){
+                var challenge_3 = challengeRounds.get(BingoRound.THREE);
+
+                challenge_3.add(Challenge.JUMP_BED);
+                
+        }
+
+
 }

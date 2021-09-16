@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import lombok.Getter;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.Challenge;
 import net.md_5.bungee.api.ChatColor;
@@ -13,10 +14,10 @@ import us.jcedeno.libs.rapidinv.ItemBuilder;
 
 public class ChallengeSlot extends Slot{
     
-    Challenge challenge;
+    @Getter Challenge challenge;
 
     public ChallengeSlot(Challenge challenge) {
-        super(Material.AIR);
+        super(Material.PAPER);
         this.challenge = challenge;
         this.isFound = false;
 

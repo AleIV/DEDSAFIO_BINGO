@@ -22,6 +22,7 @@ import me.aleiv.core.paper.commands.ConfigCMD;
 import me.aleiv.core.paper.commands.TestCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
+import me.aleiv.core.paper.listeners.ChallengeEASY;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
@@ -69,6 +70,8 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
         Bukkit.getPluginManager().registerEvents(new InGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new LobbyListener(this), this);
+
+        Bukkit.getPluginManager().registerEvents(new ChallengeEASY(this), this);
 
 
         //COMMANDS

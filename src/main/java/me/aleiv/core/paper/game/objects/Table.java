@@ -111,13 +111,24 @@ public class Table{
     
             var currentRound = round;
     
-            switch (round) {
+            switch (currentRound) {
                 case ONE: diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList()); break;
                 case TWO: diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList()); break;
                 case THREE: diff = rounds.get(BingoRound.THREE).stream().collect(Collectors.toList()); break;
                 default: break;
             }
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    var diffRand = getRand(diff);
+                    var challenge = diff.get(diffRand);
+
+                    table.getSelectedChallenge().add(challenge);
+                    table.getBoard()[i][j] = new ChallengeSlot(challenge);
+                }
+            }
     
+            /*
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
     
@@ -145,7 +156,7 @@ public class Table{
                     }
     
                 }
-            }
+            }*/
         }
 
     }
