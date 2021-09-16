@@ -58,6 +58,8 @@ public class Table{
 
         var fase = game.getBingoFase();
 
+        this.objectsFound = -1;
+
         if(fase == BingoFase.ITEMS){
             var rounds = game.getItemRounds();
 
@@ -89,7 +91,7 @@ public class Table{
                         switch (currentRound) {
                             case TWO: {
                                 currentRound = BingoRound.ONE;
-                                diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList());
+                                diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList());
                             } break;
     
                             default: 

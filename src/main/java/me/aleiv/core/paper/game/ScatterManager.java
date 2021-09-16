@@ -7,6 +7,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -61,14 +62,21 @@ public class ScatterManager {
                     loc = generateLocation();
                 }
 
-                player.teleport(loc);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*30, 20));
+                Qteleport(player, loc);
                 count++;
             }
             
 
         }
+    }
+
+    public void Qteleport(Player player, Location loc){
+        Bukkit.getScheduler().runTaskLater(instance, task ->{
+            player.teleport(loc);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
+        }, 10);
+
     }
 
     public boolean isSafe(final Location loc) {

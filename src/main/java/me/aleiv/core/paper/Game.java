@@ -115,7 +115,7 @@ public class Game extends BukkitRunnable {
                 items_1.add(List.of(Material.CAMPFIRE, Material.LANTERN, Material.TORCH));
 
                 items_1.add(List.of(Material.BOW, Material.FISHING_ROD, Material.SHIELD, Material.CROSSBOW,
-                                Material.SHEARS));
+                                Material.SHEARS)); //FLINT AND STEAL
 
                 items_1.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT, Material.CHAIN));
 
@@ -203,47 +203,39 @@ public class Game extends BukkitRunnable {
 
                 items_2.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER));
 
-                items_2.add(List.of(Material.GLOWSTONE, Material.SHROOMLIGHT));
+                items_2.add(List.of(Material.MAGMA_CREAM, Material.FIRE_CHARGE, Material.NETHER_WART));
 
                 items_2.add(List.of(Material.ENDER_PEARL));
 
-                items_2.add(List.of(Material.TWISTING_VINES, Material.WARPED_ROOTS, Material.WARPED_STEM,
-                                Material.WARPED_WART_BLOCK));
-
-                items_2.add(List.of(Material.WEEPING_VINES, Material.CRIMSON_ROOTS, Material.NETHER_WART_BLOCK,
-                                Material.CRIMSON_STEM));
+                items_2.add(List.of(Material.GLOWSTONE, Material.SHROOMLIGHT, Material.MAGMA_BLOCK));
 
                 items_2.add(List.of(Material.CRACKED_NETHER_BRICKS,
-                                Material.CHISELED_NETHER_BRICKS, Material.POLISHED_BLACKSTONE,
-                                Material.POLISHED_BLACKSTONE_BRICKS, Material.CRACKED_POLISHED_BLACKSTONE_BRICKS,
-                                Material.CHISELED_POLISHED_BLACKSTONE, Material.POLISHED_BASALT,
+                                Material.CHISELED_NETHER_BRICKS,
                                 Material.SMOOTH_QUARTZ, Material.QUARTZ_BRICKS, Material.QUARTZ_PILLAR,
                                 Material.CHISELED_QUARTZ_BLOCK));
 
-                items_2.add(List.of(Material.NETHERRACK, Material.BLACKSTONE, Material.BASALT, Material.QUARTZ_BLOCK,
-                                Material.SOUL_SAND, Material.SOUL_SOIL));
+                items_2.add(List.of(Material.NETHERRACK, Material.QUARTZ_BLOCK));
+                //GOLD NUGGET
 
-                items_2.add(List.of(Material.MAGMA_BLOCK, Material.BONE_BLOCK, Material.GOLD_BLOCK));
+                items_2.add(List.of(Material.BLACKSTONE, Material.BASALT, Material.POLISHED_BASALT, Material.POLISHED_BLACKSTONE,
+                                        Material.POLISHED_BLACKSTONE_BRICKS, Material.CHISELED_POLISHED_BLACKSTONE));
 
-                items_2.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
+                items_2.add(List.of(Material.BONE_BLOCK, Material.SOUL_SAND, Material.SOUL_SOIL));
 
-                items_2.add(List.of(Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE, Material.FIRE_CHARGE));
-
-                items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
-
-                items_2.add(List.of(Material.BEETROOT_SOUP, Material.COOKIE, Material.EGG, Material.PUMPKIN_PIE,
-                                Material.COOKED_RABBIT));
-
-                items_2.add(List.of(Material.ANVIL, Material.ENCHANTING_TABLE));
+                items_2.add(List.of(Material.TWISTING_VINES, Material.WARPED_ROOTS, Material.WARPED_STEM,
+                                Material.WARPED_WART_BLOCK));
+                
+                items_2.add(List.of(Material.WEEPING_VINES, Material.CRIMSON_ROOTS, Material.NETHER_WART_BLOCK,
+                                Material.CRIMSON_STEM));
 
                 items_2.add(List.of(Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE));
+
+                items_2.add(List.of(Material.COMPARATOR, Material.DAYLIGHT_DETECTOR, Material.POWERED_RAIL, Material.TNT_MINECART));
 
                 items_2.add(List.of(Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SWORD,
                                 Material.DIAMOND_HOE));
 
-                items_2.add(List.of(Material.CAKE));
-
-                items_2.add(List.of(Material.COMPARATOR, Material.DAYLIGHT_DETECTOR, Material.POWERED_RAIL, Material.TNT_MINECART));
+                items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
 
         }
 

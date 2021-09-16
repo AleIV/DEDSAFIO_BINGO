@@ -2,6 +2,7 @@ package me.aleiv.core.paper.commands;
 
 import java.util.Random;
 
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,32 +32,13 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
-    @Subcommand("start")
-    public void start(CommandSender sender){
-        var game = instance.getGame();
-        if(game.getGameStage() != GameStage.LOBBY){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "The game only can be started in lobby stage. \n Restart or finish the game to replay.");
-
-        }else{
-        
-            instance.getBingoManager().startGame();
-
-        }
-
-    }
-
-    @Subcommand("restart")
-    public void restart(CommandSender sender){
-        var game = instance.getGame();
-        if(game.getGameStage() == GameStage.INGAME){
-            instance.getBingoManager().restartGame();
-
-        }else{
-            
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "The game only can be restarted in game stage.");
-
-        }
-
+    @CommandPermission("admin.perm")
+    @Subcommand("tpworld")
+    @CommandAlias("tpworld")
+    @CommandCompletion("@worlds")
+    public void tpWorld(Player player, World world) {
+        player.teleport(world.getSpawnLocation());
+        player.sendMessage(ChatColor.GRAY + "Teleported to world " + world.getName());
     }
 
     @Subcommand("locations")

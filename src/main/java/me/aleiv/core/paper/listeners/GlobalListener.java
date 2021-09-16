@@ -5,10 +5,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
@@ -92,12 +91,20 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        var player = e.getPlayer();
-        var world = Bukkit.getWorld("lobby");
-        var loc = new Location(world, 71, 126, 0, 90, -0);
-        if (player.getWorld() == world) {
-            player.teleport(loc);
+    public void onRespawn(PlayerDeathEvent e) {
+        var player = e.getEntity();
+        var lobby = Bukkit.getWorld("lobby");
+        var game = instance.getGame();
+        var scatter = instance.getScatterManager();
+
+        if (player.getWorld() == lobby) {
+            var loc = new Location(lobby, 71.5, 126, 0.5, 90, -0);
+            scatter.Qteleport(player, loc);
+            
+        }else if(game.getGameStage() ==  GameStage.INGAME){
+            var loc = scatter.generateLocation();
+            scatter.Qteleport(player, loc);
+
         }
     }
 
@@ -159,49 +166,6 @@ public class GlobalListener implements Listener {
 
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
 
-    }
-
-    @EventHandler
-    public void onJoinHide(PlayerJoinEvent e) {
-        var player = e.getPlayer();
-        // If gamemode is Spectator, then hide him from all other non spectators
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() == GameMode.SURVIVAL)
-                    .forEach(all -> all.hidePlayer(instance, player));
-        } else {
-            // If gamemode isn't Spectator, then hide all spectators for him.
-            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SURVIVAL)
-                    .forEach(all -> player.hidePlayer(instance, all.getPlayer()));
-        }
-    }
-
-    @EventHandler
-    public void onGamemodeChange(PlayerGameModeChangeEvent e) {
-        var player = e.getPlayer();
-        // If gamemode to change is spectator
-        if (e.getNewGameMode() != GameMode.SURVIVAL) {
-
-            Bukkit.getOnlinePlayers().stream().forEach(all -> {
-                // If players are not specs, hide them the player
-                if (all.getGameMode() == GameMode.SURVIVAL) {
-                    all.hidePlayer(instance, player);
-                } else {
-                    // If players are specs, then show them to the player
-                    player.showPlayer(instance, all);
-                }
-            });
-        } else {
-            Bukkit.getOnlinePlayers().stream().forEach(all -> {
-                // When switching to other gamemodes, show them if not visible to player
-                if (!all.canSee(player)) {
-                    all.showPlayer(instance, player);
-                }
-                // If one of the players is a spec, hide them from the player
-                if (all.getGameMode() != GameMode.SURVIVAL) {
-                    player.hidePlayer(instance, all);
-                }
-            });
-        }
     }
 
 }
