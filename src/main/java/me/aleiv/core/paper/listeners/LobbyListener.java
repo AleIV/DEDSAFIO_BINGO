@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -145,6 +146,15 @@ public class LobbyListener implements Listener {
     public void onDroppedItem(PlayerDropItemEvent e) {
         var player = e.getPlayer();
         if (!shouldInteract(player)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void physics(BlockPhysicsEvent e){
+        var block = e.getBlock();
+        var lobby = Bukkit.getWorld("lobby");
+        if(block.getWorld() == lobby && block != null){
             e.setCancelled(true);
         }
     }
