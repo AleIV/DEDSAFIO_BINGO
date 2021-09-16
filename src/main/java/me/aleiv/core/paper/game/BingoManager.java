@@ -201,7 +201,7 @@ public class BingoManager implements Listener {
             var table = findTable(player.getUniqueId());
             if (table != null) {
                 instance.broadcastMessage(ChatColor.DARK_RED + player.getName() + ChatColor.GOLD + " POINTS: "
-                        + (table.getObjectsFound()+1));
+                        + (table.getObjectsFound()));
             }
 
         });

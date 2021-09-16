@@ -46,7 +46,7 @@ public class Table{
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
-        this.objectsFound = -1;
+        this.objectsFound =0;
 
     }
 
@@ -58,7 +58,7 @@ public class Table{
 
         var fase = game.getBingoFase();
 
-        this.objectsFound = -1;
+        this.objectsFound = 0;
 
         if(fase == BingoFase.ITEMS){
             var rounds = game.getItemRounds();
@@ -209,7 +209,7 @@ public class Table{
     }
 
     public String getTitle(){
-        var percent = (objectsFound*100)/25;
+        var percent = ((objectsFound-1)*100)/25;
         var barN = (int) ((percent*barFrames.size())/100);
 
         var bar = objectsFound < 0 ? barFrames.get(0) : barFrames.get(barN);
