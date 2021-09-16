@@ -124,7 +124,7 @@ public class Game extends BukkitRunnable {
                 items_1.add(List.of(Material.CAMPFIRE, Material.LANTERN, Material.TORCH));
 
                 items_1.add(List.of(Material.BOW, Material.FISHING_ROD, Material.SHIELD, Material.CROSSBOW,
-                                Material.SHEARS)); //FLINT AND STEAL
+                                Material.SHEARS, Material.FLINT_AND_STEEL));
 
                 items_1.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT, Material.CHAIN));
 
@@ -224,7 +224,6 @@ public class Game extends BukkitRunnable {
                                 Material.CHISELED_QUARTZ_BLOCK));
 
                 items_2.add(List.of(Material.NETHERRACK, Material.QUARTZ_BLOCK));
-                //GOLD NUGGET
 
                 items_2.add(List.of(Material.BLACKSTONE, Material.BASALT, Material.POLISHED_BASALT, Material.POLISHED_BLACKSTONE,
                                         Material.POLISHED_BLACKSTONE_BRICKS, Material.CHISELED_POLISHED_BLACKSTONE));
@@ -688,6 +687,8 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.FIRE_CHARGE, new ItemCode('\uEE36'));
                 materials.put(Material.SALMON_BUCKET, new ItemCode('\uEE37'));
                 materials.put(Material.COD_BUCKET, new ItemCode('\uEE38'));
+                materials.put(Material.FLINT_AND_STEEL, new ItemCode('\uEE39'));
+
 
         }
 
