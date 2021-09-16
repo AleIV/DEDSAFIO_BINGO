@@ -7,7 +7,7 @@ import java.util.UUID;
  * Team
  */
 public class Team extends BaseTeam {
-    private Integer points;
+    protected Integer points;
 
     public Team(UUID teamID, List<UUID> members, String teamName) {
         super(teamID, members, teamName);
@@ -19,6 +19,12 @@ public class Team extends BaseTeam {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" + "points=" + points + ", teamID=" + teamID + ", members=" + members + ", teamName='" + teamName
+                + '\'' + '}';
     }
 
 }

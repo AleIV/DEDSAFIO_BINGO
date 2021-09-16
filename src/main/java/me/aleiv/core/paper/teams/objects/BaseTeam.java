@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class BaseTeam {
-    private UUID teamID;
-    private List<UUID> members;
-    private String teamName;
+    protected UUID teamID;
+    protected List<UUID> members;
+    protected String teamName;
 
     /**
      * @param teamID   A provided team ID.

@@ -29,6 +29,7 @@ javadoc {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
