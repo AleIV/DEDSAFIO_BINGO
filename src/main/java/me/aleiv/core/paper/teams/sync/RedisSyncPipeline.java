@@ -20,6 +20,10 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
         this.pubSubConnection.async().subscribe("dedsafio");
     }
 
+    public boolean isPipelineUp() {
+        return this.pubSubConnection.isOpen();
+    }
+
     @Override
     public void message(String channel, String message) {
         System.out.println("Received message: " + message + ", from channel " + channel);

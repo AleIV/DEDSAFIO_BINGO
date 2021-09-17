@@ -10,9 +10,14 @@ public class Program {
 
     public static void main(String[] args) throws Exception {
         var teamManager = new TeamManager();
-        teamManager.createTeam("team-" + getRandomNonNegativeInt(),
-                UUID.fromString("818eef22-df26-481c-ba2d-4254f3211212"), getRandomIds());
+        teamManager.restoreOldDataset("ffa");
         // teamManager.createTeam("team-" + getRandomNonNegativeInt(), getRandomIds());
+
+        while (teamManager.isPipelineUp()) {
+            teamManager.printContentsOfSet();
+            
+            Thread.sleep(1000);
+        }
     }
 
     private static UUID[] getRandomIds() {

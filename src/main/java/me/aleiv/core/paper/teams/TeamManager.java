@@ -40,6 +40,19 @@ public class TeamManager {
         this.syncPipeline = new RedisSyncPipeline(this);
     }
 
+    public void printContentsOfSet() {
+        System.out.println(gson.toJson(teams.values()));
+    }
+
+    /**
+     * Util function that returns the status of the pipeline.
+     * 
+     * @return the status of the pipeline.
+     */
+    public boolean isPipelineUp() {
+        return this.syncPipeline.isPipelineUp();
+    }
+
     /**
      * It changes the dataset that is used to store the teams. both locally and
      * remotely. This method will block until the operation is completed.
