@@ -1,11 +1,13 @@
 package me.aleiv.core.paper.teams.exceptions;
 
+import me.aleiv.core.paper.teams.objects.Team;
+
 public class TeamAlreadyExistsException extends Exception {
-    public TeamAlreadyExistsException(String teamName) {
-        super(String.format("Team %s already exists", teamName));
+    public TeamAlreadyExistsException(Team team) {
+        super(String.format("Team %s already exists", team.getTeamID().toString()));
     }
 
-    public static TeamAlreadyExistsException of(String teamName) {
-        return new TeamAlreadyExistsException(teamName);
+    public static TeamAlreadyExistsException of(Team team) {
+        return new TeamAlreadyExistsException(team);
     }
 }

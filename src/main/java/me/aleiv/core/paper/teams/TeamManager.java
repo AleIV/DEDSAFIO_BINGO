@@ -14,6 +14,11 @@ import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.teams.sync.RedisSyncPipeline;
 
+/**
+ * A concurrent, multi nodal, multi threaded team manager.
+ * 
+ * @author jcedeno
+ */
 public class TeamManager {
     /** Static Variables */
     private static Gson gson = new Gson();
@@ -33,12 +38,6 @@ public class TeamManager {
         this.redisClient = RedisClient.create("redis://localhost");
         this.redisConnection = this.redisClient.connect();
         this.syncPipeline = new RedisSyncPipeline(this);
-    }
-
-    public static void main(String[] args) throws Exception {
-        var teamManager = new TeamManager();
-        // teamManager.restoreOldDataset("ffa");
-
     }
 
     /**
@@ -130,7 +129,7 @@ public class TeamManager {
      * @return The created team.
      * @throws TeamAlreadyExistsException If the team already exists.
      */
-    public Team createTeam(String teamName, UUID[] uuids) throws TeamAlreadyExistsException {
+    public Team createTeam(String teamName, UUID... uuids) throws TeamAlreadyExistsException {
         return createTeam(teamName, UUID.randomUUID(), uuids);
     }
 
@@ -145,8 +144,9 @@ public class TeamManager {
      */
     public Team registerTeam(Team team) throws TeamAlreadyExistsException {
         if (!validateTeam(team)) {
-            throw TeamAlreadyExistsException.of(team.getTeamName());
+            throw TeamAlreadyExistsException.of(team);
         }
+        redisConnection.sync().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
         teams.put(team.getTeamID(), team);
         // TODO: Add logic to register the team once validated.
         return team;
@@ -164,7 +164,14 @@ public class TeamManager {
          * Should check locally, then remotely. Also, ensure a user is not present in
          * two teams at once.
          */
+        if (redisConnection.isOpen())
+            return !redisConnection.sync().hexists(dataset, team.getTeamID().toString());
+
         return team != null;
+    }
+
+    public RedisClient getRedisClient() {
+        return this.redisClient;
     }
 
 }
