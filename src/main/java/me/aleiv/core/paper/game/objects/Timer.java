@@ -13,6 +13,7 @@ import lombok.Setter;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.utilities.Frames;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
 
 public class Timer {
 
@@ -21,8 +22,11 @@ public class Timer {
     int startTime;
     int seconds;
 
-    String neg1;
-    String neg2;
+    static String neg1 = NegativeSpaces.get(-39);
+    static String neg2 = NegativeSpaces.get(8);
+    static String neg3 = NegativeSpaces.get(-48);
+    static String neg4 = NegativeSpaces.get(24);
+    
 
     @Getter BossBar bossbar;
 
@@ -43,19 +47,15 @@ public class Timer {
         this.bossbar = Bukkit.createBossBar(new NamespacedKey(instance, "TIMER"), "", BarColor.WHITE, BarStyle.SOLID);
         bossbar.setVisible(false);
 
-        Bukkit.getOnlinePlayers().forEach(player ->{
-            bossbar.addPlayer(player);
-        });
-
-        clock1 = Frames.getFramesCharsIntegers(120, 140);
-        clock2 = Frames.getFramesCharsIntegers(120, 140);
-        clock3 = Frames.getFramesCharsIntegers(120, 140);
+        clock1 = Frames.getFramesCharsIntegers(200, 219);
+        clock2 = Frames.getFramesCharsIntegers(220, 239);
+        clock3 = Frames.getFramesCharsIntegers(240, 259);
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
 
             bossbar.setTitle(getClockFormat());
 
-        }, 2L, 1L);
+        }, 1L, 1L);
         
     }
 
@@ -70,17 +70,17 @@ public class Timer {
         currentClock++;
 
         var stringBuilder = new StringBuilder();
-        if(time <= 600){
-            var clock = clock2.get(n);
-            stringBuilder.append(this.time + clock);
-
-        }else if(time <= 60){
+        if(time <= 30){
             var clock = clock3.get(n);
-            stringBuilder.append(this.time + clock);
+            stringBuilder.append(clock + this.time);
+
+        }else if(time <= 600){
+            var clock = clock2.get(n);
+            stringBuilder.append(clock + this.time);
 
         }else{
             var clock = clock1.get(n);
-            stringBuilder.append(this.time + clock);
+            stringBuilder.append(clock + this.time);
         }
 
         return stringBuilder.toString();
@@ -92,8 +92,8 @@ public class Timer {
         int minutes = (t % 3600) / 60;
         int seconds = t % 60;
 
-        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
-                : String.format("%02d:%02d", minutes, seconds);
+        return (hours > 0 ? neg1 + neg2 + String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        : neg3 + neg4 + String.format("%02d:%02d", minutes, seconds));
     }
 
 

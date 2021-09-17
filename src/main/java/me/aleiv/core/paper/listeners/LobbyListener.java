@@ -120,7 +120,7 @@ public class LobbyListener implements Listener {
         var manager = instance.getBingoManager();
         var table = manager.findTable(player.getUniqueId());
         var lobby = Bukkit.getWorld("lobby");
-        var loc = new Location(lobby, 71.5, 126, 0.5, 90, -0);
+        var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
 
         if(game.getGameStage() != GameStage.INGAME){
             player.teleport(loc);

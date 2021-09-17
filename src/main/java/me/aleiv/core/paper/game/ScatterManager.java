@@ -10,10 +10,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.teams.objects.Team;
+import me.aleiv.core.paper.utilities.Frames;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
 @Data
@@ -71,11 +74,58 @@ public class ScatterManager {
     }
 
     public void Qteleport(Player player, Location loc){
-        Bukkit.getScheduler().runTaskLater(instance, task ->{
-            player.teleport(loc);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
-        }, 10);
+        var preTeleport = Frames.getFramesCharsIntegers(261, 308);
+        var postTeleport = Frames.getFramesCharsIntegers(310, 359);
+        var fullTeleport = Character.toString('\uE309');
+        var startTeleport = Character.toString('\uE260');
+
+        var task = new BukkitTCT();
+
+        task.addWithDelay(new BukkitRunnable(){
+            @Override
+            public void run(){
+                instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
+                player.playSound(loc, "teleport1", 1, 1);
+
+            }
+            
+        }, 50);
+
+        preTeleport.forEach(frame->{
+            task.addWithDelay(new BukkitRunnable(){
+                @Override
+                public void run(){
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
+                }
+                
+            }, 50);
+        });
+
+        task.addWithDelay(new BukkitRunnable(){
+            @Override
+            public void run(){
+                instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
+                player.teleport(loc);
+                player.playSound(loc, "teleport2", 1, 1);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
+
+            }
+            
+        }, 50);
+
+        postTeleport.forEach(frame->{
+            task.addWithDelay(new BukkitRunnable(){
+                @Override
+                public void run(){
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
+                }
+                
+            }, 50);
+        });
+
+
+        task.execute();
 
     }
 

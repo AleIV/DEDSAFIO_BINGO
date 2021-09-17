@@ -31,8 +31,8 @@ public class Table{
     @Getter @Setter boolean foundFull;
     @Getter int objectsFound;
 
-    public @Setter static String neg2 = NegativeSpaces.get(-8);
-    public @Setter static String neg3 = NegativeSpaces.get(-6);
+    private static String neg2 = NegativeSpaces.get(-8);
+    private static String neg3 = NegativeSpaces.get(-6);
     
     public static String logo = Character.toString('\uEAA1');
     public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 19);
@@ -84,7 +84,7 @@ public class Table{
     
                     var material = options.get(getRand(options));
     
-                    table.getBoard()[i][j] = new Slot(material);
+                    table.getBoard()[i][j] = new Slot(instance, material);
                     table.getSelectedItems().add(material);
     
                     if(diff.isEmpty()){
@@ -124,7 +124,8 @@ public class Table{
                     var challenge = diff.get(diffRand);
 
                     table.getSelectedChallenge().add(challenge);
-                    table.getBoard()[i][j] = new ChallengeSlot(challenge);
+                    table.getBoard()[i][j] = new ChallengeSlot(instance, challenge);
+                    diff.remove(challenge);
                 }
             }
     

@@ -96,7 +96,7 @@ public class GlobalListener implements Listener {
         var scatter = instance.getScatterManager();
 
         if (player.getWorld() == lobby) {
-            var loc = new Location(lobby, 71.5, 126, 0.5, 90, -0);
+            var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
             scatter.Qteleport(player, loc);
             
         }else if(game.getGameStage() ==  GameStage.INGAME){

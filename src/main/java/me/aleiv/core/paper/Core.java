@@ -51,14 +51,12 @@ public class Core extends JavaPlugin {
         instance = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-        
-        game = new Game(this);
-        game.runTaskTimerAsynchronously(this, 0L, 20L);
-
-        
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         NegativeSpaces.registerCodes();
+        
+        game = new Game(this);
+        game.runTaskTimerAsynchronously(this, 0L, 20L);
 
         bingoManager = new BingoManager(this);
         teamManager = new TeamManager(this);
