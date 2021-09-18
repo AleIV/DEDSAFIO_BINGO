@@ -1,5 +1,7 @@
 package me.aleiv.core.paper.teams.sync;
 
+import com.google.gson.Gson;
+
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import me.aleiv.core.paper.teams.TeamManager;
@@ -9,6 +11,7 @@ import me.aleiv.core.paper.teams.TeamManager;
  * achieve the goal.
  */
 public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
+    private static Gson gson = new Gson();
     private TeamManager teamManager;
     private StatefulRedisPubSubConnection<String, String> pubSubConnection;
 
@@ -17,7 +20,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
         this.pubSubConnection = teamManager.getRedisClient().connectPubSub();
         /** Add the listener */
         this.pubSubConnection.addListener(this);
-        this.pubSubConnection.async().subscribe("dedsafio");
+        this.pubSubConnection.async().subscribe("dedsafio:events", "dedsafio:sync", "dedsafio:auth");
     }
 
     public boolean isPipelineUp() {

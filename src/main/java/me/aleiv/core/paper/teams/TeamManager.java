@@ -73,12 +73,12 @@ public class TeamManager {
     private void backupDataset() {
         if (!teams.isEmpty() && redisConnection.isOpen()) {
             // Key in format dataset:timeStamp:nodeId
-            var key = this.dataset + ":" + System.currentTimeMillis() + ":" + nodeId;
+            var field = this.dataset + ":" + System.currentTimeMillis() + ":" + nodeId;
             // Value in format json, contains all teams as an array of teams.
             var value = gson.toJson(teams.values());
             // Connect and backup the old data set.
             var syncCon = redisConnection.sync();
-            syncCon.hset(BACKUP_SET, key, value);
+            syncCon.hset(BACKUP_SET, field, value);
         }
     }
 
@@ -117,6 +117,8 @@ public class TeamManager {
         // Perform the change of data
         teams.clear();
         teams.putAll(newTeamsMap);
+        
+        System.out.println("Succesfully restored dataset: " + oldSet);
         // TODO: Communicate update to other nodes.
     }
 
