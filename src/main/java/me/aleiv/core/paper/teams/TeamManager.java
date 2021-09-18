@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
+import me.aleiv.core.paper.teams.exceptions.EmptyDatasetException;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.teams.sync.RedisSyncPipeline;
@@ -38,6 +39,18 @@ public class TeamManager {
         this.redisClient = RedisClient.create("redis://localhost");
         this.redisConnection = this.redisClient.connect();
         this.syncPipeline = new RedisSyncPipeline(this);
+    }
+
+    public void initialize() {
+        // Ask redis if there is an ongoing sync in the db
+        var c = redisConnection.sync();
+        if (c.hlen(dataset) != 0) {
+            // Restore all the current data
+            c.hgetall(dataset).forEach((k, v) -> {
+                var team = gson.fromJson(v, Team.class);
+                teams.put(team.getTeamID(), team);
+            });
+        }
     }
 
     public void printContentsOfSet() {
@@ -86,12 +99,16 @@ public class TeamManager {
      * It restores the old dataset. Once the update is deamed succesful, the
      * function will communicate to other nodes of the changes.
      * 
+     * @throws EmptyDatasetException If the historical-sets hash is not present.
      * @param oldSet The old dataset name to be restored.
      */
-    public void restoreOldDataset(String oldSet) {
+    public void restoreOldDataset(String oldSet) throws EmptyDatasetException {
         // Create a synchronous connection to redis.
         var syncCon = redisConnection.sync();
         var keys = syncCon.hkeys(BACKUP_SET);
+        // Check if the historical-sets is empty
+        if (keys.isEmpty())
+            throw new EmptyDatasetException(BACKUP_SET + " does not contain any hashes.");
         var matchedFields = new ArrayList<String>();
         // Iterate through to find those that match the old set.
         for (var key : keys) {
@@ -100,8 +117,12 @@ public class TeamManager {
             if (parsed.length > 1 && parsed[0].equals(oldSet))
                 matchedFields.add(key);
         }
+        if (keys.isEmpty())
+            throw new EmptyDatasetException(
+                    "Dataset " + oldSet + " is not present in the backup set " + BACKUP_SET + ".");
         // Turn the matchedFields list into an array of strings.
-        var matchedFieldValues = syncCon.hmget(BACKUP_SET, matchedFields.toArray(new String[0]));
+        final var matchedFieldsArray = matchedFields.toArray(new String[0]);
+        var matchedFieldValues = syncCon.hmget(BACKUP_SET, matchedFieldsArray);
         var newTeamsMap = new HashMap<UUID, Team>();
         // Iterate through the matchedFieldValues and parse them into teams.
         for (var fieldValues : matchedFieldValues) {
@@ -117,7 +138,7 @@ public class TeamManager {
         // Perform the change of data
         teams.clear();
         teams.putAll(newTeamsMap);
-        
+
         System.out.println("Succesfully restored dataset: " + oldSet);
         // TODO: Communicate update to other nodes.
     }
@@ -163,7 +184,7 @@ public class TeamManager {
         }
         redisConnection.sync().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
         teams.put(team.getTeamID(), team);
-        // TODO: Add logic to register the team once validated.
+        
         return team;
     }
 
@@ -187,6 +208,14 @@ public class TeamManager {
 
     public RedisClient getRedisClient() {
         return this.redisClient;
+    }
+
+    /**
+     * A method that performs a total disconnection from the redis server.
+     */
+    public void disconect() {
+        this.redisConnection.close();
+        this.syncPipeline.closePubSubConnection();
     }
 
 }

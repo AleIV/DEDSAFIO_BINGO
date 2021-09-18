@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import me.aleiv.core.paper.teams.TeamManager;
+import me.aleiv.core.paper.teams.objects.Team;
 
 /**
  * Redis pipeline for team synchronization. Uses a Redis PubSub connection to
@@ -23,6 +24,11 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
         this.pubSubConnection.async().subscribe("dedsafio:events", "dedsafio:sync", "dedsafio:auth");
     }
 
+    public void communicateCreation(Team team) {
+        
+
+    }
+
     public boolean isPipelineUp() {
         return this.pubSubConnection.isOpen();
     }
@@ -30,7 +36,6 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
     @Override
     public void message(String channel, String message) {
         System.out.println("Received message: " + message + ", from channel " + channel);
-        
 
     }
 
@@ -62,6 +67,10 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
     public void punsubscribed(String pattern, long count) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void closePubSubConnection() {
+        this.pubSubConnection.close();
     }
 
 }
