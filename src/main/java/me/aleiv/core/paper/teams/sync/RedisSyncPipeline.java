@@ -30,6 +30,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
     @Override
     public void message(String channel, String message) {
         System.out.println("Received message: " + message + ", from channel " + channel);
+        
 
     }
 
