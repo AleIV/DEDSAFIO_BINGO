@@ -3,11 +3,15 @@ package me.aleiv.core.paper.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
@@ -40,7 +44,9 @@ public class GlobalListener implements Listener {
 
             var timer = game.getTimer();
             if (timer.isActive()) {
-                timer.refreshTime((int) game.getGameTime());
+                var currentTime = (int) game.getGameTime();
+                timer.refreshTime(currentTime);
+
             }
 
         });
@@ -89,6 +95,16 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
+    public void onRespawn(PlayerRespawnEvent e){
+        var player = e.getPlayer();
+        var lobby = Bukkit.getWorld("lobby");
+        if(player.getWorld() == lobby){
+            var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
+            e.setRespawnLocation(loc);
+        }
+    }
+
+    @EventHandler
     public void onRespawn(PlayerDeathEvent e) {
         var player = e.getEntity();
         var lobby = Bukkit.getWorld("lobby");
@@ -100,9 +116,22 @@ public class GlobalListener implements Listener {
             scatter.Qteleport(player, loc);
             
         }else if(game.getGameStage() ==  GameStage.INGAME){
-            var loc = scatter.generateLocation();
-            scatter.Qteleport(player, loc);
+            player.setHealth(20);
+            player.setGameMode(GameMode.SPECTATOR);
 
+            var loc = scatter.generateLocation();
+            Bukkit.getScheduler().runTaskLater(instance, task ->{
+                scatter.Qteleport(player, loc);
+            }, 20*5);
+
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e){
+        var entity = e.getEntity();
+        if(entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR && e.getCause() == DamageCause.VOID){
+            e.setCancelled(true);
         }
     }
 
@@ -112,9 +141,8 @@ public class GlobalListener implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
             player.setHealth(20.0);
-            player.setSaturation(20.0f);
+            player.setFoodLevel(20);
         });
 
         var round = game.getBingoRound();

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,7 +18,6 @@ import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
-import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class ScatterManager {
@@ -38,41 +38,6 @@ public class ScatterManager {
         return null;
     }
 
-    public void runScatter(){
-
-        var manager = instance.getTeamManager();
-        var game = instance.getGame();
-
-        if(manager.isTeams()){
-
-        }else{
-
-            if(safeLocations.isEmpty()){
-                instance.broadcastMessage(ChatColor.of(game.getColor3()) + "Not generated locations.");
-            }
-
-            var players = Bukkit.getOnlinePlayers();
-
-            
-            var count = 0;
-            for (var player : players) {
-                Location loc;
-
-                if(count < safeLocations.size()){
-                    loc = safeLocations.get(count);
-
-                }else{
-                    loc = generateLocation();
-                }
-
-                Qteleport(player, loc);
-                count++;
-            }
-            
-
-        }
-    }
-
     public void Qteleport(Player player, Location loc){
         var preTeleport = Frames.getFramesCharsIntegers(261, 308);
         var postTeleport = Frames.getFramesCharsIntegers(310, 359);
@@ -85,7 +50,7 @@ public class ScatterManager {
             @Override
             public void run(){
                 instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
-                player.playSound(loc, "teleport1", 1, 1);
+                player.playSound(loc, "bingo.tpstart", 1, 1);
 
             }
             
@@ -106,8 +71,9 @@ public class ScatterManager {
             public void run(){
                 instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
                 player.teleport(loc);
-                player.playSound(loc, "teleport2", 1, 1);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
+                player.setGameMode(GameMode.SURVIVAL);
+                player.playSound(loc, "bingo.tpfinish", 1, 1);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*7, 20));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
 
             }

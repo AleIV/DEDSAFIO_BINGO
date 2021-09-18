@@ -51,10 +51,10 @@ public class Slot {
         String c = Character.toString(code);
 
         if(isFound){
-            return found + negativeSpace + c;
+            return c + negativeSpace + found;
 
         }else{
-            return normal + negativeSpace + c;
+            return c + negativeSpace + normal;
 
         }
     }

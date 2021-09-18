@@ -15,6 +15,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.game.objects.BingoTableGUI;
+import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
@@ -42,18 +43,19 @@ public class TestCMD extends BaseCommand {
     public void test(Player sender){
         var task = new BukkitTCT();
 
-        for (int i = 0; i < 5; i++) {
-            final var u = i;
-            task.addWithDelay(new BukkitRunnable(){
+        var countdown = Frames.getFramesCharsIntegers(361, 489);
+        
+        countdown.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    instance.broadcastMessage("TEST " + u);
-                    var world = Bukkit.getWorlds().get(0);
-                    sender.teleport(world.getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        instance.sendActionBar(player, frame + "");
+                    });
                 }
-                
-            }, 1000);
-        }
+
+            }, 100);
+        });
 
         task.execute();
 

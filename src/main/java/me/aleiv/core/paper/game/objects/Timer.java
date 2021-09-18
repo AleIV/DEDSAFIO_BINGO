@@ -70,6 +70,7 @@ public class Timer {
         currentClock++;
 
         var stringBuilder = new StringBuilder();
+
         if(time <= 30){
             var clock = clock3.get(n);
             stringBuilder.append(clock + this.time);
@@ -97,12 +98,23 @@ public class Timer {
     }
 
 
+    public int getTime(int currentTime){
+        return (startTime + seconds) - currentTime;
+    }
+
     public void refreshTime(int currentTime){
         var time = (startTime + seconds) - currentTime;
         var game = instance.getGame();
+
+        if(time == 30 && game.getGameStage() == GameStage.INGAME){
+            Bukkit.getOnlinePlayers().forEach(player ->{
+                var loc = player.getLocation();
+                player.playSound(loc, "bingo.alarm", 1, 1);
+            });
+        }
+
         if(time < 0){
-            delete();
-            isActive = false;
+            this.time = neg3 + neg4 + "00:00";
             if(game.getGameStage() == GameStage.INGAME){
                 instance.getBingoManager().restartGame();
             }
@@ -111,6 +123,13 @@ public class Timer {
             this.time = timeConvert((int) time);
 
         }
+
+        if(time < -10){
+            delete();
+            setActive(false);
+        }
+
+        
     }
 
     public void delete(){
