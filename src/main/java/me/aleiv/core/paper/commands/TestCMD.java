@@ -14,7 +14,8 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.game.objects.Table;
+import me.aleiv.core.paper.game.objects.BingoTableGUI;
+import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
@@ -42,32 +43,51 @@ public class TestCMD extends BaseCommand {
     public void test(Player sender){
         var task = new BukkitTCT();
 
-        for (int i = 0; i < 5; i++) {
-            final var u = i;
-            task.addWithDelay(new BukkitRunnable(){
+        var countdown = Frames.getFramesCharsIntegers(361, 489);
+        
+        countdown.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    instance.broadcastMessage("TEST " + u);
-                    var world = Bukkit.getWorlds().get(0);
-                    sender.teleport(world.getSpawnLocation().add(random.nextInt(10) , 10, random.nextInt(10)));
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        instance.sendActionBar(player, frame + "");
+                    });
                 }
-                
-            }, 1000);
-        }
+
+            }, 100);
+        });
 
         task.execute();
+
+    }
+/*
+    @Subcommand("neg1")
+    public void neg1(CommandSender sender, Integer neg){
+        Timer.setNeg1(NegativeSpaces.get(neg));
 
     }
 
     @Subcommand("neg2")
     public void neg2(CommandSender sender, Integer neg){
-        Table.setNeg2(NegativeSpaces.get(neg));
+        Timer.setNeg2(NegativeSpaces.get(neg));
 
     }
 
     @Subcommand("neg3")
     public void neg3(CommandSender sender, Integer neg){
-        Table.setNeg3(NegativeSpaces.get(neg));
+        Timer.setNeg3(NegativeSpaces.get(neg));
+
+    }*/
+
+    @Subcommand("neg")
+    public void neg(CommandSender sender, Integer neg){
+        BingoTableGUI.neg3 = NegativeSpaces.get(neg);
+
+    }
+
+    @Subcommand("neg4")
+    public void neg4(CommandSender sender, Integer neg){
+        BingoTableGUI.neg4 = NegativeSpaces.get(neg);
 
     }
 

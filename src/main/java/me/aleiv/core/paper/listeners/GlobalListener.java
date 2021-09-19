@@ -2,9 +2,13 @@ package me.aleiv.core.paper.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -14,7 +18,6 @@ import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.game.objects.Table;
-import me.aleiv.core.paper.game.objects.Timer;
 import me.aleiv.core.paper.utilities.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 
@@ -40,8 +43,10 @@ public class GlobalListener implements Listener {
             }
 
             var timer = game.getTimer();
-            if (timer != null && game.getGameStage() == GameStage.INGAME) {
-                timer.refresh(game.getGameTime());
+            if (timer.isActive()) {
+                var currentTime = (int) game.getGameTime();
+                timer.refreshTime(currentTime);
+
             }
 
         });
@@ -72,8 +77,7 @@ public class GlobalListener implements Listener {
         instance.sendHeader(player, "<gradient:#5e4fa2:#f79459>Welcome to BINGOOOO!</gradient>");
 
         var timer = game.getTimer();
-        if (timer != null)
-            timer.getBossbar().addPlayer(player);
+        timer.getBossbar().addPlayer(player);
 
     }
 
@@ -91,11 +95,43 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
+    public void onRespawn(PlayerRespawnEvent e){
         var player = e.getPlayer();
-        var world = Bukkit.getWorld("lobby");
-        if (player.getWorld() == world) {
-            player.teleport(world.getSpawnLocation());
+        var lobby = Bukkit.getWorld("lobby");
+        if(player.getWorld() == lobby){
+            var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
+            e.setRespawnLocation(loc);
+        }
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerDeathEvent e) {
+        var player = e.getEntity();
+        var lobby = Bukkit.getWorld("lobby");
+        var game = instance.getGame();
+        var scatter = instance.getScatterManager();
+
+        if (player.getWorld() == lobby) {
+            var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
+            scatter.Qteleport(player, loc);
+            
+        }else if(game.getGameStage() ==  GameStage.INGAME){
+            player.setHealth(20);
+            player.setGameMode(GameMode.SPECTATOR);
+
+            var loc = scatter.generateLocation();
+            Bukkit.getScheduler().runTaskLater(instance, task ->{
+                scatter.Qteleport(player, loc);
+            }, 20*5);
+
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e){
+        var entity = e.getEntity();
+        if(entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR && e.getCause() == DamageCause.VOID){
+            e.setCancelled(true);
         }
     }
 
@@ -105,9 +141,8 @@ public class GlobalListener implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
             player.setHealth(20.0);
-            player.setSaturation(20.0f);
+            player.setFoodLevel(20);
         });
 
         var round = game.getBingoRound();
@@ -116,38 +151,21 @@ public class GlobalListener implements Listener {
         switch (round) {
             case ONE: {
 
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 1200));
-
-                } else {
-                    game.setTimer(new Timer(instance, 1200));
-                }
+                timer.start(1200, (int) game.getGameTime());
 
             }
                 break;
 
             case TWO: {
 
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 1800));
-
-                } else {
-                    game.setTimer(new Timer(instance, 1800));
-                }
+                timer.start(1800, (int) game.getGameTime());
 
             }
                 break;
 
             case THREE: {
-                if (timer != null) {
-                    timer.delete();
-                    game.setTimer(new Timer(instance, 3600));
+                timer.start(3600, (int) game.getGameTime());
 
-                } else {
-                    game.setTimer(new Timer(instance, 3600));
-                }
             }
                 break;
 
@@ -157,49 +175,6 @@ public class GlobalListener implements Listener {
 
         instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
 
-    }
-
-    @EventHandler
-    public void onJoinHide(PlayerJoinEvent e) {
-        var player = e.getPlayer();
-        // If gamemode is Spectator, then hide him from all other non spectators
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() == GameMode.SURVIVAL)
-                    .forEach(all -> all.hidePlayer(instance, player));
-        } else {
-            // If gamemode isn't Spectator, then hide all spectators for him.
-            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SURVIVAL)
-                    .forEach(all -> player.hidePlayer(instance, all.getPlayer()));
-        }
-    }
-
-    @EventHandler
-    public void onGamemodeChange(PlayerGameModeChangeEvent e) {
-        var player = e.getPlayer();
-        // If gamemode to change is spectator
-        if (e.getNewGameMode() != GameMode.SURVIVAL) {
-
-            Bukkit.getOnlinePlayers().stream().forEach(all -> {
-                // If players are not specs, hide them the player
-                if (all.getGameMode() == GameMode.SURVIVAL) {
-                    all.hidePlayer(instance, player);
-                } else {
-                    // If players are specs, then show them to the player
-                    player.showPlayer(instance, all);
-                }
-            });
-        } else {
-            Bukkit.getOnlinePlayers().stream().forEach(all -> {
-                // When switching to other gamemodes, show them if not visible to player
-                if (!all.canSee(player)) {
-                    all.showPlayer(instance, player);
-                }
-                // If one of the players is a spec, hide them from the player
-                if (all.getGameMode() != GameMode.SURVIVAL) {
-                    player.hidePlayer(instance, all);
-                }
-            });
-        }
     }
 
 }

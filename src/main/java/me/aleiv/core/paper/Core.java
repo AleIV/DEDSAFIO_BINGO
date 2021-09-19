@@ -22,6 +22,7 @@ import me.aleiv.core.paper.commands.ConfigCMD;
 import me.aleiv.core.paper.commands.TestCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
+import me.aleiv.core.paper.listeners.ChallengeEASY;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
@@ -50,13 +51,12 @@ public class Core extends JavaPlugin {
         instance = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-
-        game = new Game(this);
-        game.runTaskTimerAsynchronously(this, 0L, 20L);
-
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         NegativeSpaces.registerCodes();
+        
+        game = new Game(this);
+        game.runTaskTimerAsynchronously(this, 0L, 20L);
 
         bingoManager = new BingoManager(this);
         scatterManager = new ScatterManager(this);
@@ -68,7 +68,7 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new LobbyListener(this), this);
 
-        // COMMANDS
+        Bukkit.getPluginManager().registerEvents(new ChallengeEASY(this), this);
 
         commandManager = new PaperCommandManager(this);
 
@@ -83,7 +83,7 @@ public class Core extends JavaPlugin {
 
         Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
-            worldCreator.environment(Environment.NORMAL);
+            worldCreator.environment(Environment.THE_END);
             worldCreator.createWorld();
 
             Bukkit.getWorlds().forEach(world -> {

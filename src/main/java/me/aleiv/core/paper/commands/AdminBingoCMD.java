@@ -2,6 +2,7 @@ package me.aleiv.core.paper.commands;
 
 import java.util.Random;
 
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,6 @@ import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.objects.Table;
-import me.aleiv.core.paper.game.objects.Timer;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("admin-bingo|ab|admin|ad")
@@ -31,32 +31,13 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
-    @Subcommand("start")
-    public void start(CommandSender sender){
-        var game = instance.getGame();
-        if(game.getGameStage() != GameStage.LOBBY){
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "The game only can be started in lobby stage. \n Restart or finish the game to replay.");
-
-        }else{
-        
-            instance.getBingoManager().startGame();
-
-        }
-
-    }
-
-    @Subcommand("restart")
-    public void restart(CommandSender sender){
-        var game = instance.getGame();
-        if(game.getGameStage() == GameStage.INGAME){
-            instance.getBingoManager().restartGame();
-
-        }else{
-            
-            sender.sendMessage(ChatColor.of(game.getColor3()) + "The game only can be restarted in game stage.");
-
-        }
-
+    @CommandPermission("admin.perm")
+    @Subcommand("tpworld")
+    @CommandAlias("tpworld")
+    @CommandCompletion("@worlds")
+    public void tpWorld(Player player, World world) {
+        player.teleport(world.getSpawnLocation());
+        player.sendMessage(ChatColor.GRAY + "Teleported to world " + world.getName());
     }
 
     @Subcommand("locations")
@@ -73,12 +54,7 @@ public class AdminBingoCMD extends BaseCommand {
     public void setTimer(CommandSender sender, Integer seconds) {
         var game = instance.getGame();
 
-        if(game.getTimer() != null){
-            game.getTimer().delete();
-            game.setTimer(new Timer(instance, seconds));
-        }else{
-            game.setTimer(new Timer(instance, seconds));
-        }
+        game.getTimer().start(seconds, (int) game.getGameTime());
 
     }
 

@@ -5,15 +5,19 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.teams.objects.Team;
-import net.md_5.bungee.api.ChatColor;
+import me.aleiv.core.paper.utilities.Frames;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 
 @Data
 public class ScatterManager {
@@ -34,41 +38,61 @@ public class ScatterManager {
         return null;
     }
 
-    public void runScatter(){
+    public void Qteleport(Player player, Location loc){
+        var preTeleport = Frames.getFramesCharsIntegers(261, 308);
+        var postTeleport = Frames.getFramesCharsIntegers(310, 359);
+        var fullTeleport = Character.toString('\uE309');
+        var startTeleport = Character.toString('\uE260');
 
-        var manager = instance.getTeamManager();
-        var game = instance.getGame();
+        var task = new BukkitTCT();
 
-        if(manager.isTeams()){
+        task.addWithDelay(new BukkitRunnable(){
+            @Override
+            public void run(){
+                instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
+                player.playSound(loc, "bingo.tpstart", 1, 1);
 
-        }else{
-
-            if(safeLocations.isEmpty()){
-                instance.broadcastMessage(ChatColor.of(game.getColor3()) + "Not generated locations.");
             }
-
-            var players = Bukkit.getOnlinePlayers();
-
             
-            var count = 0;
-            for (var player : players) {
-                Location loc;
+        }, 50);
 
-                if(count < safeLocations.size()){
-                    loc = safeLocations.get(count);
-
-                }else{
-                    loc = generateLocation();
+        preTeleport.forEach(frame->{
+            task.addWithDelay(new BukkitRunnable(){
+                @Override
+                public void run(){
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
                 }
+                
+            }, 50);
+        });
 
+        task.addWithDelay(new BukkitRunnable(){
+            @Override
+            public void run(){
+                instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
                 player.teleport(loc);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*5, 20));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*30, 20));
-                count++;
+                player.setGameMode(GameMode.SURVIVAL);
+                player.playSound(loc, "bingo.tpfinish", 1, 1);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*7, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
+
             }
             
+        }, 50);
 
-        }
+        postTeleport.forEach(frame->{
+            task.addWithDelay(new BukkitRunnable(){
+                @Override
+                public void run(){
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
+                }
+                
+            }, 50);
+        });
+
+
+        task.execute();
+
     }
 
     public boolean isSafe(final Location loc) {

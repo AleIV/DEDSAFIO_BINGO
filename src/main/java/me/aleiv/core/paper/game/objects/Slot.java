@@ -1,9 +1,9 @@
 package me.aleiv.core.paper.game.objects;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,11 +26,10 @@ public class Slot {
     public static String normal = Character.toString('\uEAA2');
     public static String found = Character.toString('\uEAA3');
 
-    public Slot(Material material) {
+    public Slot(Core instance, Material material) {
         this.material = material;
         this.isFound = false;
 
-        var instance = Core.getInstance();
         var game = instance.getGame();
 
         var itemCode = game.getMaterials().get(material);
@@ -39,13 +38,10 @@ public class Slot {
 
     public ItemStack getItem(){
         ItemStack item;
-        var name = material.toString().replace("_", "");
+        var name = material.toString().replace("_", " ");
 
-        if(isFound){
-            item = new ItemBuilder(material).name(ChatColor.of("#38db1f") + name).enchant(Enchantment.MENDING).flags(ItemFlag.HIDE_ATTRIBUTES).flags(ItemFlag.HIDE_ENCHANTS).build();
-        }else{
-            item = new ItemBuilder(material).name(ChatColor.of("#1fb2db") + name).flags(ItemFlag.HIDE_ATTRIBUTES).build();
-        }
+        item = new ItemBuilder(material).name(ChatColor.of("#1fb2db") + name)
+                .meta(ItemMeta.class, meta -> meta.setCustomModelData(this.getItemCode().getCustomModelData())).flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         return item;
     }
@@ -55,10 +51,10 @@ public class Slot {
         String c = Character.toString(code);
 
         if(isFound){
-            return found + negativeSpace + c;
+            return c + negativeSpace + found;
 
         }else{
-            return normal + negativeSpace + c;
+            return c + negativeSpace + normal;
 
         }
     }

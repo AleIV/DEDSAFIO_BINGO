@@ -31,8 +31,8 @@ public class Table{
     @Getter @Setter boolean foundFull;
     @Getter int objectsFound;
 
-    public @Setter static String neg2 = NegativeSpaces.get(-8);
-    public @Setter static String neg3 = NegativeSpaces.get(-6);
+    private static String neg2 = NegativeSpaces.get(-8);
+    private static String neg3 = NegativeSpaces.get(-6);
     
     public static String logo = Character.toString('\uEAA1');
     public static List<Character> barFrames = Frames.getFramesCharsIntegers(0, 19);
@@ -46,7 +46,7 @@ public class Table{
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
-        this.objectsFound = -1;
+        this.objectsFound =0;
 
     }
 
@@ -57,6 +57,8 @@ public class Table{
         var table = this;
 
         var fase = game.getBingoFase();
+
+        this.objectsFound = 0;
 
         if(fase == BingoFase.ITEMS){
             var rounds = game.getItemRounds();
@@ -82,14 +84,14 @@ public class Table{
     
                     var material = options.get(getRand(options));
     
-                    table.getBoard()[i][j] = new Slot(material);
+                    table.getBoard()[i][j] = new Slot(instance, material);
                     table.getSelectedItems().add(material);
     
                     if(diff.isEmpty()){
                         switch (currentRound) {
                             case TWO: {
                                 currentRound = BingoRound.ONE;
-                                diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList());
+                                diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList());
                             } break;
     
                             default: 
@@ -109,13 +111,25 @@ public class Table{
     
             var currentRound = round;
     
-            switch (round) {
+            switch (currentRound) {
                 case ONE: diff = rounds.get(BingoRound.ONE).stream().collect(Collectors.toList()); break;
                 case TWO: diff = rounds.get(BingoRound.TWO).stream().collect(Collectors.toList()); break;
                 case THREE: diff = rounds.get(BingoRound.THREE).stream().collect(Collectors.toList()); break;
                 default: break;
             }
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    var diffRand = getRand(diff);
+                    var challenge = diff.get(diffRand);
+
+                    table.getSelectedChallenge().add(challenge);
+                    table.getBoard()[i][j] = new ChallengeSlot(instance, challenge);
+                    diff.remove(challenge);
+                }
+            }
     
+            /*
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
     
@@ -143,7 +157,7 @@ public class Table{
                     }
     
                 }
-            }
+            }*/
         }
 
     }
@@ -192,12 +206,11 @@ public class Table{
 
     public boolean is5of(List<Integer> list, Integer i){
         var ns = list.stream().filter(n -> n == i).collect(Collectors.toList());
-        Core.getInstance().broadcastMessage(ns.toString());
         return ns.size() == 5;
     }
 
     public String getTitle(){
-        var percent = (objectsFound*100)/25;
+        var percent = ((objectsFound-1)*100)/25;
         var barN = (int) ((percent*barFrames.size())/100);
 
         var bar = objectsFound < 0 ? barFrames.get(0) : barFrames.get(barN);

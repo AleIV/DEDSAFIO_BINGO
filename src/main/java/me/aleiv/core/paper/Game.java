@@ -51,17 +51,29 @@ public class Game extends BukkitRunnable {
         public Game(Core instance) {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
+                this.gameTime = 0;
                 this.gameStage = GameStage.LOBBY;
                 this.bingoRound = BingoRound.ONE;
                 this.bingoFase = BingoFase.ITEMS;
 
+                this.timer = new Timer(instance, (int) gameTime);
+
                 registerMaterials();
+                registerChallenges();
 
                 itemRounds.put(BingoRound.ONE, new ArrayList<>());
-                registerItems_1();
-
                 itemRounds.put(BingoRound.TWO, new ArrayList<>());
+
+                registerItems_1();
                 registerItems_2();
+
+                challengeRounds.put(BingoRound.ONE, new ArrayList<>());
+                challengeRounds.put(BingoRound.TWO, new ArrayList<>());
+                challengeRounds.put(BingoRound.THREE, new ArrayList<>());
+
+                register_challenge_1();
+                register_challenge_2();
+                register_challenge_3();
 
         }
 
@@ -93,7 +105,9 @@ public class Game extends BukkitRunnable {
         }
 
         public enum Challenge {
-                JUMP_BED;
+                HALF_HEART, SHIELD_BREAK, ARMOR_MATERIALS, DOLPHIN_SWIM, HIGHEST_HEIGHT, NETHER_TREE, SHOOT_TARGET, HOSTILE_KILL, PEACEFUL_KILL, CAMPFIRE_CAMPING, 
+                PINK_SHEEP_BIOME, BREAK_RULE_1, JUMP_BED, DONKEY_CHEST, CREEPER_IGNITE, DROWM_VILLAGER, REDSTONE_SIGNAL, PURPLE_LLAMA, EAT_FOOD, COLOR_SHEEP, LVL_30,
+                ANVIL_DAMAGE, ACUATIC_KILL, MINE_MINERALS, GET_POISON 
         }
 
         public void registerItems_1() {
@@ -115,7 +129,7 @@ public class Game extends BukkitRunnable {
                 items_1.add(List.of(Material.CAMPFIRE, Material.LANTERN, Material.TORCH));
 
                 items_1.add(List.of(Material.BOW, Material.FISHING_ROD, Material.SHIELD, Material.CROSSBOW,
-                                Material.SHEARS));
+                                Material.SHEARS, Material.FLINT_AND_STEEL));
 
                 items_1.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT, Material.CHAIN));
 
@@ -203,47 +217,38 @@ public class Game extends BukkitRunnable {
 
                 items_2.add(List.of(Material.BLAZE_ROD, Material.BREWING_STAND, Material.BLAZE_POWDER));
 
-                items_2.add(List.of(Material.GLOWSTONE, Material.SHROOMLIGHT));
+                items_2.add(List.of(Material.MAGMA_CREAM, Material.FIRE_CHARGE, Material.NETHER_WART));
 
                 items_2.add(List.of(Material.ENDER_PEARL));
 
-                items_2.add(List.of(Material.TWISTING_VINES, Material.WARPED_ROOTS, Material.WARPED_STEM,
-                                Material.WARPED_WART_BLOCK));
-
-                items_2.add(List.of(Material.WEEPING_VINES, Material.CRIMSON_ROOTS, Material.NETHER_WART_BLOCK,
-                                Material.CRIMSON_STEM));
+                items_2.add(List.of(Material.GLOWSTONE, Material.SHROOMLIGHT, Material.MAGMA_BLOCK));
 
                 items_2.add(List.of(Material.CRACKED_NETHER_BRICKS,
-                                Material.CHISELED_NETHER_BRICKS, Material.POLISHED_BLACKSTONE,
-                                Material.POLISHED_BLACKSTONE_BRICKS, Material.CRACKED_POLISHED_BLACKSTONE_BRICKS,
-                                Material.CHISELED_POLISHED_BLACKSTONE, Material.POLISHED_BASALT,
+                                Material.CHISELED_NETHER_BRICKS,
                                 Material.SMOOTH_QUARTZ, Material.QUARTZ_BRICKS, Material.QUARTZ_PILLAR,
                                 Material.CHISELED_QUARTZ_BLOCK));
 
-                items_2.add(List.of(Material.NETHERRACK, Material.BLACKSTONE, Material.BASALT, Material.QUARTZ_BLOCK,
-                                Material.SOUL_SAND, Material.SOUL_SOIL));
+                items_2.add(List.of(Material.NETHERRACK, Material.QUARTZ_BLOCK));
 
-                items_2.add(List.of(Material.MAGMA_BLOCK, Material.BONE_BLOCK, Material.GOLD_BLOCK));
+                items_2.add(List.of(Material.BLACKSTONE, Material.BASALT, Material.POLISHED_BASALT, Material.POLISHED_BLACKSTONE,
+                                        Material.POLISHED_BLACKSTONE_BRICKS, Material.CHISELED_POLISHED_BLACKSTONE));
 
-                items_2.add(List.of(Material.FERMENTED_SPIDER_EYE, Material.RABBIT_STEW, Material.POISONOUS_POTATO));
+                items_2.add(List.of(Material.BONE_BLOCK, Material.SOUL_SAND, Material.SOUL_SOIL));
 
-                items_2.add(List.of(Material.MAGMA_CREAM, Material.GLISTERING_MELON_SLICE, Material.FIRE_CHARGE));
-
-                items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
-
-                items_2.add(List.of(Material.BEETROOT_SOUP, Material.COOKIE, Material.EGG, Material.PUMPKIN_PIE,
-                                Material.COOKED_RABBIT));
-
-                items_2.add(List.of(Material.ANVIL, Material.ENCHANTING_TABLE));
+                items_2.add(List.of(Material.TWISTING_VINES, Material.WARPED_ROOTS, Material.WARPED_STEM,
+                                Material.WARPED_WART_BLOCK));
+                
+                items_2.add(List.of(Material.WEEPING_VINES, Material.CRIMSON_ROOTS, Material.NETHER_WART_BLOCK,
+                                Material.CRIMSON_STEM));
 
                 items_2.add(List.of(Material.CRYING_OBSIDIAN, Material.GILDED_BLACKSTONE));
+
+                items_2.add(List.of(Material.COMPARATOR, Material.DAYLIGHT_DETECTOR, Material.POWERED_RAIL, Material.TNT_MINECART));
 
                 items_2.add(List.of(Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SWORD,
                                 Material.DIAMOND_HOE));
 
-                items_2.add(List.of(Material.CAKE));
-
-                items_2.add(List.of(Material.COMPARATOR, Material.DAYLIGHT_DETECTOR, Material.POWERED_RAIL, Material.TNT_MINECART));
+                items_2.add(List.of(Material.CARROT_ON_A_STICK, Material.WARPED_FUNGUS_ON_A_STICK));
 
         }
 
@@ -687,6 +692,88 @@ public class Game extends BukkitRunnable {
                 materials.put(Material.FIRE_CHARGE, new ItemCode('\uEE36'));
                 materials.put(Material.SALMON_BUCKET, new ItemCode('\uEE37'));
                 materials.put(Material.COD_BUCKET, new ItemCode('\uEE38'));
+                materials.put(Material.FLINT_AND_STEEL, new ItemCode('\uEE39'));
+                materials.put(Material.FLINT_AND_STEEL, new ItemCode('\uEE39'));
+
 
         }
+
+        public void registerChallenges(){
+
+                challenges.put(Challenge.HALF_HEART, new ItemCode('\uEE41', 1, "Todos los miembros deben permanecer a medio corazón durante 10 segundos."));
+                challenges.put(Challenge.SHIELD_BREAK, new ItemCode('\uEE42', 2, "Rompe un escudo de un compañero."));
+                challenges.put(Challenge.ARMOR_MATERIALS, new ItemCode('\uEE43', 3, "Un integrante debe llevar armadura completa de distinto material cada pieza."));
+                challenges.put(Challenge.DOLPHIN_SWIM, new ItemCode('\uEE44', 4, "Nada con un delfín."));
+                challenges.put(Challenge.HIGHEST_HEIGHT, new ItemCode('\uEE45', 5, "Alcanza la altura máxima."));
+                challenges.put(Challenge.NETHER_TREE, new ItemCode('\uEE46', 6, "Haz crecer un árbol en el nether."));
+                challenges.put(Challenge.SHOOT_TARGET, new ItemCode('\uEE47', 7, "Dispara a un target block."));
+                challenges.put(Challenge.HOSTILE_KILL, new ItemCode('\uEE48', 8, "Mata a 5 mobs hostiles diferentes."));
+                challenges.put(Challenge.PEACEFUL_KILL, new ItemCode('\uEE49', 9, "Mata a 5 mobs pacificos diferentes."));
+                challenges.put(Challenge.CAMPFIRE_CAMPING, new ItemCode('\uEE50', 10, "Cocina en una hoguera con todo tu equipo cerca."));
+                challenges.put(Challenge.PINK_SHEEP_BIOME, new ItemCode('\uEE51', 11, "Cada miembro del equipo debe matar una oveja rosa en un bioma diferente."));
+                challenges.put(Challenge.BREAK_RULE_1, new ItemCode('\uEE52', 12, "Rompe la regla #1 de Minecraft."));
+                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar encima de una cama al mismo tiempo."));
+                challenges.put(Challenge.DONKEY_CHEST, new ItemCode('\uEE54', 14, "Equipa un cofre a un burro."));
+                challenges.put(Challenge.CREEPER_IGNITE, new ItemCode('\uEE55', 15, "Enciende un creeper con un mechero."));
+                challenges.put(Challenge.DROWM_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
+                challenges.put(Challenge.REDSTONE_SIGNAL, new ItemCode('\uEE57', 17, "Activa 5 objetos diferentes que emitan una señal de redstone."));
+                challenges.put(Challenge.PURPLE_LLAMA, new ItemCode('\uEE58', 18, "Monta una llama con una alfombra morada."));
+                challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 5 tipos de comida diferentes."));
+                challenges.put(Challenge.COLOR_SHEEP, new ItemCode('\uEE60', 20, "Cambia el color de una oveja con 10 tipos de tinte distintos."));
+                challenges.put(Challenge.LVL_30, new ItemCode('\uEE61', 21, "Todos los miembros deben sumar más de 30 niveles de experiencia."));
+                challenges.put(Challenge.ANVIL_DAMAGE, new ItemCode('\uEE62', 22, "Cada miembro del equipo debe tomar daño de caída de yunque."));
+                challenges.put(Challenge.ACUATIC_KILL, new ItemCode('\uEE63', 23, "Mata 5 mobs acuaticos diferentes."));
+                challenges.put(Challenge.MINE_MINERALS, new ItemCode('\uEE64', 24, "Mina 5 minerales diferentes."));
+                challenges.put(Challenge.GET_POISON, new ItemCode('\uEE65', 24, "Consigue el efecto de veneno."));
+                
+
+        }
+
+        public void register_challenge_1(){
+                var challenge_1 = challengeRounds.get(BingoRound.ONE);
+
+                challenge_1.add(Challenge.HALF_HEART);
+                challenge_1.add(Challenge.SHIELD_BREAK);
+                challenge_1.add(Challenge.ARMOR_MATERIALS);
+                challenge_1.add(Challenge.DOLPHIN_SWIM);
+                challenge_1.add(Challenge.HIGHEST_HEIGHT);
+                challenge_1.add(Challenge.NETHER_TREE);
+                challenge_1.add(Challenge.SHOOT_TARGET);
+                challenge_1.add(Challenge.HOSTILE_KILL);
+                challenge_1.add(Challenge.PEACEFUL_KILL);
+                challenge_1.add(Challenge.CAMPFIRE_CAMPING);
+                challenge_1.add(Challenge.PINK_SHEEP_BIOME);
+                challenge_1.add(Challenge.BREAK_RULE_1);
+                challenge_1.add(Challenge.JUMP_BED);
+                challenge_1.add(Challenge.DONKEY_CHEST);
+                challenge_1.add(Challenge.CREEPER_IGNITE);
+                challenge_1.add(Challenge.DROWM_VILLAGER);
+                challenge_1.add(Challenge.REDSTONE_SIGNAL);
+                challenge_1.add(Challenge.PURPLE_LLAMA);
+                challenge_1.add(Challenge.EAT_FOOD);
+                challenge_1.add(Challenge.COLOR_SHEEP);
+                challenge_1.add(Challenge.LVL_30);
+                challenge_1.add(Challenge.ANVIL_DAMAGE);
+                challenge_1.add(Challenge.ACUATIC_KILL);
+                challenge_1.add(Challenge.MINE_MINERALS);
+                challenge_1.add(Challenge.ACUATIC_KILL);
+                challenge_1.add(Challenge.GET_POISON);
+
+        }
+
+        public void register_challenge_2(){
+                var challenge_2 = challengeRounds.get(BingoRound.TWO);
+
+                challenge_2.add(Challenge.JUMP_BED);
+                
+        }
+
+        public void register_challenge_3(){
+                var challenge_3 = challengeRounds.get(BingoRound.THREE);
+
+                challenge_3.add(Challenge.JUMP_BED);
+                
+        }
+
+
 }
