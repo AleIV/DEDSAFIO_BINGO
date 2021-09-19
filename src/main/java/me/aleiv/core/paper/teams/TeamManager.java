@@ -67,9 +67,11 @@ public abstract class TeamManager {
      * so use this with caution.
      * 
      * @param team The team to add to the map.
+     * @return The previous value associated with key, or null if there was no
+     *         mapping for key
      */
-    public void put(Team team) {
-        this.teams.put(team.getTeamID(), team);
+    public Team put(Team team) {
+        return this.teams.put(team.getTeamID(), team);
     }
 
     /**
