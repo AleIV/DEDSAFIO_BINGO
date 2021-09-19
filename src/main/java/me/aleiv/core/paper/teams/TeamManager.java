@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
 import me.aleiv.core.paper.teams.exceptions.EmptyDatasetException;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.teams.objects.Team;
@@ -20,7 +22,7 @@ import me.aleiv.core.paper.teams.sync.RedisSyncPipeline;
  * 
  * @author jcedeno
  */
-public class TeamManager {
+public abstract class TeamManager {
     /** Static Variables */
     private static Gson gson = new Gson();
     private static UUID nodeId = UUID.randomUUID();
@@ -33,28 +35,64 @@ public class TeamManager {
     private ConcurrentHashMap<UUID, Team> teams;
     /** Synchronisation pipeline */
     private RedisSyncPipeline syncPipeline;
+    private Logger logger;
 
     public TeamManager() {
         this.teams = new ConcurrentHashMap<>();
         this.redisClient = RedisClient.create("redis://localhost");
         this.redisConnection = this.redisClient.connect();
         this.syncPipeline = new RedisSyncPipeline(this);
+        this.logger = Logger.getLogger("TeamManager-" + nodeId.toString().split("-")[0]);
     }
 
+    public abstract void updateTeam(Team team, UUID nodeId);
+
+    /**
+     * @return The common redis sync connection used to send messages or use any
+     *         other command. This object blocks the thread that executes it.
+     */
+    public RedisCommands<String, String> getRedisSyncConnection() {
+        return redisConnection.sync();
+    }
+
+    /**
+     * @return The concurrent map of teams currently in ram.
+     */
+    public ConcurrentHashMap<UUID, Team> getTeamsMap() {
+        return this.teams;
+    }
+
+    /**
+     * Just plainly puts the team object into the map. No security checks are taken,
+     * so use this with caution.
+     * 
+     * @param team The team to add to the map.
+     */
+    public void put(Team team) {
+        this.teams.put(team.getTeamID(), team);
+    }
+
+    /**
+     * Function that must be called at least once to guarantee data accuracy.
+     */
     public void initialize() {
         // Ask redis if there is an ongoing sync in the db
-        var c = redisConnection.sync();
-        if (c.hlen(dataset) != 0) {
+        var syncConn = getRedisSyncConnection();
+        if (syncConn.hlen(dataset) != 0) {
             // Restore all the current data
-            c.hgetall(dataset).forEach((k, v) -> {
+            syncConn.hgetall(dataset).forEach((k, v) -> {
                 var team = gson.fromJson(v, Team.class);
                 teams.put(team.getTeamID(), team);
             });
         }
     }
 
+    public UUID getNodeId() {
+        return nodeId;
+    }
+
     public void printContentsOfSet() {
-        System.out.println(gson.toJson(teams.values()));
+        logger.info(gson.toJson(teams.values()));
     }
 
     /**
@@ -90,7 +128,7 @@ public class TeamManager {
             // Value in format json, contains all teams as an array of teams.
             var value = gson.toJson(teams.values());
             // Connect and backup the old data set.
-            var syncCon = redisConnection.sync();
+            var syncCon = getRedisSyncConnection();
             syncCon.hset(BACKUP_SET, field, value);
         }
     }
@@ -104,7 +142,7 @@ public class TeamManager {
      */
     public void restoreOldDataset(String oldSet) throws EmptyDatasetException {
         // Create a synchronous connection to redis.
-        var syncCon = redisConnection.sync();
+        var syncCon = getRedisSyncConnection();
         var keys = syncCon.hkeys(BACKUP_SET);
         // Check if the historical-sets is empty
         if (keys.isEmpty())
@@ -139,7 +177,7 @@ public class TeamManager {
         teams.clear();
         teams.putAll(newTeamsMap);
 
-        System.out.println("Succesfully restored dataset: " + oldSet);
+        logger.info("Succesfully restored dataset: " + oldSet);
         // TODO: Communicate update to other nodes.
     }
 
@@ -153,7 +191,10 @@ public class TeamManager {
      * @throws TeamAlreadyExistsException If the team already exists.
      */
     public Team createTeam(String teamName, UUID teamId, UUID... uuids) throws TeamAlreadyExistsException {
-        return registerTeam(new Team(teamId, Arrays.asList(uuids), teamName));
+        var team = registerTeam(new Team(teamId, Arrays.asList(uuids), teamName));
+        // Communicate the update as succesful.
+        syncPipeline.communicateCreation(team);
+        return team;
     }
 
     /**
@@ -182,9 +223,11 @@ public class TeamManager {
         if (!validateTeam(team)) {
             throw TeamAlreadyExistsException.of(team);
         }
-        redisConnection.sync().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
+        var syncCon = getRedisSyncConnection();
+        syncCon.hset(dataset, team.getTeamID().toString(), gson.toJson(team));
+
         teams.put(team.getTeamID(), team);
-        
+
         return team;
     }
 
@@ -201,7 +244,7 @@ public class TeamManager {
          * two teams at once.
          */
         if (redisConnection.isOpen())
-            return !redisConnection.sync().hexists(dataset, team.getTeamID().toString());
+            return !getRedisSyncConnection().hexists(dataset, team.getTeamID().toString());
 
         return team != null;
     }

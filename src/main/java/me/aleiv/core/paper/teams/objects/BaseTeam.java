@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The most basic representation of a team using plain java.
+ * 
+ * @author jcedeno
+ */
 public class BaseTeam {
     protected UUID teamID;
     protected List<UUID> members;
@@ -61,7 +66,9 @@ public class BaseTeam {
     }
 
     /**
-     * @return The name of a team.
+     * @return The name of a team. <b>Note</b>: Team names might be repeated, teams
+     *         id's are unique. Team name here is refered as the team tag or team
+     *         displayname.
      */
     public String getTeamName() {
         return teamName;

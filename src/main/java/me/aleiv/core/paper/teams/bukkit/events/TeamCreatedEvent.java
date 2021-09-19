@@ -1,4 +1,6 @@
-package me.aleiv.core.paper.teams.events;
+package me.aleiv.core.paper.teams.bukkit.events;
+
+import java.util.UUID;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -14,7 +16,7 @@ public class TeamCreatedEvent extends Event {
     private final @Getter HandlerList Handlers = HandlerList;
     /** Fields */
     private Team team;
-    private String node;
+    private UUID node;
 
     /**
      * Constructor
@@ -22,7 +24,7 @@ public class TeamCreatedEvent extends Event {
      * @param team
      * @param node
      */
-    public TeamCreatedEvent(Team team, String node) {
+    public TeamCreatedEvent(Team team, UUID node) {
         this.team = team;
         this.node = node;
     }
@@ -41,7 +43,7 @@ public class TeamCreatedEvent extends Event {
      * 
      * @return
      */
-    public String getNode() {
+    public UUID getNode() {
         return node;
     }
 
