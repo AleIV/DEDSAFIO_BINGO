@@ -27,6 +27,7 @@ public class BTeamManager extends TeamManager {
             callEvent(new TeamUpdatedEvent(team, from));
         } else {
             // If old team does not exist, then it is a creation.
+            put(team);
             callEvent(new TeamCreatedEvent(team, from));
         }
 
