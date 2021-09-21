@@ -4,7 +4,6 @@ import java.time.Duration;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.google.common.collect.ImmutableList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -22,11 +21,13 @@ import me.aleiv.core.paper.commands.ConfigCMD;
 import me.aleiv.core.paper.commands.TestCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
-import me.aleiv.core.paper.listeners.ChallengeEASY;
+import me.aleiv.core.paper.listeners.ChallengeEasy;
+import me.aleiv.core.paper.listeners.ChallengeHard;
+import me.aleiv.core.paper.listeners.ChallengeMedium;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
-import me.aleiv.core.paper.teams.deprecated.TeamManager;
+import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -68,17 +69,16 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InGameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new LobbyListener(this), this);
 
-        Bukkit.getPluginManager().registerEvents(new ChallengeEASY(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChallengeEasy(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChallengeMedium(this), this);
+        Bukkit.getPluginManager().registerEvents(new ChallengeHard(this), this);
+        
 
         commandManager = new PaperCommandManager(this);
 
-        commandManager.getCommandCompletions().registerCompletion("stages", c -> {
-            return ImmutableList.of("LOBBY", "STARTING", "INGAME", "POSTGAME");
-        });
-
         commandManager.registerCommand(new AdminBingoCMD(this));
-        commandManager.registerCommand(new BingoCMD(this));
         commandManager.registerCommand(new ConfigCMD(this));
+        commandManager.registerCommand(new BingoCMD(this));
         commandManager.registerCommand(new TestCMD(this));
 
         Bukkit.getScheduler().runTaskLater(this, task -> {

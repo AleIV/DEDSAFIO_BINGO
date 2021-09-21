@@ -37,13 +37,48 @@ public class Slot {
     }
 
     public ItemStack getItem(){
-        ItemStack item;
-        var name = material.toString().replace("_", " ");
 
-        item = new ItemBuilder(material).name(ChatColor.of("#1fb2db") + name)
-                .meta(ItemMeta.class, meta -> meta.setCustomModelData(this.getItemCode().getCustomModelData())).flags(ItemFlag.HIDE_ATTRIBUTES).build();
+        var name = (isFound ? ChatColor.of("#f58700") : ChatColor.of("#00e0f5")) + formatName(material.toString()); 
+        var code = this.getItemCode().getCustomModelData();
+
+        var item = new ItemBuilder(material).name(name).meta(ItemMeta.class, meta -> meta.setCustomModelData(code)).flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         return item;
+    }
+
+    public String formatName(String string){
+        var str = string;
+        Core.getInstance().broadcastMessage(str);
+
+        str.toLowerCase();
+        return str;
+        
+        /*
+        Core.getInstance().broadcastMessage(str);
+
+        var array = str.toCharArray();
+
+        var upper = true;
+        var count = 0;
+        
+        for (char c : array) {
+            if(upper){
+                array[count] = Character.toUpperCase(c);
+                upper = false;
+            }else if(c == '_'){
+                upper = true;
+            }
+            count++;
+        }
+
+        var newString = String.valueOf(array);
+
+        Core.getInstance().broadcastMessage(newString);
+
+        newString.replace("_", " ");
+
+        Core.getInstance().broadcastMessage(newString);
+        return newString;*/
     }
 
     public String getDisplay(){

@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -17,9 +17,9 @@ import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.GameStartedEvent;
 import me.aleiv.core.paper.events.GameTickEvent;
+import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
-import net.md_5.bungee.api.ChatColor;
 
 public class GlobalListener implements Listener {
 
@@ -115,14 +115,17 @@ public class GlobalListener implements Listener {
             var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
             scatter.Qteleport(player, loc);
             
-        }else if(game.getGameStage() ==  GameStage.INGAME){
+        }else if(game.getGameStage() == GameStage.INGAME){
             player.setHealth(20);
             player.setGameMode(GameMode.SPECTATOR);
 
             var loc = scatter.generateLocation();
             Bukkit.getScheduler().runTaskLater(instance, task ->{
                 scatter.Qteleport(player, loc);
-            }, 20*5);
+                player.getInventory().clear();
+                player.setHealth(20.0);
+                player.setFoodLevel(20);
+            }, 20*BingoManager.respawnSeconds);
 
         }
     }
@@ -137,7 +140,6 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onStart(GameStartedEvent e) {
-        var game = instance.getGame();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.getInventory().clear();
@@ -145,35 +147,10 @@ public class GlobalListener implements Listener {
             player.setFoodLevel(20);
         });
 
-        var round = game.getBingoRound();
-        var timer = game.getTimer();
-
-        switch (round) {
-            case ONE: {
-
-                timer.start(1200, (int) game.getGameTime());
-
-            }
-                break;
-
-            case TWO: {
-
-                timer.start(1800, (int) game.getGameTime());
-
-            }
-                break;
-
-            case THREE: {
-                timer.start(3600, (int) game.getGameTime());
-
-            }
-                break;
-
-            default:
-                break;
-        }
-
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game has started.");
+        Bukkit.getWorlds().forEach(world ->{
+            world.setTime(0L);
+            
+        });
 
     }
 

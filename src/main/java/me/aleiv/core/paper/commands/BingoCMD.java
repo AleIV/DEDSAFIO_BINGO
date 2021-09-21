@@ -1,5 +1,6 @@
 package me.aleiv.core.paper.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -70,7 +71,6 @@ public class BingoCMD extends BaseCommand {
         }else{
         
             instance.getBingoManager().startGame();
-
         }
 
     }
@@ -87,6 +87,44 @@ public class BingoCMD extends BaseCommand {
             sender.sendMessage(ChatColor.of(game.getColor3()) + "The game only can be restarted in game stage.");
 
         }
+
+    }
+
+    @Subcommand("total-start")
+    @CommandPermission("admin.perm")
+    public void setTimer(CommandSender sender) {
+        
+        var game = instance.getGame();
+        final var color = game.getColor1();
+
+        var round = game.getBingoRound();
+        var manager = instance.getBingoManager();
+
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            var loc = player.getLocation();
+            player.playSound(loc, "bingo.horn", 1, 1);
+        });
+
+        switch (round) {
+            case ONE:{
+                game.getTimer().start(1200, (int) game.getGameTime());
+
+            }break;
+            case TWO:{
+                game.getTimer().start(1800, (int) game.getGameTime());
+
+            }break;
+            case THREE:{
+                game.getTimer().start(3600, (int) game.getGameTime());
+
+            }break;
+        
+            default:
+                break;
+        }
+
+        manager.selectTables();
+        sender.sendMessage(ChatColor.of(color) + "Tables selected & timer set.");
 
     }
 

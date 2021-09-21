@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import lombok.Getter;
+import lombok.Setter;
 import me.aleiv.core.paper.teams.exceptions.EmptyDatasetException;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.teams.objects.Team;
@@ -28,7 +30,7 @@ public abstract class TeamManager {
     private static UUID nodeId = UUID.randomUUID();
     private static final String BACKUP_SET = "historical-sets";
     /** This is the name of the hashset on redis. */
-    private String dataset = "ffa";
+    private @Getter @Setter String dataset = "ffa";
     /** Instance Variables */
     private RedisClient redisClient;
     private StatefulRedisConnection<String, String> redisConnection;
@@ -48,6 +50,14 @@ public abstract class TeamManager {
     public abstract void updateTeam(Team team, UUID nodeId);
 
     /**
+     * @return Returns the player team, it doesn't have one return null.
+     */
+    public Team getPlayerTeam(UUID uuid){
+
+        if (teams.isEmpty()) return null;
+        return teams.values().stream().filter(team -> team.isMember(uuid)).findFirst().orElse(null);
+    }
+    /**
      * @return The common redis sync connection used to send messages or use any
      *         other command. This object blocks the thread that executes it.
      */
@@ -58,7 +68,7 @@ public abstract class TeamManager {
     /**
      * @return The concurrent map of teams currently in ram.
      */
-    public ConcurrentHashMap<UUID, Team> getTeamsMap() {
+    public ConcurrentHashMap<UUID, Team> getTeamsMap() { 
         return this.teams;
     }
 

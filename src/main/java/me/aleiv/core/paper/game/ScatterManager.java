@@ -73,7 +73,7 @@ public class ScatterManager {
                 player.teleport(loc);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.playSound(loc, "bingo.tpfinish", 1, 1);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*7, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20*10, 20));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*20, 20));
 
             }

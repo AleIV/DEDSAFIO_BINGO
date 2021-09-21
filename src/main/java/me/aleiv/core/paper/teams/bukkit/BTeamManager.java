@@ -13,7 +13,7 @@ import me.aleiv.core.paper.teams.objects.Team;
 
 public class BTeamManager extends TeamManager {
 
-    private Plugin plugin;
+    Plugin plugin;
 
     public BTeamManager(Plugin plugin) {
         this.plugin = plugin;

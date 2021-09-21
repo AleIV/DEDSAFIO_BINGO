@@ -81,13 +81,13 @@ public class TestCMD extends BaseCommand {
 
     @Subcommand("neg")
     public void neg(CommandSender sender, Integer neg){
-        BingoTableGUI.neg3 = NegativeSpaces.get(neg);
+        BingoTableGUI.neg = NegativeSpaces.get(neg);
 
     }
 
-    @Subcommand("neg4")
+    @Subcommand("neg2")
     public void neg4(CommandSender sender, Integer neg){
-        BingoTableGUI.neg4 = NegativeSpaces.get(neg);
+        BingoTableGUI.neg2 = NegativeSpaces.get(neg);
 
     }
 

@@ -4,11 +4,11 @@ import org.bukkit.event.Listener;
 
 import me.aleiv.core.paper.Core;
 
-public class ChallengeMEDIUM implements Listener{
+public class ChallengeMedium implements Listener{
     
     Core instance;
 
-    public ChallengeMEDIUM(Core instance){
+    public ChallengeMedium(Core instance){
         this.instance = instance;
     }
 }

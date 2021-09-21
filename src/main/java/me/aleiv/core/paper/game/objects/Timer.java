@@ -138,6 +138,7 @@ public class Timer {
     }
 
     public void start(int seconds, int startTime){
+        this.time = neg3 + neg4 + "00:00";
         this.seconds = seconds;
         this.startTime = (int) instance.getGame().getGameTime();
         this.isActive = true;

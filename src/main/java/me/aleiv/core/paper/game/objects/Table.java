@@ -118,18 +118,16 @@ public class Table{
                 default: break;
             }
 
-            for (int i = 0; i < 5; i++) {
+            /*for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     var diffRand = getRand(diff);
                     var challenge = diff.get(diffRand);
 
                     table.getSelectedChallenge().add(challenge);
                     table.getBoard()[i][j] = new ChallengeSlot(instance, challenge);
-                    diff.remove(challenge);
                 }
-            }
+            }*/
     
-            /*
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
     
@@ -137,7 +135,7 @@ public class Table{
                     var challenge = diff.get(diffRand);
                     diff.remove(diffRand);
     
-                    table.getBoard()[i][j] = new ChallengeSlot(challenge);
+                    table.getBoard()[i][j] = new ChallengeSlot(instance, challenge);
                     table.getSelectedChallenge().add(challenge);
     
                     if(diff.isEmpty()){
@@ -157,7 +155,7 @@ public class Table{
                     }
     
                 }
-            }*/
+            }
         }
 
     }

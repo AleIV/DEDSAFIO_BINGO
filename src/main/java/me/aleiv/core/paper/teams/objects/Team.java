@@ -36,6 +36,10 @@ public class Team extends BaseTeam {
         this.points = points;
     }
 
+    public boolean isMember(UUID uuid) {
+        return members.stream().anyMatch(member -> member.getMostSignificantBits() == uuid.getMostSignificantBits());
+    }
+
     @Override
     public String toString() {
         return "Team{" + "points=" + points + ", teamID=" + teamID + ", members=" + members + ", teamName='" + teamName

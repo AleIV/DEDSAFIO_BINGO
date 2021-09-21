@@ -90,10 +90,11 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
+        var world = Bukkit.getWorld("lobby");
         var entity = e.getEntity();
         if (entity instanceof Player) {
             var player = (Player) entity;
-            if (!shouldInteract(player)) {
+            if (player.getWorld() == world) {
                 e.setCancelled(true);
             }
         }

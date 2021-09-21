@@ -5,14 +5,19 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.Data;
+import me.aleiv.core.paper.utilities.NegativeSpaces;
+import net.md_5.bungee.api.ChatColor;
 import us.jcedeno.libs.rapidinv.RapidInv;
 
 @Data
 public class BingoTableGUI {
     RapidInv gui;
 
-    public static String neg3 = "";
-    public static String neg4 = "";
+    public static String negGui = NegativeSpaces.get(-8);
+
+    public static String neg = NegativeSpaces.get(-134);
+    public static String neg2 = NegativeSpaces.get(-90);
+
 
     private static String guiUnicode = Character.toString('\uE021');
     Slot[][] board = new Slot[5][5];
@@ -28,26 +33,21 @@ public class BingoTableGUI {
     public BingoTableGUI(Table table){
         
         var guiName = new StringBuilder();
-        guiName.append(neg4);
-        var c = 1;
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 var slot = table.getBoard()[i][j];
+
                 if(slot.isFound()){
-                    guiName.append(foundRows.get(j));
+                    guiName.append(foundRows.get(i));
                 }else{
-                    guiName.append(nonFoundRows.get(j));
+                    guiName.append(nonFoundRows.get(i));
                 }
-
             }
-
-            for (int k = 0; k < c; k++) {
-                guiName.append(neg3);
-            }
-            c++;
+            guiName.append(neg2);
         }
 
-        this.gui = new RapidInv(6*9, guiUnicode + guiName);
+        this.gui = new RapidInv(6*9, ChatColor.WHITE + negGui + guiUnicode + neg + guiName);
         
         var count = 0;
         for (int i = 0; i < 5; i++) {
