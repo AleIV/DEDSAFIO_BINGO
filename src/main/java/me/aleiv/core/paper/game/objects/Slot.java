@@ -48,7 +48,7 @@ public class Slot {
 
     public String formatName(String string){
         var str = string;
-        Core.getInstance().broadcastMessage(str);
+        //Core.getInstance().broadcastMessage(str);
 
         str.toLowerCase();
         return str;
