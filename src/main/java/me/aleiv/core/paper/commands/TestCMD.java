@@ -15,6 +15,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.game.objects.BingoTableGUI;
+import me.aleiv.core.paper.game.objects.Slot;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
@@ -60,12 +61,12 @@ public class TestCMD extends BaseCommand {
         task.execute();
 
     }
-/*
+
     @Subcommand("neg1")
     public void neg1(CommandSender sender, Integer neg){
-        Timer.setNeg1(NegativeSpaces.get(neg));
+        Slot.setNegativeSpace(NegativeSpaces.get(neg));
 
-    }
+    }/*
 
     @Subcommand("neg2")
     public void neg2(CommandSender sender, Integer neg){

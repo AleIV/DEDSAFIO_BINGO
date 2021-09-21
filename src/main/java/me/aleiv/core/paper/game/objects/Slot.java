@@ -20,7 +20,7 @@ public class Slot {
     Material material;
 
 
-    public static String negativeSpace = NegativeSpaces.get(-18);
+    public @Setter @Getter static String negativeSpace = NegativeSpaces.get(-18);
     
     public static String interrogation = Character.toString('\uEAA0');
     public static String normal = Character.toString('\uEAA2');
