@@ -1,6 +1,7 @@
 package me.aleiv.core.paper.listeners;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
@@ -23,6 +24,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -52,6 +54,42 @@ public class ChallengeEasy implements Listener {
             Material.NETHER_GOLD_ORE, Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.EMERALD_ORE,
             Material.NETHER_QUARTZ_ORE, Material.ANCIENT_DEBRIS, Material.REDSTONE_ORE);
 
+
+    @EventHandler
+    public void onCampfire(BlockCookEvent e){
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        var block = e.getBlock();
+        if(block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE){
+            var manager = instance.getBingoManager();
+
+            var camping = block.getLocation().getNearbyPlayers(10).stream().map(p -> p.getUniqueId()).collect(Collectors.toList());
+            for (var uuid : camping) {
+                var table = manager.findTable(uuid);   
+                var players = table.getMembers();
+                var player = Bukkit.getPlayer(uuid);
+
+                if (player != null && table != null && isTeamCamping(players, camping)) {
+
+                    manager.attempToFind(player, Challenge.CAMPFIRE_CAMPING, "");
+                    return;
+                }
+            }
+
+        }
+    }
+
+    public boolean isTeamCamping(List<UUID> players, List<UUID> camping){
+        for (UUID uuid : players) {
+            if(!camping.contains(uuid)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     @EventHandler
     public void onLVL(PlayerLevelChangeEvent e) {
         var game = instance.getGame();
@@ -64,7 +102,7 @@ public class ChallengeEasy implements Listener {
         var table = manager.findTable(player.getUniqueId());
 
         if (table != null && isTeam40LVL(table.getPlayerStream().collect(Collectors.toList()))) {
-            manager.attempToFind(player, Challenge.LVL_30, "");
+            manager.attempToFind(player, Challenge.LVL_40, "");
         }
 
     }
@@ -273,10 +311,13 @@ public class ChallengeEasy implements Listener {
         if (player == null) {
 
             if (entity instanceof Villager villager) {
+
                 var cause = villager.getLastDamageCause().getCause();
                 if (cause == DamageCause.DROWNING || cause == DamageCause.SUFFOCATION) {
-                    villager.getLocation().getNearbyPlayers(10).stream().forEach(p -> {
-                        manager.attempToFind(player, Challenge.DROWN_VILLAGER, "");
+
+                    var nearby = villager.getLocation().getNearbyPlayers(10).stream().collect(Collectors.toList());
+                    nearby.forEach(p ->{
+                        manager.attempToFind(p, Challenge.DROWN_VILLAGER, "");
                     });
                 }
             }

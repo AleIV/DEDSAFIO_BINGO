@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
 import net.md_5.bungee.api.ChatColor;
@@ -24,11 +25,12 @@ public class InGameListener implements Listener {
 
     @EventHandler
     public void onItem(FoundItemEvent e){
-        var game = instance.getGame();
+        var bingoManager = instance.getBingoManager();
         var slot = e.getSlot();
         var player = e.getPlayer();
-        instance.broadcastMessage(ChatColor.of(game.getColor2()) + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
-        instance.broadcastMessage("");
+        var table = bingoManager.findTable(player.getUniqueId());
+        table.sendMessageMembers(ChatColor.of("#f89a16") + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
+        table.sendMessageMembers("");
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -51,12 +53,17 @@ public class InGameListener implements Listener {
 
     @EventHandler
     public void onBingo(BingoEvent e) {
-        var game = instance.getGame();
-        Bukkit.getScheduler().runTask(instance, () -> {
-            instance.broadcastMessage(ChatColor.of(game.getColor2()) + "BINGO " + e.getBingoType() + " found " + ChatColor.RESET + e.getFoundItemEvent().getSlot().getDisplay());
-            instance.broadcastMessage("");
+        var manager = instance.getBingoManager();
+        var player = e.getFoundItemEvent().getPlayer();
+        var table = manager.findTable(player.getUniqueId());
 
-        });
+        if(e.getBingoType() == BingoType.LINE){
+            table.sendMessageMembers(ChatColor.of("#52abfa") + player.getName() + " completed a line! ");
+
+        }else{
+            
+            table.sendMessageMembers(ChatColor.of("#52abfa") + player.getName() + " BINGOOOOOOOOOO! ");
+        }
 
     }
 

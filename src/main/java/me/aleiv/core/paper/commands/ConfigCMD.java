@@ -80,7 +80,7 @@ public class ConfigCMD extends BaseCommand {
             table1.getMembers().add(uuid2);
             
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Added " + player2.getName() + " to " + player1.getName() + " table.");
+            sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Added " + player2.getName() + " to " + player1.getName() + " table.");
         }
 
     }
@@ -180,7 +180,7 @@ public class ConfigCMD extends BaseCommand {
             tables.add(table);
             table.selectItems(instance);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
+            sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now playing.");
         }
 
     }
@@ -204,7 +204,7 @@ public class ConfigCMD extends BaseCommand {
             tables.remove(table);
             table.getMembers().clear();
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
+            sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo player " + target.getName() + " is now not playing.");
         }
 
     }
@@ -218,28 +218,28 @@ public class ConfigCMD extends BaseCommand {
             case LOBBY: {
                 game.setGameStage(GameStage.LOBBY);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to LOBBY stage.");
+                sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to LOBBY stage.");
             }
                 break;
 
             case STARTING: {
                 game.setGameStage(GameStage.STARTING);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to STARTING stage.");
+                sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to STARTING stage.");
             }
                 break;
 
             case INGAME: {
                 game.setGameStage(GameStage.INGAME);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to INGAME stage.");
+                sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to INGAME stage.");
             }
                 break;
 
             case POSTGAME: {
                 game.setGameStage(GameStage.POSTGAME);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to POSTGAME stage.");
+                sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Game stage switched to POSTGAME stage.");
             }
                 break;
 
@@ -258,7 +258,7 @@ public class ConfigCMD extends BaseCommand {
 
         game.setBingoRound(round);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo round switched to " + round.toString());
+        sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo round switched to " + round.toString());
 
     }
 
@@ -268,7 +268,7 @@ public class ConfigCMD extends BaseCommand {
 
         game.setBingoFase(fase);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo fase switched to " + fase.toString());
+        sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo fase switched to " + fase.toString());
 
     }
 

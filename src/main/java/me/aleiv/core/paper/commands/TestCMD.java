@@ -101,9 +101,9 @@ public class TestCMD extends BaseCommand {
     @Subcommand("test-item")
     public void neg2(CommandSender sender, Material material){
         var mat = instance.getGame().getMaterials();
-        instance.broadcastMessage(Character.toString(mat.get(material).getCode()) + material.toString());
-        instance.broadcastMessage("");
-        instance.broadcastMessage("");
+        sender.sendMessage(Character.toString(mat.get(material).getCode()) + material.toString());
+        sender.sendMessage("");
+        sender.sendMessage("");
 
     }
 

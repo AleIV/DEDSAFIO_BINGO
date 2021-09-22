@@ -52,9 +52,9 @@ public class Game extends BukkitRunnable {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameTime = 0;
-                this.gameStage = GameStage.INGAME;
+                this.gameStage = GameStage.LOBBY;
                 this.bingoRound = BingoRound.ONE;
-                this.bingoFase = BingoFase.CHALLENGE;
+                this.bingoFase = BingoFase.ITEMS;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -693,14 +693,20 @@ public class Game extends BukkitRunnable {
 
         public enum Challenge {
                 HALF_HEART, SHIELD_BREAK, ARMOR_MATERIALS, DOLPHIN_SWIM, MAXIMUM_HEIGHT, NETHER_TREE, SHOOT_TARGET, HOSTILE_KILL, ANIMAL_KILL, CAMPFIRE_CAMPING, 
-                PINK_SHEEP_BIOME, BREAK_RULE_1, JUMP_BED, BONE_MEAL_COMPOSTER, DONKEY_CHEST, CREEPER_IGNITE, DROWN_VILLAGER, REDSTONE_SIGNAL, PURPLE_LLAMA, EAT_FOOD, COLOR_SHEEP, LVL_30,
-                ANVIL_DAMAGE, ACUATIC_KILL, MINE_MINERALS, GET_POISON 
+                PINK_SHEEP_BIOME, BREAK_RULE_1, JUMP_BED, BONE_MEAL_COMPOSTER, DONKEY_CHEST, CREEPER_IGNITE, DROWN_VILLAGER, REDSTONE_SIGNAL, PURPLE_LLAMA, EAT_FOOD, COLOR_SHEEP, LVL_40,
+                ANVIL_DAMAGE, ACUATIC_KILL, MINE_MINERALS, GET_POISON, INVENTORY_STACKS, STRIDER_GAPPLE, PIGLIN_BARTER, COMPLETE_MAP, VILLAGER_MAX_TRADE, CROSSBOW_SHOT, SHIELD_BANNER,
+                ENCHANT_LVL6, CAMPFIRE_HAY_BALE, BED_EXPLODE, FISH_ITEMS, GIVE_PLAYER_FLOWER, WATER_DROP, EMPTY_CAULDRON, BREED_ANIMALS, POTION_EFFECTS, MILK_ZOMBIE, POTION_TYPES, EQUIP_DONKEY_CHEST, 
+                HUNGER_DAMAGE, HOGLIN_SCARE, PIGLIN_SCARE, SHOOT_PORTAL, RIDE_HORSE_MINECART, CAKE_EAT, END_LEAVE, PLAYER_FISH, PIG_FALL, FULL_ARMOR, FIREWORK_CROSSBOW,
+                CREEPER_TNT_KILL, NETHER_MOB_KILL, ENDER_EYE_THROW, FLYING_MOBS_KILL, LINGERING_WATER_POTION, ENDER_PEARL_TRAVEL, VILLAGER_EXPENSIVE_TRADE,
+                EAT_SUS_STEW, MINE_LIGHT_SOURCE, GLOWING_BAT, TEAM_SPAWN_ANCHOR, NOTEBLOCK_INSTRUMENTS, DROWNED_MAP, TEAM_DANCE, SNOWBALL_BLAZE_KILL,
+                OBTAIN_MULE, FARM_CROPS, END_BINGO_MAX_HEIGHT, NONE
+
         }
 
         public void registerChallenges(){
 
-                challenges.put(Challenge.HALF_HEART, new ItemCode('\uEE41', 1, "Todos los miembros deben permanecer a medio corazón durante 10 segundos."));
-                challenges.put(Challenge.SHIELD_BREAK, new ItemCode('\uEE42', 2, "Rompe un escudo de un compañero."));
+                challenges.put(Challenge.HALF_HEART, new ItemCode('\uEE41', 1, "Todos los miembros deben permanecer a medio corazón."));
+                challenges.put(Challenge.SHIELD_BREAK, new ItemCode('\uEE42', 2, "Rompe el escudo de un compañero."));
                 challenges.put(Challenge.ARMOR_MATERIALS, new ItemCode('\uEE43', 3, "Un integrante debe llevar armadura completa de distinto material cada pieza."));
                 challenges.put(Challenge.DOLPHIN_SWIM, new ItemCode('\uEE44', 4, "Nada con un delfín."));
                 challenges.put(Challenge.MAXIMUM_HEIGHT, new ItemCode('\uEE45', 5, "Alcanza la altura máxima."));
@@ -708,10 +714,10 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.SHOOT_TARGET, new ItemCode('\uEE47', 7, "Dispara a un target block."));
                 challenges.put(Challenge.HOSTILE_KILL, new ItemCode('\uEE48', 8, "Mata a 5 mobs hostiles diferentes."));
                 challenges.put(Challenge.ANIMAL_KILL, new ItemCode('\uEE49', 9, "Mata a 5 animales diferentes."));
-                challenges.put(Challenge.CAMPFIRE_CAMPING, new ItemCode('\uEE50', 10, "Cocina en una hoguera con todo tu equipo cerca."));
+                challenges.put(Challenge.CAMPFIRE_CAMPING, new ItemCode('\uEE50', 10, "“Acampanding” Cocina en una hoguera con todo tu equipo cerca."));
                 challenges.put(Challenge.PINK_SHEEP_BIOME, new ItemCode('\uEE51', 11, "Cada miembro del equipo debe matar una oveja rosa en un bioma diferente."));
                 challenges.put(Challenge.BREAK_RULE_1, new ItemCode('\uEE52', 12, "Rompe la regla #1 de Minecraft."));
-                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar encima de una cama al mismo tiempo."));
+                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar encima de la misma cama al mismo tiempo."));
                 challenges.put(Challenge.BONE_MEAL_COMPOSTER, new ItemCode('\uEE54', 14, "Consigue bone meal mediante un compostador."));
                 challenges.put(Challenge.CREEPER_IGNITE, new ItemCode('\uEE55', 15, "Enciende un creeper con un mechero."));
                 challenges.put(Challenge.DROWN_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
@@ -719,15 +725,64 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.PURPLE_LLAMA, new ItemCode('\uEE58', 18, "Monta una llama con una alfombra morada."));
                 challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 5 tipos de comida diferentes."));
                 challenges.put(Challenge.COLOR_SHEEP, new ItemCode('\uEE60', 20, "Cambia el color de una oveja con 10 tipos de tinte distintos."));
-                challenges.put(Challenge.LVL_30, new ItemCode('\uEE61', 21, "Todos los miembros deben sumar más de 30 niveles de experiencia."));
+                challenges.put(Challenge.LVL_40, new ItemCode('\uEE61', 21, "Todos los miembros deben sumar más de 40 niveles de experiencia."));
                 challenges.put(Challenge.ANVIL_DAMAGE, new ItemCode('\uEE62', 22, "Cada miembro del equipo debe tomar daño de caída de yunque."));
                 challenges.put(Challenge.ACUATIC_KILL, new ItemCode('\uEE63', 23, "Mata 5 mobs acuaticos diferentes."));
                 challenges.put(Challenge.MINE_MINERALS, new ItemCode('\uEE64', 24, "Mina 5 minerales diferentes."));
                 challenges.put(Challenge.GET_POISON, new ItemCode('\uEE65', 25, "Consigue el efecto de veneno."));
-
-                challenges.put(Challenge.DONKEY_CHEST, new ItemCode('\uEE54', 14, "Equipa un cofre a un burro."));
                 
-
+                challenges.put(Challenge.INVENTORY_STACKS, new ItemCode('\uEE66', 26, "Un integrante debe de llenar todo su inventario con stacks de 64 de cualquier item."));
+	        challenges.put(Challenge.STRIDER_GAPPLE, new ItemCode('\uEE67', 27, "Come una manzana dorada mientras montas un strider."));
+		challenges.put(Challenge.PIGLIN_BARTER, new ItemCode('\uEE68', 28, "Tradea con un piglin."));
+		challenges.put(Challenge.COMPLETE_MAP, new ItemCode('\uEE69', 29, "Completa un mapa."));
+		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
+		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Dispara a través de 3 miembros de tu equipo con un solo disparo de ballesta."));
+		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben de tener un escudo con el mismo banner."));
+		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
+		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
+		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));
+		challenges.put(Challenge.FISH_ITEMS, new ItemCode('\uEE76', 36, "Pesca 5 items diferentes."));
+		challenges.put(Challenge.GIVE_PLAYER_FLOWER, new ItemCode('\uEE77', 37, "Regala una flor a un jugador de otro equipo con click derecho sobre ellos."));
+		challenges.put(Challenge.WATER_DROP, new ItemCode('\uEE78', 38, "“Salto de fe” Consigue un WaterDrop perfecto de más de 75 bloques de altura."));
+		challenges.put(Challenge.EMPTY_CAULDRON, new ItemCode('\uEE79', 39, "Vacía un cauldron sin usar botellas ni cubetas."));
+		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 5 tipos de animales diferentes."));
+		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 5 efectos de poción al mismo tiempo."));
+		challenges.put(Challenge.MILK_ZOMBIE, new ItemCode('\uEE82', 42, "Dale un cubo de leche a un zombie."));
+		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Fabrica 3 tipos diferentes de pociones."));
+		challenges.put(Challenge.EQUIP_DONKEY_CHEST, new ItemCode('\uEE84', 44, "Equipa un cofre a un burro."));
+		challenges.put(Challenge.HUNGER_DAMAGE, new ItemCode('\uEE85', 45, "Recibe daño por hambre."));
+		challenges.put(Challenge.HOGLIN_SCARE, new ItemCode('\uEE86', 46, "Asusta un hoglin usando un warped fungus."));
+		challenges.put(Challenge.PIGLIN_SCARE, new ItemCode('\uEE87', 47, "Asusta un piglin usando una antorcha o linterna de alma."));
+		challenges.put(Challenge.SHOOT_PORTAL, new ItemCode('\uEE88', 48, "Dispara a una entidad a través de un portal del nether"));
+		//challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE89', 49, "."));
+		challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE90', 50, "Monta a un caballo que este montando un minecart."));
+                                
+		challenges.put(Challenge.CAKE_EAT, new ItemCode('\uEE91', 51, "“Feliz Cumpleaños a ti” Todos los miembros del equipo deben comer de un mismo pastel."));
+		challenges.put(Challenge.END_LEAVE, new ItemCode('\uEE92', 52, "“De vuelta a casa” Regresa al overworld a través de un portal del end."));
+		challenges.put(Challenge.PLAYER_FISH, new ItemCode('\uEE93', 53, "Pesca un jugador de otro bando."));
+		challenges.put(Challenge.PIG_FALL, new ItemCode('\uEE94', 54, "“Cuando los cerdos vuelen” Guía a un cerdo a morir de caída"));
+		challenges.put(Challenge.FULL_ARMOR, new ItemCode('\uEE95', 55, "“Equipados para todo” Todos los miembros deben llevar una armadura completa."));
+		challenges.put(Challenge.FIREWORK_CROSSBOW, new ItemCode('\uEE96', 56, "“Se fue con un BANG” Todos los miembros deben lanzar una ballesta cargada con fuegos artificiales"));
+		challenges.put(Challenge.CREEPER_TNT_KILL, new ItemCode('\uEE97', 57, "“Dulce Venganza” Mata a un creeper con tnt."));
+		challenges.put(Challenge.NETHER_MOB_KILL, new ItemCode('\uEE98', 58, "Cada miembro del equipo debe matar un mob en un bioma del nether diferente."));
+		challenges.put(Challenge.ENDER_EYE_THROW, new ItemCode('\uEE99', 59, "“Veo veo con mi ojo feo” Todos los jugadores tienen que lanzar un ojo de ender"));
+		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
+		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion de agua."));
+		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 300 bloques con una enderpearl"));
+		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 20 esmeraldas con un aldeano "));
+		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 5 tipos diferentes de suspicious stew."));
+		challenges.put(Challenge.MINE_LIGHT_SOURCE, new ItemCode('\uEF06', 65, "Pica 10 bloques diferentes que den luz."));
+		challenges.put(Challenge.GLOWING_BAT, new ItemCode('\uEF07', 66, "Dispárale una flecha con glowing a un murciélago."));
+		challenges.put(Challenge.TEAM_SPAWN_ANCHOR, new ItemCode('\uEF08', 67, "Todos los miembros del equipo deben asignar su reaparición a un mismo respawn anchor."));
+		challenges.put(Challenge.NOTEBLOCK_INSTRUMENTS, new ItemCode('\uEF09', 68, "Toca 5 instrumentos diferentes en un note block."));
+		challenges.put(Challenge.DROWNED_MAP, new ItemCode('\uEF10', 69, "“Rey de los océanos” Dale un mapa a un drowned."));
+		challenges.put(Challenge.TEAM_DANCE, new ItemCode('\uEF11', 70, "Reproduce un disco en un tocadiscos y baila con todo tu equipo."));
+		challenges.put(Challenge.SNOWBALL_BLAZE_KILL, new ItemCode('\uEF12', 71, "Mata a un blaze usando bolas de nieve."));
+		challenges.put(Challenge.OBTAIN_MULE, new ItemCode('\uEF13', 72, "Consigue una Mula."));
+		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Crece 5 cultivos diferentes al máximo."));
+		challenges.put(Challenge.END_BINGO_MAX_HEIGHT, new ItemCode('\uEF15', 74, "“En la Cima” Todos los integrantes deben de estar juntos y en la capa 256 después de completar todos los otros logros."));
+		//challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEF16', 48, ""));
+                
         }
 
         public void register_challenge_1(){
@@ -753,11 +808,10 @@ public class Game extends BukkitRunnable {
                 challenge_1.add(Challenge.PURPLE_LLAMA);
                 challenge_1.add(Challenge.EAT_FOOD);
                 challenge_1.add(Challenge.COLOR_SHEEP);
-                challenge_1.add(Challenge.LVL_30);
+                challenge_1.add(Challenge.LVL_40);
                 challenge_1.add(Challenge.ANVIL_DAMAGE);
                 challenge_1.add(Challenge.ACUATIC_KILL);
                 challenge_1.add(Challenge.MINE_MINERALS);
-                challenge_1.add(Challenge.ACUATIC_KILL);
                 challenge_1.add(Challenge.GET_POISON);
 
         }
@@ -765,15 +819,61 @@ public class Game extends BukkitRunnable {
         public void register_challenge_2(){
                 var challenge_2 = challengeRounds.get(BingoRound.TWO);
 
-                challenge_2.add(Challenge.JUMP_BED);
-                
+                challenge_2.add(Challenge.INVENTORY_STACKS);
+                challenge_2.add(Challenge.STRIDER_GAPPLE);
+                challenge_2.add(Challenge.PIGLIN_BARTER);
+                challenge_2.add(Challenge.COMPLETE_MAP);
+                challenge_2.add(Challenge.VILLAGER_MAX_TRADE);
+                challenge_2.add(Challenge.CROSSBOW_SHOT);
+                challenge_2.add(Challenge.SHIELD_BANNER);
+                challenge_2.add(Challenge.ENCHANT_LVL6);
+                challenge_2.add(Challenge.CAMPFIRE_HAY_BALE);
+                challenge_2.add(Challenge.BED_EXPLODE);
+                challenge_2.add(Challenge.FISH_ITEMS);
+                challenge_2.add(Challenge.GIVE_PLAYER_FLOWER);
+                challenge_2.add(Challenge.WATER_DROP);
+                challenge_2.add(Challenge.EMPTY_CAULDRON);
+                challenge_2.add(Challenge.BREED_ANIMALS);
+                challenge_2.add(Challenge.POTION_EFFECTS);
+                challenge_2.add(Challenge.MILK_ZOMBIE);
+                challenge_2.add(Challenge.POTION_TYPES);
+                challenge_2.add(Challenge.EQUIP_DONKEY_CHEST);
+                challenge_2.add(Challenge.HUNGER_DAMAGE);
+                challenge_2.add(Challenge.HOGLIN_SCARE);
+                challenge_2.add(Challenge.PIGLIN_SCARE);
+                challenge_2.add(Challenge.SHOOT_PORTAL);
+                challenge_2.add(Challenge.RIDE_HORSE_MINECART);
+
         }
 
         public void register_challenge_3(){
                 var challenge_3 = challengeRounds.get(BingoRound.THREE);
 
-                challenge_3.add(Challenge.JUMP_BED);
-                
+                challenge_3.add(Challenge.CAKE_EAT);
+                challenge_3.add(Challenge.END_LEAVE);
+                challenge_3.add(Challenge.PLAYER_FISH);
+                challenge_3.add(Challenge.PIG_FALL);
+                challenge_3.add(Challenge.FULL_ARMOR);
+                challenge_3.add(Challenge.FIREWORK_CROSSBOW);
+                challenge_3.add(Challenge.CREEPER_TNT_KILL);
+                challenge_3.add(Challenge.NETHER_MOB_KILL);
+                challenge_3.add(Challenge.ENDER_EYE_THROW);
+                challenge_3.add(Challenge.FLYING_MOBS_KILL);
+                challenge_3.add(Challenge.LINGERING_WATER_POTION);
+                challenge_3.add(Challenge.ENDER_PEARL_TRAVEL);
+                challenge_3.add(Challenge.VILLAGER_EXPENSIVE_TRADE);
+                challenge_3.add(Challenge.EAT_SUS_STEW);
+                challenge_3.add(Challenge.MINE_LIGHT_SOURCE);
+                challenge_3.add(Challenge.GLOWING_BAT);
+                challenge_3.add(Challenge.TEAM_SPAWN_ANCHOR);
+                challenge_3.add(Challenge.NOTEBLOCK_INSTRUMENTS);
+                challenge_3.add(Challenge.DROWNED_MAP);
+                challenge_3.add(Challenge.TEAM_DANCE);
+                challenge_3.add(Challenge.SNOWBALL_BLAZE_KILL);
+                challenge_3.add(Challenge.OBTAIN_MULE);
+                challenge_3.add(Challenge.FARM_CROPS);
+                challenge_3.add(Challenge.END_BINGO_MAX_HEIGHT);
+
         }
 
 

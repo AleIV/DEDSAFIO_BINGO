@@ -64,7 +64,7 @@ public class BingoManager implements Listener {
                 });
     }
 
-    public void addChallenge(Table table, Challenge challenge, Player player){
+    public void addChallenge(Table table, Challenge challenge, Player player) {
         var game = instance.getGame();
         var board = table.getBoard();
         var selectedChallenges = table.getSelectedChallenge();
@@ -87,11 +87,10 @@ public class BingoManager implements Listener {
         }
     }
 
-    public void removeChallenge(Table table, Challenge challenge, Player player){
+    public void removeChallenge(Table table, Challenge challenge, Player player) {
         var uuid = player.getUniqueId().toString();
         var game = instance.getGame();
         var board = table.getBoard();
-        var selectedChallenges = table.getSelectedChallenge();
         var boards = game.getBoards();
 
         for (int i = 0; i < 5; i++) {
@@ -100,7 +99,6 @@ public class BingoManager implements Listener {
                 if (slot.isFound() && slot instanceof ChallengeSlot slotC && slotC.getChallenge() == challenge) {
                     slot.setFound(false);
 
-                    selectedChallenges.remove(challenge);
                     var score = boards.get(uuid);
                     instance.getBingoManager().updateBoard(score, table);
 
@@ -110,7 +108,7 @@ public class BingoManager implements Listener {
         }
     }
 
-    public void addItem(Table table, Material material, Player player){
+    public void addItem(Table table, Material material, Player player) {
         var uuid = player.getUniqueId().toString();
         var game = instance.getGame();
         var board = table.getBoard();
@@ -134,11 +132,10 @@ public class BingoManager implements Listener {
         }
     }
 
-    public void removeItem(Table table, Material material, Player player){
+    public void removeItem(Table table, Material material, Player player) {
         var uuid = player.getUniqueId().toString();
         var game = instance.getGame();
         var board = table.getBoard();
-        var selectedItems = table.getSelectedItems();
         var boards = game.getBoards();
 
         for (int i = 0; i < 5; i++) {
@@ -147,7 +144,6 @@ public class BingoManager implements Listener {
                 if (!slot.isFound() && slot.getItem().getType() == material) {
                     slot.setFound(false);
 
-                    selectedItems.remove(material);
                     var score = boards.get(uuid);
                     instance.getBingoManager().updateBoard(score, table);
 
@@ -176,7 +172,7 @@ public class BingoManager implements Listener {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
                         var slot = board[i][j];
-                        if (!slot.isFound() && slot.getItem().getType() == item.getType()){
+                        if (!slot.isFound() && slot.getItem().getType() == item.getType()) {
                             slot.setFound(true);
 
                             var score = boards.get(uuid);
@@ -214,63 +210,65 @@ public class BingoManager implements Listener {
                         var slot = board[i][j];
                         if (!slot.isFound() && slot instanceof ChallengeSlot slotC
                                 && slotC.getChallenge() == challenge) {
-                            
+
                             var challengeInfo = slotC.getChallengeInfo();
                             var infoPlayers = slotC.getInfoPlayers();
-                            
 
                             switch (challenge) {
                                 case COLOR_SHEEP:
-                                case EAT_FOOD:{
+                                case EAT_FOOD: {
 
-                                    if(challengeInfo.contains(info)){
+                                    if (challengeInfo.contains(info)) {
                                         return;
 
-                                    }else{
+                                    } else {
                                         challengeInfo.add(info);
                                     }
 
-                                    if(challengeInfo.size() < 10){
+                                    if (challengeInfo.size() < 10) {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
 
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
-                                case HOSTILE_KILL:{
+                                case HOSTILE_KILL: {
 
-                                    if(challengeInfo.contains(info)){
+                                    if (challengeInfo.contains(info)) {
                                         return;
 
-                                    }else{
+                                    } else {
                                         challengeInfo.add(info);
                                     }
 
-                                    if(challengeInfo.size() < 5){
+                                    if (challengeInfo.size() < 5) {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
 
-                                case PINK_SHEEP_BIOME:{
+                                case PINK_SHEEP_BIOME: {
 
-                                    if(challengeInfo.contains(info) || infoPlayers.contains(playerName)){
+                                    if (challengeInfo.contains(info) || infoPlayers.contains(playerName)) {
                                         return;
 
-                                    }else{
+                                    } else {
                                         challengeInfo.add(info);
                                         infoPlayers.add(playerName);
                                     }
 
-                                    if(challengeInfo.size() < table.getMembers().size() || infoPlayers.size() < table.getMembers().size()){
+                                    if (challengeInfo.size() < table.getMembers().size()
+                                            || infoPlayers.size() < table.getMembers().size()) {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
 
-                            
                                 default:
                                     break;
                             }
@@ -384,23 +382,21 @@ public class BingoManager implements Listener {
         var game = instance.getGame();
 
         game.setGameStage(GameStage.POSTGAME);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarting...");
+        instance.broadcastMessage(ChatColor.of(game.getColor3()) + "TIME IS UP!");
 
-        game.setGameStage(GameStage.LOBBY);
-        instance.broadcastMessage(ChatColor.of(game.getColor1()) + "Game restarted.");
+        var manager = instance.getScatterManager();
+        Bukkit.getScheduler().runTaskLater(instance, task -> {
 
-        var world = Bukkit.getWorld("lobby");
-        var loc = new Location(world, 0.5, 126, 0.5, 90, -0);
+            game.setGameStage(GameStage.LOBBY);
 
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            player.teleport(loc);
-            var table = findTable(player.getUniqueId());
-            if (table != null) {
-                instance.broadcastMessage(ChatColor.DARK_RED + player.getName() + ChatColor.GOLD + " POINTS: "
-                        + (table.getObjectsFound()));
-            }
+            var world = Bukkit.getWorld("lobby");
+            var loc = new Location(world, 0.5, 126, 0.5, 90, -0);
 
-        });
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                manager.Qteleport(player, loc);
+            });
+
+        }, 20 * 5);
 
     }
 
@@ -423,11 +419,15 @@ public class BingoManager implements Listener {
             if (!table.isFoundFull() && table.isBingoFull()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
                 table.setFoundFull(true);
+                table.playFullFoundAnimation();
 
             } else if (!table.isFoundLine() && table.isBingoLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
                 table.setFoundLine(true);
+                table.playLineFoundAnimation();
 
+            } else {
+                table.playItemFoundAnimation();
             }
 
         });
