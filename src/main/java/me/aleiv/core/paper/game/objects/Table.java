@@ -247,7 +247,6 @@ public class Table {
                 for (int j = 0; j < 5; j++) {
 
                     var challenge = diff.get(count);
-                    instance.broadcastMessage(challenge.toString());
 
                     table.getBoard()[i][j] = new ChallengeSlot(instance, challenge);
                     table.getSelectedChallenge().add(challenge);
