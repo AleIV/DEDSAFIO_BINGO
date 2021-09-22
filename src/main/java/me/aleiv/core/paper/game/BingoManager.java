@@ -176,7 +176,7 @@ public class BingoManager implements Listener {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
                         var slot = board[i][j];
-                        if (!slot.isFound() && slot.getItem().getType() == item.getType()) {
+                        if (!slot.isFound() && slot.getItem().getType() == item.getType()){
                             slot.setFound(true);
 
                             var score = boards.get(uuid);
@@ -220,6 +220,24 @@ public class BingoManager implements Listener {
                             
 
                             switch (challenge) {
+                                case COLOR_SHEEP:
+                                case EAT_FOOD:{
+
+                                    if(challengeInfo.contains(info)){
+                                        return;
+
+                                    }else{
+                                        challengeInfo.add(info);
+                                    }
+
+                                    if(challengeInfo.size() < 10){
+                                        return;
+                                    }
+
+                                } break;
+
+                                case ACUATIC_KILL:
+                                case MINE_MINERALS:
                                 case ANIMAL_KILL:
                                 case HOSTILE_KILL:{
 
@@ -230,8 +248,7 @@ public class BingoManager implements Listener {
                                         challengeInfo.add(info);
                                     }
 
-                                    //TODO: change 4 to size of team
-                                    if(challengeInfo.size() < 4){
+                                    if(challengeInfo.size() < 5){
                                         return;
                                     }
 
@@ -247,8 +264,7 @@ public class BingoManager implements Listener {
                                         infoPlayers.add(playerName);
                                     }
 
-                                    //TODO: change 4 to size of team
-                                    if(challengeInfo.size() < 4 || infoPlayers.size() < 4){
+                                    if(challengeInfo.size() < table.getMembers().size() || infoPlayers.size() < table.getMembers().size()){
                                         return;
                                     }
 

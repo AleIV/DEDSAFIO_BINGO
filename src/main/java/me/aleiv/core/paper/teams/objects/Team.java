@@ -1,7 +1,13 @@
 package me.aleiv.core.paper.teams.objects;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 /**
  * Team intended to have more information then just the basics of a team, but
@@ -34,6 +40,11 @@ public class Team extends BaseTeam {
      */
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public Stream<Player> getPlayerStream() {
+        return members.stream().map(Bukkit::getOfflinePlayer).filter(Objects::nonNull)
+                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer);
     }
 
     public boolean isMember(UUID uuid) {

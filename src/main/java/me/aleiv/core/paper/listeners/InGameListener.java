@@ -63,7 +63,8 @@ public class InGameListener implements Listener {
     @EventHandler
     public void cancelSpawners(BlockBreakEvent e){
         var block = e.getBlock();
-        if(block.getType() == Material.SPAWNER){
+        var world = Bukkit.getWorld("lobby");
+        if(world == block.getWorld() && block.getType() == Material.SPAWNER){
             e.setCancelled(true);
         }
     }

@@ -2,11 +2,15 @@ package me.aleiv.core.paper.game.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
@@ -46,8 +50,13 @@ public class Table{
         this.members = new ArrayList<>();
         this.foundLine = false;
         this.foundFull = false;
-        this.objectsFound =0;
+        this.objectsFound = 0;
 
+    }
+
+    public Stream<Player> getPlayerStream() {
+        return members.stream().map(Bukkit::getOfflinePlayer).filter(Objects::nonNull)
+                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer);
     }
 
     public void selectItems(Core instance) {

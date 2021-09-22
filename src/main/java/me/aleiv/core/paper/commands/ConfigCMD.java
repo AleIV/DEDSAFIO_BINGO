@@ -55,6 +55,36 @@ public class ConfigCMD extends BaseCommand {
 
     }
 
+    @Subcommand("set-table")
+    @CommandCompletion("@players")
+    public void setTable(CommandSender sender, @Flags("other") Player player1, @Flags("other") Player player2) {
+        var game = instance.getGame();
+        var uuid1 = player1.getUniqueId();
+        var uuid2 = player2.getUniqueId();
+        var manager = instance.getBingoManager();
+
+        var color1 = ChatColor.of(game.getColor1());
+
+        var table1 = manager.findTable(uuid1);
+        var table2 = manager.findTable(uuid2);
+
+        if(table1 == null){
+            sender.sendMessage(color1 + "Bingo player " + player1.getName() + " is not playing.");
+
+        }else{
+            
+            if(table2 != null){
+                table2.getMembers().remove(uuid2);
+            }
+
+            table1.getMembers().add(uuid2);
+            
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            instance.broadcastMessage(senderName + ChatColor.of(game.getColor4()) + "Added " + player2.getName() + " to " + player1.getName() + " table.");
+        }
+
+    }
+
     @Subcommand("add-challenge")
     public void addChallenge(CommandSender sender, Challenge challenge, @Flags("other") Player player) {
         var manager = instance.getBingoManager();

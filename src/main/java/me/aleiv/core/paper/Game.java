@@ -52,9 +52,9 @@ public class Game extends BukkitRunnable {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameTime = 0;
-                this.gameStage = GameStage.LOBBY;
+                this.gameStage = GameStage.INGAME;
                 this.bingoRound = BingoRound.ONE;
-                this.bingoFase = BingoFase.ITEMS;
+                this.bingoFase = BingoFase.CHALLENGE;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -693,7 +693,7 @@ public class Game extends BukkitRunnable {
 
         public enum Challenge {
                 HALF_HEART, SHIELD_BREAK, ARMOR_MATERIALS, DOLPHIN_SWIM, MAXIMUM_HEIGHT, NETHER_TREE, SHOOT_TARGET, HOSTILE_KILL, ANIMAL_KILL, CAMPFIRE_CAMPING, 
-                PINK_SHEEP_BIOME, BREAK_RULE_1, JUMP_BED, BONE_MEAL_COMPOSTER, DONKEY_CHEST, CREEPER_IGNITE, DROWM_VILLAGER, REDSTONE_SIGNAL, PURPLE_LLAMA, EAT_FOOD, COLOR_SHEEP, LVL_30,
+                PINK_SHEEP_BIOME, BREAK_RULE_1, JUMP_BED, BONE_MEAL_COMPOSTER, DONKEY_CHEST, CREEPER_IGNITE, DROWN_VILLAGER, REDSTONE_SIGNAL, PURPLE_LLAMA, EAT_FOOD, COLOR_SHEEP, LVL_30,
                 ANVIL_DAMAGE, ACUATIC_KILL, MINE_MINERALS, GET_POISON 
         }
 
@@ -714,7 +714,7 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar encima de una cama al mismo tiempo."));
                 challenges.put(Challenge.BONE_MEAL_COMPOSTER, new ItemCode('\uEE54', 14, "Consigue bone meal mediante un compostador."));
                 challenges.put(Challenge.CREEPER_IGNITE, new ItemCode('\uEE55', 15, "Enciende un creeper con un mechero."));
-                challenges.put(Challenge.DROWM_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
+                challenges.put(Challenge.DROWN_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
                 challenges.put(Challenge.REDSTONE_SIGNAL, new ItemCode('\uEE57', 17, "Activa 5 objetos diferentes que emitan una señal de redstone."));
                 challenges.put(Challenge.PURPLE_LLAMA, new ItemCode('\uEE58', 18, "Monta una llama con una alfombra morada."));
                 challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 5 tipos de comida diferentes."));
@@ -748,7 +748,7 @@ public class Game extends BukkitRunnable {
                 challenge_1.add(Challenge.JUMP_BED);
                 challenge_1.add(Challenge.BONE_MEAL_COMPOSTER);
                 challenge_1.add(Challenge.CREEPER_IGNITE);
-                challenge_1.add(Challenge.DROWM_VILLAGER);
+                challenge_1.add(Challenge.DROWN_VILLAGER);
                 challenge_1.add(Challenge.REDSTONE_SIGNAL);
                 challenge_1.add(Challenge.PURPLE_LLAMA);
                 challenge_1.add(Challenge.EAT_FOOD);
