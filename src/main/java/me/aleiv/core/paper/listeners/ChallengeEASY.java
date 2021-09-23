@@ -12,17 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Drowned;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Turtle;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -41,6 +31,7 @@ import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoFase;
 import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.Challenge;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 public class ChallengeEasy implements Listener {
 
@@ -437,6 +428,23 @@ public class ChallengeEasy implements Listener {
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Challenge.BONE_MEAL_COMPOSTER, "");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMount(EntityMountEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        if (event.getEntity() instanceof Player player && event.getMount() instanceof Llama llama) {
+            if (llama.getInventory().contains(new ItemStack(Material.PURPLE_CARPET))) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Challenge.PURPLE_LLAMA, "");
                 }
             }
         }
