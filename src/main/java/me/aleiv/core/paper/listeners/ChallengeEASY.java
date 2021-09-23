@@ -32,10 +32,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -420,6 +417,27 @@ public class ChallengeEasy implements Listener {
             var table = manager.findTable(player.getUniqueId());
             if (table != null) {
                 manager.attempToFind(player, Challenge.ARMOR_MATERIALS, "");
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerInteractBlock(PlayerInteractEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        var player = event.getPlayer();
+        var block = event.getClickedBlock();
+
+        if (block != null && block.getType() == Material.COMPOSTER) {
+            var blockData = block.getBlockData();
+            if (blockData.getAsString().equals("minecraft:composter[level=8]")) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Challenge.BONE_MEAL_COMPOSTER, "");
+                }
             }
         }
     }
