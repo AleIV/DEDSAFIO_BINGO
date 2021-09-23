@@ -17,11 +17,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCookEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -116,17 +113,13 @@ public class ChallengeEasy implements Listener {
 
         if (entity instanceof Player player) {
             var manager = instance.getBingoManager();
-
             var table = manager.findTable(player.getUniqueId());
-
             if (table != null) {
-
                 Bukkit.getScheduler().runTaskLater(instance, task -> {
                     if (isTeamAtHalf(table.getPlayerStream().collect(Collectors.toList()))) {
                         manager.attempToFind(player, Challenge.HALF_HEART, "");
                     }
                 }, 1);
-
             }
         }
     }
@@ -445,6 +438,25 @@ public class ChallengeEasy implements Listener {
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Challenge.PURPLE_LLAMA, "");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        if (event.getEntity() instanceof Player player) {
+            if (event.getCause() == DamageCause.FALLING_BLOCK && event.getDamager() instanceof FallingBlock fallingBlock) {
+                if (fallingBlock.getBlockData().getMaterial() == Material.ANVIL) {
+                    var manager = instance.getBingoManager();
+                    var table = manager.findTable(player.getUniqueId());
+                    if (table != null) {
+                        manager.attempToFind(player, Challenge.ANVIL_DAMAGE, "");
+                    }
                 }
             }
         }
