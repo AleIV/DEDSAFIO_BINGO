@@ -292,13 +292,16 @@ public class ChallengeEasy implements Listener {
             return;
 
         var block = e.getBlock();
+        var manager = instance.getBingoManager();
+        var player = e.getPlayer();
 
         if (listMaterials.contains(block.getType())) {
-            var manager = instance.getBingoManager();
-            var player = e.getPlayer();
             manager.attempToFind(player, Challenge.MINE_MINERALS, block.getType().toString());
         }
 
+        var l = block.getLocation();
+        String formattedLoc = l.getBlockX() + ";" + l.getBlockY() + ";" + l.getBlockZ();
+        manager.attempToFind(player, Challenge.BREAK_RULE_1, formattedLoc);
     }
 
     @EventHandler
