@@ -1,11 +1,13 @@
 package me.aleiv.core.paper.listeners;
 
+import io.papermc.paper.event.player.PlayerTradeEvent;
 import me.aleiv.core.paper.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Piglin;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Strider;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -78,6 +80,22 @@ public class ChallengeMedium implements Listener{
                             manager.attempToFind(player, Game.Challenge.PIGLIN_BARTER, "");
                         }
                     }), 1);
+        }
+    }
+
+    @EventHandler
+    public void onTrading(PlayerTradeEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
+            return;
+
+        Player player = event.getPlayer();
+        if (event.getVillager() instanceof Villager villager && villager.getVillagerLevel() >= 5) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.VILLAGER_MAX_TRADE, "");
+            }
         }
     }
 
