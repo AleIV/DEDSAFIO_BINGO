@@ -1,5 +1,6 @@
 package me.aleiv.core.paper.game;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -229,8 +230,7 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                }
-                                    break;
+                                } break;
 
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
@@ -248,8 +248,7 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                }
-                                    break;
+                                } break;
 
                                 case PINK_SHEEP_BIOME: {
 
@@ -266,11 +265,28 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                }
-                                    break;
+                                } break;
 
-                                default:
-                                    break;
+                                case BREAK_RULE_1: {
+                                    if (challengeInfo.size() == 0) {
+                                        challengeInfo.add(info);
+                                        return;
+                                    }
+                                    int[] lastCoords = Arrays.stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
+                                            .mapToInt(Integer::parseInt).toArray();
+                                    int[] currentCoords = Arrays.stream(info.split(";"))
+                                            .mapToInt(Integer::parseInt).toArray();
+                                    if (currentCoords[0] != lastCoords[0] || currentCoords[2] != lastCoords[2] ||
+                                        currentCoords[1] >= lastCoords[1]) {
+                                        challengeInfo.clear();
+                                        challengeInfo.add(info);
+                                        return;
+                                    }
+                                    challengeInfo.add(info);
+                                    if (challengeInfo.size() < 40) return;
+                                } break;
+
+                                default: break;
                             }
 
                             slot.setFound(true);
