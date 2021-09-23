@@ -1,9 +1,11 @@
 package me.aleiv.core.paper.listeners;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
 import org.bukkit.Bukkit;
@@ -35,6 +37,7 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import me.aleiv.core.paper.Core;
@@ -224,11 +227,12 @@ public class ChallengeEasy implements Listener {
             return;
 
         var player = e.getPlayer();
+        if (player == null) return;
 
         var manager = instance.getBingoManager();
         var table = manager.findTable(player.getUniqueId());
 
-        if (player != null && table != null && player.getWorld().getEnvironment() == Environment.NETHER) {
+        if (table != null && player.getWorld().getEnvironment() == Environment.NETHER) {
 
             manager.attempToFind(player, Challenge.NETHER_TREE, "");
 
@@ -390,6 +394,31 @@ public class ChallengeEasy implements Listener {
             }
         }
 
+    }
+
+    @EventHandler
+    public void armorEquipped(PlayerArmorChangeEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        Player player = event.getPlayer();
+        List<String> equippedItems = new ArrayList<>();
+        for (ItemStack item : player.getInventory().getArmorContents()) {
+            if (item == null) break;
+            Material material = item.getType();
+            String baseMaterial = material.name().split("_")[0];
+            if (equippedItems.contains(baseMaterial)) break;
+            equippedItems.add(baseMaterial);
+        }
+
+        if (equippedItems.size() == 4) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Challenge.ARMOR_MATERIALS, "");
+            }
+        }
     }
 
 }
