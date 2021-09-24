@@ -699,7 +699,7 @@ public class Game extends BukkitRunnable {
                 HUNGER_DAMAGE, HOGLIN_SCARE, PIGLIN_SCARE, SHOOT_PORTAL, RIDE_HORSE_MINECART, CAKE_EAT, END_LEAVE, PLAYER_FISH, PIG_FALL, FULL_ARMOR, FIREWORK_CROSSBOW,
                 CREEPER_TNT_KILL, NETHER_MOB_KILL, ENDER_EYE_THROW, FLYING_MOBS_KILL, LINGERING_WATER_POTION, ENDER_PEARL_TRAVEL, VILLAGER_EXPENSIVE_TRADE,
                 EAT_SUS_STEW, MINE_LIGHT_SOURCE, GLOWING_BAT, TEAM_SPAWN_ANCHOR, NOTEBLOCK_INSTRUMENTS, DROWNED_MAP, TEAM_DANCE, SNOWBALL_BLAZE_KILL,
-                OBTAIN_MULE, FARM_CROPS, END_BINGO_MAX_HEIGHT, NONE
+                OBTAIN_MULE, FARM_CROPS, END_BINGO_MAX_HEIGHT, JARDINERO, OVER_ZOGLIN
 
         }
 
@@ -754,7 +754,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.HOGLIN_SCARE, new ItemCode('\uEE86', 46, "Asusta un hoglin usando un warped fungus."));
 		challenges.put(Challenge.PIGLIN_SCARE, new ItemCode('\uEE87', 47, "Asusta un piglin usando una antorcha o linterna de alma."));
 		challenges.put(Challenge.SHOOT_PORTAL, new ItemCode('\uEE88', 48, "Dispara a una entidad a través de un portal del nether"));
-		//challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE89', 49, "."));
+		challenges.put(Challenge.JARDINERO, new ItemCode('\uEE89', 49, "Coloca 5 flores diferentes en una maceta."));
 		challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE90', 50, "Monta a un caballo que este montando un minecart."));
                                 
 		challenges.put(Challenge.CAKE_EAT, new ItemCode('\uEE91', 51, "“Feliz Cumpleaños a ti” Todos los miembros del equipo deben comer de un mismo pastel."));
@@ -781,7 +781,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.OBTAIN_MULE, new ItemCode('\uEF13', 72, "Consigue una Mula."));
 		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Crece 5 cultivos diferentes al máximo."));
 		challenges.put(Challenge.END_BINGO_MAX_HEIGHT, new ItemCode('\uEF15', 74, "“En la Cima” Todos los integrantes deben de estar juntos y en la capa 256 después de completar todos los otros logros."));
-		//challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEF16', 48, ""));
+		challenges.put(Challenge.OVER_ZOGLIN, new ItemCode('\uEF16', 75, "Mata un Zoglin."));
                 
         }
 
@@ -843,6 +843,7 @@ public class Game extends BukkitRunnable {
                 challenge_2.add(Challenge.PIGLIN_SCARE);
                 challenge_2.add(Challenge.SHOOT_PORTAL);
                 challenge_2.add(Challenge.RIDE_HORSE_MINECART);
+                challenge_2.add(Challenge.JARDINERO);
 
         }
 
@@ -873,6 +874,7 @@ public class Game extends BukkitRunnable {
                 challenge_3.add(Challenge.OBTAIN_MULE);
                 challenge_3.add(Challenge.FARM_CROPS);
                 challenge_3.add(Challenge.END_BINGO_MAX_HEIGHT);
+                challenge_3.add(Challenge.OVER_ZOGLIN);
 
         }
 

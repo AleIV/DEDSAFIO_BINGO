@@ -198,7 +198,7 @@ public class Table {
 
                     var material = options.get(getRand(options));
 
-                    table.getBoard()[i][j] = new Slot(instance, material);
+                    table.getBoard()[i][j] = new Slot(material);
                     table.getSelectedItems().add(material);
 
                     if (diff.isEmpty()) {

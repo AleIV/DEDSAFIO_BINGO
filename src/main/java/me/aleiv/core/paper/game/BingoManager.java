@@ -283,7 +283,7 @@ public class BingoManager implements Listener {
                                         return;
                                     }
                                     challengeInfo.add(info);
-                                    if (challengeInfo.size() < 40) return;
+                                    if (challengeInfo.size() < 30) return;
                                 } break;
 
                                 case ANVIL_DAMAGE: {

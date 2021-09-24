@@ -1,7 +1,7 @@
 package me.aleiv.core.paper.listeners;
 
-import io.papermc.paper.event.player.PlayerTradeEvent;
-import me.aleiv.core.paper.Game;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Piglin;
@@ -10,13 +10,13 @@ import org.bukkit.entity.Strider;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import me.aleiv.core.paper.Core;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
-import java.util.Arrays;
+import io.papermc.paper.event.player.PlayerTradeEvent;
+import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game;
 
 public class ChallengeMedium implements Listener{
     
