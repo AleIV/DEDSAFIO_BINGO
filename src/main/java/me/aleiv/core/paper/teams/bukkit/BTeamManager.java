@@ -11,11 +11,24 @@ import me.aleiv.core.paper.teams.bukkit.events.TeamCreatedEvent;
 import me.aleiv.core.paper.teams.bukkit.events.TeamUpdatedEvent;
 import me.aleiv.core.paper.teams.objects.Team;
 
+/**
+ * Simple class to make a TeamManager for Bukkit.
+ * 
+ * @author jcedeno
+ */
 public class BTeamManager extends TeamManager {
 
     Plugin plugin;
 
-    public BTeamManager(Plugin plugin) {
+    /**
+     * Constructor for the BTeamManager class.
+     * 
+     * @param plugin   A Bukkit plugin instance.
+     * @param redisURI The URI of the Redis server. Include password and port if
+     *                 needed.
+     */
+    public BTeamManager(Plugin plugin, String redisURI) {
+        super(redisURI);
         this.plugin = plugin;
     }
 
