@@ -18,13 +18,9 @@ public class TeamCreatedEvent extends Event {
     private Team team;
     private UUID node;
 
-    /**
-     * Constructor
-     * 
-     * @param team
-     * @param node
-     */
-    public TeamCreatedEvent(Team team, UUID node) {
+
+    public TeamCreatedEvent(Team team, UUID node, boolean async) {
+        super(async);
         this.team = team;
         this.node = node;
     }

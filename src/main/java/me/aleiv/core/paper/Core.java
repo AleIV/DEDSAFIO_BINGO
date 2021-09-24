@@ -29,6 +29,7 @@ import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
 import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.teams.bukkit.BTeamManager;
+import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -83,6 +84,7 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new ConfigCMD(this));
         commandManager.registerCommand(new BingoCMD(this));
         commandManager.registerCommand(new TestCMD(this));
+        commandManager.registerCommand(new TeamCMD(this));
 
         Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
@@ -103,6 +105,7 @@ public class Core extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        teamManager.disconect();
 
     }
 
