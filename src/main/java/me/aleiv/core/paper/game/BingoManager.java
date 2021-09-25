@@ -1,8 +1,10 @@
 package me.aleiv.core.paper.game;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -290,6 +292,22 @@ public class BingoManager implements Listener {
                                     if (infoPlayers.contains(playerName)) return;
                                     infoPlayers.add(playerName);
                                     if (infoPlayers.size() < table.getMembers().size()) return;
+                                } break;
+
+                                case CROSSBOW_SHOT: {
+                                    List<String> previewsPlayers = challengeInfo.stream()
+                                            .map(s -> s.split(";")[1])
+                                            .collect(Collectors.toList());
+                                    String[] lastData = challengeInfo.get(challengeInfo.size() - 1).split(";");
+                                    String[] newData = info.split(";");
+                                    if (!lastData[0].equals(newData[0]) || previewsPlayers.contains(newData[1]) ||
+                                        !lastData[2].equals(newData[2])) {
+                                        challengeInfo.clear();
+                                        challengeInfo.add(info);
+                                        return;
+                                    }
+                                    challengeInfo.add(info);
+                                    if (challengeInfo.size() < 3) return;
                                 } break;
 
                                 default: break;
