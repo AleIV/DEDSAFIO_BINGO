@@ -12,23 +12,43 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Drowned;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Fish;
+import org.bukkit.entity.Guardian;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.Turtle;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCookEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.*;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoFase;
 import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.Challenge;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 public class ChallengeEasy implements Listener {
 
@@ -275,6 +295,8 @@ public class ChallengeEasy implements Listener {
         var block = e.getBlock();
         var manager = instance.getBingoManager();
         var player = e.getPlayer();
+
+        if(player == null) return;
 
         if (listMaterials.contains(block.getType())) {
             manager.attempToFind(player, Challenge.MINE_MINERALS, block.getType().toString());

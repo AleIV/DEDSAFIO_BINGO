@@ -7,6 +7,10 @@ import me.aleiv.core.paper.teams.objects.Team;
 
 public class SimpleTeamManager extends TeamManager {
 
+    public SimpleTeamManager(String redisURI) {
+        super(redisURI);
+    }
+
     @Override
     public void updateTeam(Team team, UUID nodeId) {
         // Since this is not bukkit, we don't need to call an event or anything, so

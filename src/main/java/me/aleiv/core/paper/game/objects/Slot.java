@@ -1,5 +1,8 @@
 package me.aleiv.core.paper.game.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -14,11 +17,11 @@ import us.jcedeno.libs.rapidinv.ItemBuilder;
 
 public class Slot {
 
+    static Core instance = Core.getInstance();
     @Setter @Getter boolean isFound;
     @Getter ItemCode itemCode;
 
     Material material;
-
 
     public @Setter @Getter static String negativeSpace = NegativeSpaces.get(-18);
     
@@ -26,7 +29,8 @@ public class Slot {
     public static String normal = Character.toString('\uEAA2');
     public static String found = Character.toString('\uEAA3');
 
-    public Slot(Core instance, Material material) {
+    public Slot(Material material) {
+        
         this.material = material;
         this.isFound = false;
 
@@ -37,30 +41,24 @@ public class Slot {
     }
 
     public ItemStack getItem(){
-
-        var name = (isFound ? ChatColor.of("#f58700") : ChatColor.of("#00e0f5")) + formatName(material.toString()); 
+        var name = (isFound ? ChatColor.of("#f58700") + "Obtenido" : ChatColor.of("#00e0f5") + "Encuentra");
         var code = this.getItemCode().getCustomModelData();
 
-        var item = new ItemBuilder(material).name(name).meta(ItemMeta.class, meta -> meta.setCustomModelData(code)).flags(ItemFlag.HIDE_ATTRIBUTES).build();
+        var item = new ItemBuilder(material).meta(ItemMeta.class, meta -> meta.setCustomModelData(code)).flags(ItemFlag.HIDE_ATTRIBUTES);
+        var lore = formatName(material.toString());
 
-        return item;
+        item.name(name);
+        item.addLore(ChatColor.WHITE + lore);
+
+        return item.build();
     }
 
     public String formatName(String string){
-        var str = string;
-        //Core.getInstance().broadcastMessage(str);
-
-        str.toLowerCase();
-        return str;
-        
-        /*
-        Core.getInstance().broadcastMessage(str);
-
+        var str = string.toLowerCase();
         var array = str.toCharArray();
 
         var upper = true;
         var count = 0;
-        
         for (char c : array) {
             if(upper){
                 array[count] = Character.toUpperCase(c);
@@ -72,13 +70,29 @@ public class Slot {
         }
 
         var newString = String.valueOf(array);
+        return newString.replace("_", " ");
+    }
 
-        Core.getInstance().broadcastMessage(newString);
+    public List<String> formatDescription(String string, int wordLimit){
+        var description = string.split(" ");
 
-        newString.replace("_", " ");
+        List<String> finalDesc = new ArrayList<>();
+        var line = "";
+        var count = 0;
+        for (var str : description) {
+            if(count < wordLimit){
+                line += str + " ";
+            }else{
+                finalDesc.add(line);
+                count = 0;
+                line = "";
+                line += str + " ";
+            }
+            count++;
+        }
+        finalDesc.add(line);
 
-        Core.getInstance().broadcastMessage(newString);
-        return newString;*/
+        return finalDesc;
     }
 
     public String getDisplay(){

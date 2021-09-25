@@ -28,6 +28,8 @@ import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
 import me.aleiv.core.paper.teams.TeamManager;
+import me.aleiv.core.paper.teams.bukkit.BTeamManager;
+import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -55,7 +57,10 @@ public class Core extends JavaPlugin {
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         NegativeSpaces.registerCodes();
-        
+
+        // Hook the team manager
+        teamManager = new BTeamManager(this, "redis://localhost");
+
         game = new Game(this);
         game.runTaskTimerAsynchronously(this, 0L, 20L);
 
@@ -72,7 +77,6 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ChallengeEasy(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallengeMedium(this), this);
         Bukkit.getPluginManager().registerEvents(new ChallengeHard(this), this);
-        
 
         commandManager = new PaperCommandManager(this);
 
@@ -80,6 +84,7 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new ConfigCMD(this));
         commandManager.registerCommand(new BingoCMD(this));
         commandManager.registerCommand(new TestCMD(this));
+        commandManager.registerCommand(new TeamCMD(this));
 
         Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
@@ -100,6 +105,7 @@ public class Core extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        teamManager.disconect();
 
     }
 

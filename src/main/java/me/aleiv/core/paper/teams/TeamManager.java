@@ -39,9 +39,9 @@ public abstract class TeamManager {
     private RedisSyncPipeline syncPipeline;
     private Logger logger;
 
-    public TeamManager() {
+    public TeamManager(String redisURI) {
         this.teams = new ConcurrentHashMap<>();
-        this.redisClient = RedisClient.create("redis://localhost");
+        this.redisClient = RedisClient.create(redisURI);
         this.redisConnection = this.redisClient.connect();
         this.syncPipeline = new RedisSyncPipeline(this);
         this.logger = Logger.getLogger("TeamManager-" + nodeId.toString().split("-")[0]);

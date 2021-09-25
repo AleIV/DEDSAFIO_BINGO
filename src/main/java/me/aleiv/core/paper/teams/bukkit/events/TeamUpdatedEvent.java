@@ -24,7 +24,8 @@ public class TeamUpdatedEvent extends Event {
      * @param team
      * @param node
      */
-    public TeamUpdatedEvent(Team team, UUID node) {
+    public TeamUpdatedEvent(Team team, UUID node, boolean async) {
+        super(async);
         this.team = team;
         this.node = node;
     }

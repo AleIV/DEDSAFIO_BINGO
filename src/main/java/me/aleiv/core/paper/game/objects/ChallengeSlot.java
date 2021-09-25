@@ -22,8 +22,10 @@ public class ChallengeSlot extends Slot{
     @Getter @Setter List<String> challengeInfo;
     @Getter @Setter List<String> infoPlayers;
 
+    private List<Challenge> nonInfoLore = List.of(Challenge.BREAK_RULE_1);
+
     public ChallengeSlot(Core instance, Challenge challenge) {
-        super(instance, Material.PAPER);
+        super(Material.PAPER);
         this.challenge = challenge;
         this.isFound = false;
         this.challengeInfo = new ArrayList<>();
@@ -37,22 +39,30 @@ public class ChallengeSlot extends Slot{
 
     @Override
     public ItemStack getItem(){
-        var name = (isFound ? ChatColor.of("#f58700") : ChatColor.of("#00e0f5")) + "Challenge"; 
+        var name = (isFound ? ChatColor.of("#f58700") + "DEDsafío completado": ChatColor.of("#00e0f5") + "DEDsafío");
         var code = this.getItemCode().getCustomModelData();
 
         var item = new ItemBuilder(material).name(name).meta(ItemMeta.class, meta -> meta.setCustomModelData(code)).flags(ItemFlag.HIDE_ATTRIBUTES);
 
-        if(!infoPlayers.isEmpty()){
-            for (String string : infoPlayers) {
-                item.addLore(ChatColor.of("#94eaff") + string);
-            }
+        var description = formatDescription(itemCode.getDescription(), 5);
+
+        for (var desc : description) {
+            item.addLore(ChatColor.WHITE + desc);
         }
 
-        item.addLore("\n");
-
-        if(!challengeInfo.isEmpty()){
-            for (String string : challengeInfo) {
-                item.addLore(ChatColor.of("#94eaff") + string);
+        if(!nonInfoLore.contains(challenge)){
+            if(!infoPlayers.isEmpty()){
+                item.addLore(" ");
+                for (String string : infoPlayers) {
+                    item.addLore(ChatColor.of("#ffee2e") + string);
+                }
+            }
+    
+            if(!challengeInfo.isEmpty()){
+                item.addLore(" ");
+                for (String string : challengeInfo) {
+                    item.addLore(ChatColor.of("#ffee2e") + formatName(string));
+                }
             }
         }
 
