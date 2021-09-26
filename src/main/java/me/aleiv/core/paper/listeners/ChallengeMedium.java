@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.EnchantingTable;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -141,10 +140,13 @@ public class ChallengeMedium implements Listener{
         if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
             return;
 
-        if (event.getEnchantBlock() instanceof EnchantingTable enchantingTable) {
-            Player player = event.getEnchanter();
-            instance.broadcastMessage("Block data: " + enchantingTable.getBlockData());
-            instance.broadcastMessage("Lvl: " + event.getExpLevelCost());
+        Player player = event.getEnchanter();
+        if (event.getExpLevelCost() == 6) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.ENCHANT_LVL6, "");
+            }
         }
     }
 
