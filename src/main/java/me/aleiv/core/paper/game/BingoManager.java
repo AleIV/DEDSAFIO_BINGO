@@ -237,6 +237,7 @@ public class BingoManager implements Listener {
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
+                                case REDSTONE_SIGNAL:
                                 case HOSTILE_KILL: {
 
                                     if (challengeInfo.contains(info)) {
@@ -300,8 +301,7 @@ public class BingoManager implements Listener {
                                             .collect(Collectors.toList());
                                     String[] lastData = challengeInfo.get(challengeInfo.size() - 1).split(";");
                                     String[] newData = info.split(";");
-                                    if (!lastData[0].equals(newData[0]) || previewsPlayers.contains(newData[1]) ||
-                                        !lastData[2].equals(newData[2])) {
+                                    if (!lastData[0].equals(newData[0]) || previewsPlayers.contains(newData[1])) {
                                         challengeInfo.clear();
                                         challengeInfo.add(info);
                                         return;

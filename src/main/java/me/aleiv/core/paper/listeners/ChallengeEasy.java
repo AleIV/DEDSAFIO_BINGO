@@ -29,6 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -58,10 +59,11 @@ public class ChallengeEasy implements Listener {
         this.instance = instance;
     }
 
-    private List<Material> listMaterials = List.of(Material.GOLD_ORE, Material.IRON_ORE, Material.COAL_ORE,
+    private final List<Material> listMaterials = List.of(Material.GOLD_ORE, Material.IRON_ORE, Material.COAL_ORE,
             Material.NETHER_GOLD_ORE, Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.EMERALD_ORE,
             Material.NETHER_QUARTZ_ORE, Material.ANCIENT_DEBRIS, Material.REDSTONE_ORE);
-
+    private final List<Material> redstoneBlocks = List.of(Material.REDSTONE_BLOCK, Material.REDSTONE_TORCH);
+    private final List<String> interactableBlock = List.of("BUTTON", "LEVER", "PRESSURE");
 
     @EventHandler
     public void onCampfire(BlockCookEvent e){
@@ -384,7 +386,7 @@ public class ChallengeEasy implements Listener {
     }
 
     @EventHandler
-    public void creeperIgnite(PlayerInteractAtEntityEvent e) {
+    public void entityInteractEvent(PlayerInteractAtEntityEvent e) {
         var game = instance.getGame();
         if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
             return;
@@ -392,11 +394,19 @@ public class ChallengeEasy implements Listener {
         var player = e.getPlayer();
         var entity = e.getRightClicked();
         var hand = player.getEquipment().getItemInMainHand();
-        if (entity instanceof Creeper creeper && hand != null && hand.getType() == Material.FLINT_AND_STEEL) {
+        if (entity instanceof Creeper && hand != null && hand.getType() == Material.FLINT_AND_STEEL) {
             var manager = instance.getBingoManager();
             var table = manager.findTable(player.getUniqueId());
             if (table != null) {
                 manager.attempToFind(player, Challenge.CREEPER_IGNITE, "");
+            }
+        }
+
+        if (entity instanceof Sheep && hand != null && hand.getType().toString().contains("DYE")) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Challenge.COLOR_SHEEP, hand.getType().toString());
             }
         }
 
@@ -445,6 +455,13 @@ public class ChallengeEasy implements Listener {
                     manager.attempToFind(player, Challenge.BONE_MEAL_COMPOSTER, "");
                 }
             }
+        } else if (block != null && interactableBlock.stream()
+                .anyMatch(b -> block.getType().toString().contains(b))) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Challenge.REDSTONE_SIGNAL, block.getType().toString());
+            }
         }
     }
 
@@ -480,6 +497,22 @@ public class ChallengeEasy implements Listener {
                         manager.attempToFind(player, Challenge.ANVIL_DAMAGE, "");
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        Player player = event.getPlayer();
+        if (redstoneBlocks.contains(event.getBlockPlaced().getType())) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Challenge.REDSTONE_SIGNAL, event.getBlockPlaced().getType().toString());
             }
         }
     }

@@ -126,7 +126,7 @@ public class ChallengeMedium implements Listener{
                 if (table != null) {
                     Bukkit.getScheduler().runTaskLater(instance, task -> {
                         if (table.getPlayerStream().collect(Collectors.toList()).contains(shooter)) {
-                            String data = shooter.getUniqueId() + ";" + player.getUniqueId() + ";" + projectile.getUniqueId();
+                            String data = player.getUniqueId() + ";" + projectile.getUniqueId();
                             manager.attempToFind(player, Game.Challenge.CROSSBOW_SHOT, data);
                         }
                     }, 1);
