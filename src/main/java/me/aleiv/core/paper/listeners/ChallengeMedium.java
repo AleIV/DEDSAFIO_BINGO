@@ -17,6 +17,7 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
@@ -195,6 +196,22 @@ public class ChallengeMedium implements Listener{
                 if (table != null) {
                     manager.attempToFind(player, Game.Challenge.BED_EXPLODE, "");
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onFish(PlayerFishEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
+            return;
+
+        Player player = event.getPlayer();
+        if (event.getCaught() instanceof Item item) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null && event.getCaught() != null) {
+                manager.attempToFind(player, Game.Challenge.FISH_ITEMS, item.getItemStack().getType().toString());
             }
         }
     }
