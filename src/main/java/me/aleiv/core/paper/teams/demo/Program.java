@@ -11,7 +11,7 @@ public class Program {
     private static Logger logger = Logger.getLogger("Demo-program");
 
     public static void main(String[] args) throws Exception {
-        var teamManager = new SimpleTeamManager("redis://localhost");
+        var teamManager = new SimpleTeamManager("redis://147.182.135.68");
         teamManager.initialize();
 
         try {

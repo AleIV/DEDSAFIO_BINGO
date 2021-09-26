@@ -59,7 +59,7 @@ public class Core extends JavaPlugin {
         NegativeSpaces.registerCodes();
 
         // Hook the team manager
-        teamManager = new BTeamManager(this, "redis://localhost");
+        teamManager = new BTeamManager(this, "redis://147.182.135.68");
 
         game = new Game(this);
         game.runTaskTimerAsynchronously(this, 0L, 20L);
