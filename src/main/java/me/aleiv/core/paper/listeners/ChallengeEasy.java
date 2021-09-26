@@ -101,6 +101,29 @@ public class ChallengeEasy implements Listener {
     }
 
     @EventHandler
+    public void onJump(PlayerJumpEvent e) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
+            return;
+
+        var block = e.getPlayer().getLocation().getBlock().getType().toString();
+
+        if (!block.contains("BED"))
+            return;
+
+        var manager = instance.getBingoManager();
+
+        var player = e.getPlayer();
+        var table = manager.findTable(player.getUniqueId());
+
+        if (table != null) {
+            // TODO: async timer check
+            manager.attempToFind(player, Challenge.JUMP_BED, "");
+        }
+
+    }
+
+    @EventHandler
     public void onLVL(PlayerLevelChangeEvent e) {
         var game = instance.getGame();
         if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
@@ -358,29 +381,6 @@ public class ChallengeEasy implements Listener {
 
             manager.attempToFind(player, Challenge.ANIMAL_KILL, animal.getType().toString());
 
-        }
-
-    }
-
-    @EventHandler
-    public void onJump(PlayerJumpEvent e) {
-        var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
-
-        var block = e.getPlayer().getLocation().getBlock().getType().toString();
-
-        if (!block.contains("BED"))
-            return;
-
-        var manager = instance.getBingoManager();
-
-        var player = e.getPlayer();
-        var table = manager.findTable(player.getUniqueId());
-
-        if (table != null) {
-            // TODO: async timer check
-            manager.attempToFind(player, Challenge.JUMP_BED, "");
         }
 
     }
