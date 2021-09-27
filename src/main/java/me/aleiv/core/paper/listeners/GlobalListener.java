@@ -203,6 +203,7 @@ public class GlobalListener implements Listener {
                 player.getInventory().clear();
                 player.setHealth(20.0);
                 player.setFoodLevel(20);
+                player.setExp(0);
             }, 20*BingoManager.respawnSeconds);
 
         }

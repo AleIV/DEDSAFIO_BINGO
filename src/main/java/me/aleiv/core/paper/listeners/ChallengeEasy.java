@@ -117,7 +117,6 @@ public class ChallengeEasy implements Listener {
         var table = manager.findTable(player.getUniqueId());
 
         if (table != null) {
-            // TODO: async timer check
             manager.attempToFind(player, Challenge.JUMP_BED, "");
         }
 

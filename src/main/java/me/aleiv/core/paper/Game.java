@@ -107,9 +107,7 @@ public class Game extends BukkitRunnable {
         public void registerItems_1() {
                 var items_1 = itemRounds.get(BingoRound.ONE);
 
-                items_1.add(List.of(Material.DIAMOND, Material.GOLD_BLOCK, Material.LAPIS_BLOCK));
-
-                items_1.add(List.of(Material.EMERALD, Material.GOLD_INGOT));
+                items_1.add(List.of(Material.DIAMOND, Material.EMERALD, Material.GOLD_INGOT));
 
                 items_1.add(List.of(Material.OAK_LEAVES, Material.BIRCH_LEAVES, Material.SPRUCE_LEAVES,
                                 Material.OAK_SAPLING, Material.BIRCH_SAPLING, Material.SPRUCE_SAPLING));
@@ -122,8 +120,9 @@ public class Game extends BukkitRunnable {
 
                 items_1.add(List.of(Material.CAMPFIRE, Material.LANTERN, Material.TORCH));
 
-                items_1.add(List.of(Material.BOW, Material.FISHING_ROD, Material.SHIELD, Material.CROSSBOW,
-                                Material.SHEARS, Material.FLINT_AND_STEEL));
+                items_1.add(List.of(Material.BOW, Material.FISHING_ROD, Material.CROSSBOW));
+
+                items_1.add(List.of(Material.SHIELD, Material.SHEARS, Material.FLINT_AND_STEEL));
 
                 items_1.add(List.of(Material.PAINTING, Material.ITEM_FRAME, Material.LADDER, Material.FLOWER_POT, Material.CHAIN));
 
@@ -717,13 +716,13 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.CAMPFIRE_CAMPING, new ItemCode('\uEE50', 10, "“Acampanding” Cocina en una hoguera con todo tu equipo cerca."));
                 challenges.put(Challenge.PINK_SHEEP_BIOME, new ItemCode('\uEE51', 11, "Cada miembro del equipo debe matar una oveja rosa en un bioma diferente."));
                 challenges.put(Challenge.BREAK_RULE_1, new ItemCode('\uEE52', 12, "Rompe la regla #1 de Minecraft."));
-                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar encima de la misma cama al mismo tiempo."));
+                challenges.put(Challenge.JUMP_BED, new ItemCode('\uEE53', 13, "Todos los miembros del equipo deben saltar en una cama."));
                 challenges.put(Challenge.BONE_MEAL_COMPOSTER, new ItemCode('\uEE54', 14, "Consigue bone meal mediante un compostador."));
                 challenges.put(Challenge.CREEPER_IGNITE, new ItemCode('\uEE55', 15, "Enciende un creeper con un mechero."));
                 challenges.put(Challenge.DROWN_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
                 challenges.put(Challenge.REDSTONE_SIGNAL, new ItemCode('\uEE57', 17, "Activa 5 objetos diferentes que emitan una señal de redstone."));
                 challenges.put(Challenge.PURPLE_LLAMA, new ItemCode('\uEE58', 18, "Monta una llama con una alfombra morada."));
-                challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 5 tipos de comida diferentes."));
+                challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 10 tipos de comida diferentes."));
                 challenges.put(Challenge.COLOR_SHEEP, new ItemCode('\uEE60', 20, "Cambia el color de una oveja con 10 tipos de tinte distintos."));
                 challenges.put(Challenge.LVL_40, new ItemCode('\uEE61', 21, "Todos los miembros deben sumar más de 40 niveles de experiencia."));
                 challenges.put(Challenge.ANVIL_DAMAGE, new ItemCode('\uEE62', 22, "Cada miembro del equipo debe tomar daño de caída de yunque."));
@@ -737,7 +736,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.COMPLETE_MAP, new ItemCode('\uEE69', 29, "Completa un mapa."));
 		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
 		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Dispara a través de 3 miembros de tu equipo con un solo disparo de ballesta."));
-		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben de tener un escudo con el mismo banner."));
+		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo."));
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
 		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));
@@ -798,19 +797,19 @@ public class Game extends BukkitRunnable {
                 challenge_1.add(Challenge.HOSTILE_KILL);
                 challenge_1.add(Challenge.ANIMAL_KILL);
                 challenge_1.add(Challenge.CAMPFIRE_CAMPING);
-                challenge_1.add(Challenge.PINK_SHEEP_BIOME);
+                challenge_1.add(Challenge.FISH_ITEMS);
                 challenge_1.add(Challenge.BREAK_RULE_1);
                 challenge_1.add(Challenge.JUMP_BED);
                 challenge_1.add(Challenge.BONE_MEAL_COMPOSTER);
                 challenge_1.add(Challenge.CREEPER_IGNITE);
-                challenge_1.add(Challenge.DROWN_VILLAGER);
+                challenge_1.add(Challenge.SHIELD_BANNER);
                 challenge_1.add(Challenge.REDSTONE_SIGNAL);
                 challenge_1.add(Challenge.PURPLE_LLAMA);
                 challenge_1.add(Challenge.EAT_FOOD);
                 challenge_1.add(Challenge.COLOR_SHEEP);
                 challenge_1.add(Challenge.LVL_40);
                 challenge_1.add(Challenge.ANVIL_DAMAGE);
-                challenge_1.add(Challenge.ACUATIC_KILL);
+                challenge_1.add(Challenge.JARDINERO);
                 challenge_1.add(Challenge.MINE_MINERALS);
                 challenge_1.add(Challenge.GET_POISON);
 
@@ -819,17 +818,18 @@ public class Game extends BukkitRunnable {
         public void register_challenge_2(){
                 var challenge_2 = challengeRounds.get(BingoRound.TWO);
 
+                challenge_2.add(Challenge.ACUATIC_KILL);
                 challenge_2.add(Challenge.INVENTORY_STACKS);
                 challenge_2.add(Challenge.STRIDER_GAPPLE);
                 challenge_2.add(Challenge.PIGLIN_BARTER);
                 challenge_2.add(Challenge.COMPLETE_MAP);
                 challenge_2.add(Challenge.VILLAGER_MAX_TRADE);
                 challenge_2.add(Challenge.CROSSBOW_SHOT);
-                challenge_2.add(Challenge.SHIELD_BANNER);
+                challenge_2.add(Challenge.DROWN_VILLAGER);
                 challenge_2.add(Challenge.ENCHANT_LVL6);
                 challenge_2.add(Challenge.CAMPFIRE_HAY_BALE);
                 challenge_2.add(Challenge.BED_EXPLODE);
-                challenge_2.add(Challenge.FISH_ITEMS);
+                challenge_2.add(Challenge.MINE_LIGHT_SOURCE);
                 challenge_2.add(Challenge.GIVE_PLAYER_FLOWER);
                 challenge_2.add(Challenge.WATER_DROP);
                 challenge_2.add(Challenge.EMPTY_CAULDRON);
@@ -843,7 +843,7 @@ public class Game extends BukkitRunnable {
                 challenge_2.add(Challenge.PIGLIN_SCARE);
                 challenge_2.add(Challenge.SHOOT_PORTAL);
                 challenge_2.add(Challenge.RIDE_HORSE_MINECART);
-                challenge_2.add(Challenge.JARDINERO);
+                
 
         }
 
@@ -864,7 +864,7 @@ public class Game extends BukkitRunnable {
                 challenge_3.add(Challenge.ENDER_PEARL_TRAVEL);
                 challenge_3.add(Challenge.VILLAGER_EXPENSIVE_TRADE);
                 challenge_3.add(Challenge.EAT_SUS_STEW);
-                challenge_3.add(Challenge.MINE_LIGHT_SOURCE);
+                challenge_3.add(Challenge.PINK_SHEEP_BIOME);
                 challenge_3.add(Challenge.GLOWING_BAT);
                 challenge_3.add(Challenge.TEAM_SPAWN_ANCHOR);
                 challenge_3.add(Challenge.NOTEBLOCK_INSTRUMENTS);

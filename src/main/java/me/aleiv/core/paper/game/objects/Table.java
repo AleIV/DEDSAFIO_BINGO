@@ -90,7 +90,7 @@ public class Table {
 
         getPlayerStream().forEach(player ->{
             var loc = player.getLocation();
-            player.playSound(loc, "bingo.star1", 1, 1);
+            player.playSound(loc, "bingo.star1", 0.5f, 1);
         });
 
         animation1.forEach(frame -> {
@@ -115,7 +115,7 @@ public class Table {
 
         getPlayerStream().forEach(player ->{
             var loc = player.getLocation();
-            player.playSound(loc, "bingo.star2", 1, 1);
+            player.playSound(loc, "bingo.star2", 0.5f, 1);
         });
 
         animation2.forEach(frame -> {
@@ -140,7 +140,7 @@ public class Table {
 
         getPlayerStream().forEach(player ->{
             var loc = player.getLocation();
-            player.playSound(loc, "bingo.star3", 1, 1);
+            player.playSound(loc, "bingo.star3", 0.5f, 1);
         });
 
         animation3.forEach(frame -> {

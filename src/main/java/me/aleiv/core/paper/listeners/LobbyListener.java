@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -83,7 +83,7 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onInventory(InventoryOpenEvent e) {
         var player = (Player) e.getPlayer();
-        if (!shouldInteract(player)) {
+        if (!shouldInteract(player) && e.getInventory().getType() != InventoryType.CHEST) {
             e.setCancelled(true);
         }
     }
@@ -151,14 +151,14 @@ public class LobbyListener implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void physics(BlockPhysicsEvent e){
         var block = e.getBlock();
         var lobby = Bukkit.getWorld("lobby");
         if(block.getWorld() == lobby && block != null){
             e.setCancelled(true);
         }
-    }
+    }*/
 
     @EventHandler
     public void onPickedUpItems(PlayerAttemptPickupItemEvent e) {

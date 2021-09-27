@@ -97,7 +97,7 @@ public class Core extends JavaPlugin {
                 world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
                 world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
                 world.getWorldBorder().setCenter(0, 0);
-                world.getWorldBorder().setSize(10000);
+                world.getWorldBorder().setSize(6000);
             });
         }, 20);
 

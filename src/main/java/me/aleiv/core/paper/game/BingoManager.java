@@ -233,7 +233,23 @@ public class BingoManager implements Listener {
                                     }
 
                                 } break;
+                                //5 diff player case
+                                case JUMP_BED: {
 
+                                    if (infoPlayers.contains(playerName)) {
+                                        return;
+
+                                    } else {
+                                        infoPlayers.add(playerName);
+                                    }
+
+                                    if (infoPlayers.size() < table.getMembers().size()) {
+                                        return;
+                                    }
+
+                                } break;
+                                
+                                //5 diff info case
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
