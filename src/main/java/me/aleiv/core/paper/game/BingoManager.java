@@ -312,21 +312,6 @@ public class BingoManager implements Listener {
                                     if (infoPlayers.size() < table.getMembers().size()) return;
                                 } break;
 
-                                case CROSSBOW_SHOT: {
-                                    List<String> previewsPlayers = challengeInfo.stream()
-                                            .map(s -> s.split(";")[1])
-                                            .collect(Collectors.toList());
-                                    String[] lastData = challengeInfo.get(challengeInfo.size() - 1).split(";");
-                                    String[] newData = info.split(";");
-                                    if (!lastData[0].equals(newData[0]) || previewsPlayers.contains(newData[1])) {
-                                        challengeInfo.clear();
-                                        challengeInfo.add(info);
-                                        return;
-                                    }
-                                    challengeInfo.add(info);
-                                    if (challengeInfo.size() < 3) return;
-                                } break;
-
                                 default: break;
                             }
 

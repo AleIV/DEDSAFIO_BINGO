@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,14 +19,13 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.*;
 
 import io.papermc.paper.event.player.PlayerTradeEvent;
 
 import me.aleiv.core.paper.Game;
 import me.aleiv.core.paper.Core;
+import org.bukkit.inventory.ItemStack;
 
 public class ChallengeMedium implements Listener{
     
@@ -38,6 +39,7 @@ public class ChallengeMedium implements Listener{
             Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIGHT_GRAY_BED,
             Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED,
             Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED);
+    private final List<Material> flowers = List.of(Material.RED_TULIP);
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
@@ -121,13 +123,14 @@ public class ChallengeMedium implements Listener{
         if (event.getEntity() instanceof Player player && event.getDamager() instanceof Projectile projectile) {
             if (projectile.getShooter() instanceof Player shooter) {
                 if (shooter.equals(player)) return;
+                ItemStack crossbow = shooter.getInventory().getItemInMainHand();
+                if (!crossbow.containsEnchantment(Enchantment.PIERCING)) return;
                 var manager = instance.getBingoManager();
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     Bukkit.getScheduler().runTaskLater(instance, task -> {
                         if (table.getPlayerStream().collect(Collectors.toList()).contains(shooter)) {
-                            String data = player.getUniqueId() + ";" + projectile.getUniqueId();
-                            manager.attempToFind(player, Game.Challenge.CROSSBOW_SHOT, data);
+                            manager.attempToFind(player, Game.Challenge.CROSSBOW_SHOT, "");
                         }
                     }, 1);
                 }
@@ -212,6 +215,29 @@ public class ChallengeMedium implements Listener{
             var table = manager.findTable(player.getUniqueId());
             if (table != null && event.getCaught() != null) {
                 manager.attempToFind(player, Game.Challenge.FISH_ITEMS, item.getItemStack().getType().toString());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityInteract(PlayerInteractAtEntityEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
+            return;
+
+        Player player = event.getPlayer();
+        if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {
+            ItemStack itemHand = player.getEquipment().getItemInMainHand();
+            if (flowers.contains(itemHand.getType())) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null ) {
+                    manager.attempToFind(player, Game.Challenge.GIVE_PLAYER_FLOWER, "");
+                    player.sendMessage(ChatColor.GOLD + "Le diste una flor a " + clickedPlayer.getName());
+                    clickedPlayer.sendMessage(ChatColor.GOLD + player.getName() + " te dió una flor");
+                    clickedPlayer.getInventory().addItem(itemHand.clone());
+                    player.getEquipment().setItemInMainHand(null);
+                }
             }
         }
     }
