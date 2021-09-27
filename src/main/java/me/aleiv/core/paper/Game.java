@@ -87,6 +87,21 @@ public class Game extends BukkitRunnable {
                 Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
         }
 
+        public boolean isChallengeEnabledFor(Challenge ch){
+                return getCurrentChallengeF().contains(ch);
+        }
+
+        public List<Challenge> getCurrentChallengeF(){
+
+            switch (bingoRound) {
+                case ONE: return challengeRounds.get(BingoRound.ONE).stream().toList();
+                case TWO: return challengeRounds.get(BingoRound.TWO).stream().toList(); 
+                case THREE: return challengeRounds.get(BingoRound.THREE).stream().toList(); 
+                default: break;
+            }
+            return null;
+        }
+
 
         public enum BingoRound {
                 ONE, TWO, THREE;

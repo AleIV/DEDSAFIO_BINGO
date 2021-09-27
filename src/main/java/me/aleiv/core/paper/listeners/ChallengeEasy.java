@@ -47,8 +47,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.Game.BingoFase;
-import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.Challenge;
 
 public class ChallengeEasy implements Listener {
@@ -68,8 +66,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onCampfire(BlockCookEvent e){
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_CAMPING)) return;
 
         var block = e.getBlock();
         if(block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE){
@@ -103,8 +100,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onJump(PlayerJumpEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.JUMP_BED)) return;
 
         var block = e.getPlayer().getLocation().getBlock().getType().toString();
 
@@ -125,8 +121,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onLVL(PlayerLevelChangeEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.LVL_40)) return;
 
         var manager = instance.getBingoManager();
 
@@ -150,8 +145,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.HALF_HEART)) return;
 
         var entity = e.getEntity();
 
@@ -180,8 +174,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onShield(PlayerItemBreakEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.SHIELD_BREAK)) return;
 
         var item = e.getBrokenItem();
 
@@ -201,8 +194,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onEntityPotionEffect(EntityPotionEffectEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.DOLPHIN_SWIM) || !game.isChallengeEnabledFor(Challenge.GET_POISON)) return;
 
         if (e.getEntity() instanceof Player) {
 
@@ -232,8 +224,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onSkyHigh(PlayerJumpEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.MAXIMUM_HEIGHT)) return;
 
         var manager = instance.getBingoManager();
         var player = e.getPlayer();
@@ -248,8 +239,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void growTree(StructureGrowEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.NETHER_TREE)) return;
 
         var player = e.getPlayer();
         if (player == null) return;
@@ -268,8 +258,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onShootTarget(ProjectileHitEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.SHOOT_TARGET)) return;
 
         var block = e.getHitBlock();
         if (block != null && block.getType() == Material.TARGET) {
@@ -291,8 +280,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.EAT_FOOD)) return;
 
         var item = e.getItem();
         if (item != null && (item.getType() != Material.POTION || item.getType() != Material.MILK_BUCKET
@@ -313,8 +301,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void mineMinerals(BlockBreakEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.BREAK_RULE_1) || !game.isChallengeEnabledFor(Challenge.MINE_MINERALS)) return;
 
         var block = e.getBlock();
         var manager = instance.getBingoManager();
@@ -334,8 +321,9 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void entityDeath(EntityDeathEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.DROWN_VILLAGER) || !game.isChallengeEnabledFor(Challenge.PINK_SHEEP_BIOME) 
+            || !game.isChallengeEnabledFor(Challenge.HOSTILE_KILL) || !game.isChallengeEnabledFor(Challenge.ANIMAL_KILL)
+            || !game.isChallengeEnabledFor(Challenge.ACUATIC_KILL)) return;
 
         var entity = e.getEntity();
         var player = entity.getKiller();
@@ -387,8 +375,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void entityInteractEvent(PlayerInteractAtEntityEvent e) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.CREEPER_IGNITE) || !game.isChallengeEnabledFor(Challenge.COLOR_SHEEP)) return;
 
         var player = e.getPlayer();
         var entity = e.getRightClicked();
@@ -414,8 +401,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void armorEquipped(PlayerArmorChangeEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.ARMOR_MATERIALS)) return;
 
         Player player = event.getPlayer();
         List<String> equippedItems = new ArrayList<>();
@@ -439,8 +425,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void playerInteractBlock(PlayerInteractEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL) || !game.isChallengeEnabledFor(Challenge.BONE_MEAL_COMPOSTER)) return;
 
         var player = event.getPlayer();
         var block = event.getClickedBlock();
@@ -467,8 +452,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onMount(EntityMountEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.PURPLE_LLAMA)) return;
 
         if (event.getEntity() instanceof Player player && event.getMount() instanceof Llama llama) {
             if (llama.getInventory().contains(new ItemStack(Material.PURPLE_CARPET))) {
@@ -484,8 +468,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.ANVIL_DAMAGE)) return;
 
         if (event.getEntity() instanceof Player player) {
             if (event.getCause() == DamageCause.FALLING_BLOCK && event.getDamager() instanceof FallingBlock fallingBlock) {
@@ -503,8 +486,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != BingoFase.CHALLENGE && game.getBingoRound() != BingoRound.ONE)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL)) return;
 
         Player player = event.getPlayer();
         if (redstoneBlocks.contains(event.getBlockPlaced().getType())) {
