@@ -48,11 +48,13 @@ public class ChallengeMedium implements Listener{
             Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIGHT_GRAY_BED,
             Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED,
             Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED);
-    private final List<Material> flowers = List.of(Material.RED_TULIP);
+    private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY,
+            Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY,
+            Material.WITHER_ROSE, Material.SUNFLOWER, Material.PEONY, Material.CORNFLOWER);
     private final List<Material> lightBlocks = List.of(Material.SEA_LANTERN, Material.GLOWSTONE, Material.TORCH,
-            Material.REDSTONE_BLOCK, Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD,
+            Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD,
             Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.LANTERN, Material.SOUL_LANTERN,
-            Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
+            Material.CAMPFIRE, Material.SOUL_CAMPFIRE, Material.SHROOMLIGHT, Material.BEACON, Material.JACK_O_LANTERN);
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
@@ -232,7 +234,7 @@ public class ChallengeMedium implements Listener{
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {
             ItemStack itemHand = player.getEquipment().getItemInMainHand();
-            if (flowers.contains(itemHand.getType())) {
+            if (itemHand.getType().toString().contains("TULIP") || flowers.contains(itemHand.getType())) {
                 var manager = instance.getBingoManager();
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null ) {
@@ -249,8 +251,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.MINE_LIGHT_SOURCE)) return;
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
