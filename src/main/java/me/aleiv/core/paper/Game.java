@@ -54,7 +54,7 @@ public class Game extends BukkitRunnable {
                 this.gameTime = 0;
                 this.gameStage = GameStage.LOBBY;
                 this.bingoRound = BingoRound.ONE;
-                this.bingoFase = BingoFase.ITEMS;
+                this.bingoFase = BingoFase.CHALLENGE;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -751,7 +751,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.COMPLETE_MAP, new ItemCode('\uEE69', 29, "Completa un mapa."));
 		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
 		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Dispara a través de 3 miembros de tu equipo con un solo disparo de ballesta."));
-		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo."));
+		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo. (No cuenta color blanco)"));
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
 		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));

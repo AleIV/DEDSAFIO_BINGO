@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Banner;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Drowned;
@@ -43,6 +44,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityMountEvent;
 
@@ -62,6 +64,62 @@ public class ChallengeEasy implements Listener {
             Material.NETHER_QUARTZ_ORE, Material.ANCIENT_DEBRIS, Material.REDSTONE_ORE);
     private final List<Material> redstoneBlocks = List.of(Material.REDSTONE_BLOCK, Material.REDSTONE_TORCH);
     private final List<String> interactableBlock = List.of("BUTTON", "LEVER", "PRESSURE");
+
+    private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, 
+        Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY, 
+            Material.WITHER_ROSE, Material.SUNFLOWER, Material.PEONY, Material.CORNFLOWER);//CONSIDER TULIP
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e){
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.JARDINERO) || !game.isChallengeEnabledFor(Challenge.SHIELD_BANNER)) return;
+        var block = e.getClickedBlock();
+        var hand = e.getItem();
+        var player = e.getPlayer();
+        var manager = instance.getBingoManager();
+        var table = manager.findTable(player.getUniqueId());
+
+        if(table == null) return;
+
+        if(block != null && hand != null && block.getType() == Material.FLOWER_POT 
+            && (flowers.contains(hand.getType()) || hand.getType().toString().contains("TULIP"))){
+
+                manager.attempToFind(player, Challenge.JARDINERO, hand.getType().toString());
+
+        }else if(hand != null && hand.getType() == Material.SHIELD){
+
+            var list = table.getPlayerStream().toList();
+            if(list.size() != table.getMembers().size()) return;
+            
+            if(isTeamBlocking(list, player)){
+
+                manager.attempToFind(player, Challenge.SHIELD_BANNER, hand.getType().toString());
+            }
+        }
+    }
+
+    public boolean isTeamBlocking(List<Player> players, Player p){
+
+        for (var player : players) {
+            if(player.getUniqueId().getMostSignificantBits() == p.getUniqueId().getMostSignificantBits()) continue;
+
+            var item = player.getInventory().getItemInMainHand();
+            if(item == null || item.getType() != Material.SHIELD || !player.isBlocking()){
+                return false;
+            }
+            var meta = (BlockStateMeta) item.getItemMeta();
+            var state = meta.getBlockState();
+            var banner = (Banner) state;
+
+            if(banner.getBaseColor().toString().contains("WHITE")){
+                return false;
+            }
+        } 
+
+        if(players.isEmpty()) return false;
+    
+        return true;
+    }
 
     @EventHandler
     public void onCampfire(BlockCookEvent e){
@@ -497,5 +555,7 @@ public class ChallengeEasy implements Listener {
             }
         }
     }
+
+
 
 }
