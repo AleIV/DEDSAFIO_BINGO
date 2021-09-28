@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
+import me.aleiv.core.paper.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 
 import me.aleiv.core.paper.Core;
@@ -37,8 +39,9 @@ public class ChallengeHard implements Listener{
     
     Core instance;
 
-    private List<EntityType> flyingList = List.of(EntityType.BEE, EntityType.BAT, EntityType.PARROT, 
+    private final List<EntityType> flyingList = List.of(EntityType.BEE, EntityType.BAT, EntityType.PARROT,
         EntityType.GHAST, EntityType.BLAZE, EntityType.PHANTOM, EntityType.WITHER);
+    private final List<String> invalidPotions = List.of("WATER", "AWKWARD", "MUNDANE", "THICK");
 
     public ChallengeHard(Core instance){
         this.instance = instance;
@@ -116,7 +119,7 @@ public class ChallengeHard implements Listener{
     @EventHandler
     public void onCatch(PlayerItemConsumeEvent e){
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.EAT_SUS_STEW)) return;
+        if (!game.isChallengeEnabledFor(Challenge.EAT_SUS_STEW) || !game.isChallengeEnabledFor(Challenge.POTION_TYPES)) return;
 
         var item = e.getItem();
         if(item.getType() == Material.SUSPICIOUS_STEW){
@@ -134,6 +137,17 @@ public class ChallengeHard implements Listener{
                 var manager = instance.getBingoManager();
                         
                 manager.attempToFind(player, Challenge.EAT_SUS_STEW, nStr[0]);
+            }
+        } else if (e.getItem().getType() == Material.POTION) {
+            var player = e.getPlayer();
+            PotionMeta potionMeta = (PotionMeta) e.getItem().getItemMeta();
+            String potionType = potionMeta.getBasePotionData().getType().toString();
+            if (!invalidPotions.contains(potionType)) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.POTION_TYPES, potionType);
+                }
             }
         }
     }

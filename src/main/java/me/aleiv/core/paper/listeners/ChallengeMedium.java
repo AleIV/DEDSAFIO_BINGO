@@ -29,6 +29,7 @@ import io.papermc.paper.event.player.PlayerTradeEvent;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game;
 import me.aleiv.core.paper.Game.Challenge;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 public class ChallengeMedium implements Listener{
     
@@ -92,15 +93,15 @@ public class ChallengeMedium implements Listener{
 
         if (event.getEntity() instanceof Piglin piglin) {
             var manager = instance.getBingoManager();
-            Bukkit.getScheduler().runTaskLater(instance, task -> piglin.getNearbyEntities(10, 10, 10).stream()
-                    .filter(e -> e instanceof Player)
-                    .forEach(e -> {
-                        var player = (Player) e;
+            piglin.getWorld().getNearbyLivingEntities(piglin.getLocation(), 10).stream()
+                    .filter(livingEntity -> livingEntity instanceof Player)
+                    .forEach(livingEntity -> {
+                        var player = (Player) livingEntity;
                         var table = manager.findTable(player.getUniqueId());
                         if (table != null) {
                             manager.attempToFind(player, Game.Challenge.PIGLIN_BARTER, "");
                         }
-                    }), 1);
+                    });
         }
     }
 
@@ -160,7 +161,8 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE)) return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE) || !game.isChallengeEnabledFor(Challenge.HOGLIN_SCARE)
+                || !game.isChallengeEnabledFor(Challenge.PIGLIN_SCARE)) return;
 
 
         Block block = event.getBlockPlaced();
@@ -181,6 +183,24 @@ public class ChallengeMedium implements Listener{
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Game.Challenge.CAMPFIRE_HAY_BALE, "");
+                }
+            }
+        } else if (block.getType() == Material.WARPED_FUNGUS) {
+            if (block.getWorld().getNearbyLivingEntities(block.getLocation(), 10).stream()
+                    .anyMatch(livingEntity -> livingEntity instanceof Hoglin)) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.HOGLIN_SCARE, "");
+                }
+            }
+        } else if (block.getType() == Material.SOUL_TORCH) {
+            if (block.getWorld().getNearbyLivingEntities(block.getLocation(), 10).stream()
+                    .anyMatch(livingEntity -> livingEntity instanceof Piglin)) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Challenge.PIGLIN_SCARE, "");
                 }
             }
         }
@@ -223,7 +243,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.GIVE_PLAYER_FLOWER)) return;
+        if (!game.isChallengeEnabledFor(Challenge.GIVE_PLAYER_FLOWER) || !game.isChallengeEnabledFor(Challenge.EQUIP_DONKEY_CHEST)) return;
 
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {
@@ -237,6 +257,15 @@ public class ChallengeMedium implements Listener{
                     clickedPlayer.sendMessage(ChatColor.GOLD + player.getName() + " te dió una flor");
                     clickedPlayer.getInventory().addItem(itemHand.clone());
                     player.getEquipment().setItemInMainHand(null);
+                }
+            }
+        } else if (event.getRightClicked() instanceof Donkey donkey && player.getEquipment() != null) {
+            ItemStack itemHand = player.getEquipment().getItemInMainHand();
+            if (itemHand.getType() == Material.CHEST && donkey.isTamed() && !donkey.isCarryingChest()) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.EQUIP_DONKEY_CHEST, "");
                 }
             }
         }
@@ -304,6 +333,50 @@ public class ChallengeMedium implements Listener{
                             manager.attempToFind(player, Game.Challenge.MILK_ZOMBIE, "");
                         }
                     }), 1);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.HUNGER_DAMAGE)) return;
+
+        if (event.getEntity() instanceof Player player && event.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.HUNGER_DAMAGE, "");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPortal(EntityPortalEnterEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.SHOOT_PORTAL)) return;
+
+        if (event.getEntity() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.SHOOT_PORTAL, "");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMount(EntityMountEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.RIDE_HORSE_MINECART)) return;
+
+        if (event.getEntity() instanceof Player player && event.getMount() instanceof Horse horse) {
+            if (horse.getVehicle() != null && horse.getVehicle() instanceof Minecart) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.RIDE_HORSE_MINECART, "");
+                }
+            }
         }
     }
 
