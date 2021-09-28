@@ -316,4 +316,18 @@ public class ChallengeMedium implements Listener{
         }
     }
 
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.HUNGER_DAMAGE)) return;
+
+        if (event.getEntity() instanceof Player player && event.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.HUNGER_DAMAGE, "");
+            }
+        }
+    }
+
 }
