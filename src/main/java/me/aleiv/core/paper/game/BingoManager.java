@@ -333,6 +333,34 @@ public class BingoManager implements Listener {
                                     if (infoPlayers.size() < table.getMembers().size()) return;
                                 } break;
 
+                                case TEAM_SPAWN_ANCHOR:
+                                case CAKE_EAT: {
+                                    if (challengeInfo.size() == 0) {
+                                        challengeInfo.add(info);
+                                    }
+                                    int[] lastCoords = Arrays.stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
+                                            .mapToInt(Integer::parseInt).toArray();
+                                    int[] currentCoords = Arrays.stream(info.split(";"))
+                                            .mapToInt(Integer::parseInt).toArray();
+                                    boolean validCoords = true;
+                                    for (int index = 0; index < 3; index++) {
+                                        if (index < lastCoords.length && (lastCoords[index] != currentCoords[index])) {
+                                            validCoords = false;
+                                            break;
+                                        }
+                                    }
+                                    if (!validCoords) {
+                                        challengeInfo.clear();
+                                        challengeInfo.add(info);
+                                        infoPlayers.clear();
+                                    } else {
+                                        if (infoPlayers.contains(playerName)) return;
+                                        challengeInfo.add(info);
+                                    }
+                                    infoPlayers.add(playerName);
+                                    if (infoPlayers.size() < table.getMembers().size()) return;
+                                } break;
+
                                 default: break;
                             }
 

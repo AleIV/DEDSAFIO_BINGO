@@ -22,7 +22,8 @@ public class ChallengeSlot extends Slot{
     @Getter @Setter List<String> challengeInfo;
     @Getter @Setter List<String> infoPlayers;
 
-    private List<Challenge> nonInfoLore = List.of(Challenge.BREAK_RULE_1);
+    private final List<Challenge> nonInfoLore = List.of(Challenge.BREAK_RULE_1,
+            Challenge.TEAM_SPAWN_ANCHOR, Challenge.CAKE_EAT);
 
     public ChallengeSlot(Core instance, Challenge challenge) {
         super(Material.PAPER);
@@ -33,8 +34,7 @@ public class ChallengeSlot extends Slot{
 
         var game = instance.getGame();
 
-        var itemCode = game.getChallenges().get(challenge);
-        this.itemCode = itemCode;
+        this.itemCode = game.getChallenges().get(challenge);
     }
 
     @Override
@@ -50,14 +50,14 @@ public class ChallengeSlot extends Slot{
             item.addLore(ChatColor.WHITE + desc);
         }
 
-        if(!nonInfoLore.contains(challenge)){
-            if(!infoPlayers.isEmpty()){
-                item.addLore(" ");
-                for (String string : infoPlayers) {
-                    item.addLore(ChatColor.of("#ffee2e") + string);
-                }
+        if(!infoPlayers.isEmpty()){
+            item.addLore(" ");
+            for (String string : infoPlayers) {
+                item.addLore(ChatColor.of("#ffee2e") + string);
             }
-    
+        }
+
+        if(!nonInfoLore.contains(challenge)){
             if(!challengeInfo.isEmpty()){
                 item.addLore(" ");
                 for (String string : challengeInfo) {
