@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -19,10 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import io.papermc.paper.event.player.PlayerTradeEvent;
@@ -377,6 +371,26 @@ public class ChallengeMedium implements Listener{
                     manager.attempToFind(player, Game.Challenge.RIDE_HORSE_MINECART, "");
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onWater(PlayerBucketEmptyEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.WATER_DROP)) return;
+
+        Player player = event.getPlayer();
+        if (player.getFallDistance() >= 72 && player.getLocation().distance(event.getBlock().getLocation()) < 3) {
+            final double preHealth = player.getHealth();
+            Bukkit.getScheduler().runTaskLater(instance, task -> {
+                if (player.getGameMode() != GameMode.SPECTATOR && player.getHealth() >= preHealth) {
+                    var manager = instance.getBingoManager();
+                    var table = manager.findTable(player.getUniqueId());
+                    if (table != null) {
+                        manager.attempToFind(player, Game.Challenge.WATER_DROP, "");
+                    }
+                }
+            }, 10);
         }
     }
 
