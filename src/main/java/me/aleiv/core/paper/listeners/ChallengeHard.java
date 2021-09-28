@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.EntityType;
@@ -17,18 +16,19 @@ import org.bukkit.entity.Mule;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.Zoglin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
-import org.bukkit.potion.PotionEffectType;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.Challenge;
@@ -48,7 +48,8 @@ public class ChallengeHard implements Listener{
     public void onKill(EntityDeathEvent e){
         var game = instance.getGame();
         if (!game.isChallengeEnabledFor(Challenge.SNOWBALL_BLAZE_KILL) || !game.isChallengeEnabledFor(Challenge.OVER_ZOGLIN)
-            || !game.isChallengeEnabledFor(Challenge.FLYING_MOBS_KILL) || !game.isChallengeEnabledFor(Challenge.NETHER_MOB_KILL)) return;
+            || !game.isChallengeEnabledFor(Challenge.FLYING_MOBS_KILL) || !game.isChallengeEnabledFor(Challenge.NETHER_MOB_KILL)
+            || !game.isChallengeEnabledFor(Challenge.PIG_FALL)) return;
         var manager = instance.getBingoManager();
 
         var entity = e.getEntity();
@@ -69,23 +70,29 @@ public class ChallengeHard implements Listener{
                 manager.attempToFind(player, Challenge.OVER_ZOGLIN, "");
             }
 
-        }else if(flyingList.contains(entity.getType())){
+        }
+        if(flyingList.contains(entity.getType())){
             var player = entity.getKiller();
             if(player != null){
-                manager.attempToFind(player, Challenge.FLYING_MOBS_KILL, "");
+                manager.attempToFind(player, Challenge.FLYING_MOBS_KILL, entity.getType().toString());
             }
 
-        }else if(entity.getWorld().getEnvironment() == Environment.NETHER){
+        }
+        if(entity.getWorld().getEnvironment() == Environment.NETHER){
             var player = entity.getKiller();
             
             if(player != null){
                 var biome = entity.getLocation().getBlock().getBiome().toString();
                 manager.attempToFind(player, Challenge.NETHER_MOB_KILL, biome);
             }
-        }else if(entity instanceof Pig pig && !pig.getPassengers().isEmpty() && pig.getPassengers().get(0) instanceof Player player){
-            if(player != null){
+
+        }
+        if(entity instanceof Pig pig && !pig.getPassengers().isEmpty() && pig.getPassengers().get(0) instanceof Player player){
+
+            if(entity.getLastDamageCause().getCause() == DamageCause.FALL){
                 manager.attempToFind(player, Challenge.PIG_FALL, "");
             }
+            
         }
     }
 
@@ -96,20 +103,13 @@ public class ChallengeHard implements Listener{
 
         var entity = e.getEntity();
         var damager = e.getDamager();
-        if(entity instanceof Bat bat && damager instanceof Arrow arrow 
+        
+        if(entity instanceof Bat bat && damager instanceof SpectralArrow arrow 
             && arrow.getShooter() != null && arrow.getShooter() instanceof Player player){
-
-            var effects = arrow.getCustomEffects();
-            if(!effects.isEmpty()){
-                for (var effect : effects) {
-                    if(effect.getType() == PotionEffectType.GLOWING){
-                        var manager = instance.getBingoManager();
-                        
-                        manager.attempToFind(player, Challenge.GLOWING_BAT, "");
-                        return;
-                    }
-                }
-            }
+                
+                var manager = instance.getBingoManager();
+                
+                manager.attempToFind(player, Challenge.GLOWING_BAT, "");
         }
     }
 
