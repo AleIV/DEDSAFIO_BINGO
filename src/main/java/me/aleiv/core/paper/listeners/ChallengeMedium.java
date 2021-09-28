@@ -223,7 +223,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.GIVE_PLAYER_FLOWER)) return;
+        if (!game.isChallengeEnabledFor(Challenge.GIVE_PLAYER_FLOWER) || !game.isChallengeEnabledFor(Challenge.EQUIP_DONKEY_CHEST)) return;
 
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {
@@ -237,6 +237,15 @@ public class ChallengeMedium implements Listener{
                     clickedPlayer.sendMessage(ChatColor.GOLD + player.getName() + " te dió una flor");
                     clickedPlayer.getInventory().addItem(itemHand.clone());
                     player.getEquipment().setItemInMainHand(null);
+                }
+            }
+        } else if (event.getRightClicked() instanceof Donkey donkey && player.getEquipment() != null) {
+            ItemStack itemHand = player.getEquipment().getItemInMainHand();
+            if (itemHand.getType() == Material.CHEST && donkey.isTamed() && !donkey.isCarryingChest()) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.EQUIP_DONKEY_CHEST, "");
                 }
             }
         }
