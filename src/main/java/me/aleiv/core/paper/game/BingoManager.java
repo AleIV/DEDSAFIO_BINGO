@@ -232,6 +232,7 @@ public class BingoManager implements Listener {
 
                                 } break;
                                 //5 diff player case
+                                case FIREWORK_CROSSBOW:
                                 case JUMP_BED: {
 
                                     if (infoPlayers.contains(playerName)) {
@@ -263,6 +264,7 @@ public class BingoManager implements Listener {
                                 } break;
 
                                 //5 diff info case
+                                case FARM_CROPS:
                                 case EAT_SUS_STEW:
                                 case JARDINERO:
                                 case ACUATIC_KILL:

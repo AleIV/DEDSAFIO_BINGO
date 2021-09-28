@@ -7,12 +7,9 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EnderSignal;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +34,7 @@ public class GlobalListener implements Listener {
 
     Core instance;
 
-    HashMap<UUID, UUID> enderEyes; 
+    HashMap<UUID, UUID> enderEyes;
     Random random = new Random();
 
     public GlobalListener(Core instance) {
@@ -45,53 +42,40 @@ public class GlobalListener implements Listener {
         this.enderEyes = new HashMap<>();
     }
 
-
-
     @EventHandler
-    public void entitySpawn(EntitySpawnEvent e){
+    public void entitySpawn(EntitySpawnEvent e) {
         var entity = e.getEntity();
 
-        if(entity instanceof EnderSignal ender){
+        if (entity instanceof EnderSignal ender) {
 
             var players = ender.getLocation().getNearbyPlayers(1).stream().toList();
-            if(!players.isEmpty()){
+            if (!players.isEmpty()) {
                 final var player = players.get(0);
                 var uuid = player.getUniqueId();
                 var enderUuid = ender.getUniqueId();
                 enderEyes.put(enderUuid, uuid);
 
-                Bukkit.getScheduler().runTaskLater(instance, task ->{
-                    var entitys = ender.getLocation().getNearbyEntities(3, 3, 3).stream()
-                        .filter(ent -> ent instanceof Item item && item.getItemStack().getType() == Material.ENDER_EYE).toList();
-    
-                    if(entitys.isEmpty()){
-                        
-                        //this player break a ender eye
-                        if(enderEyes.containsKey(enderUuid)){
-                            var manager = instance.getScatterManager();
-                            var world = Bukkit.getWorld("world_the_end");
-                            var loc = genLoc(world);
-                            loc.setY(100);
-                            manager.Qteleport(player, loc);
-                            var dragonLoc = genLoc(world);
-                            world.spawnEntity(dragonLoc, EntityType.ENDER_DRAGON);
-                        }
-    
-                    }
-    
-                }, 20*5);
+                Bukkit.getScheduler().runTaskLater(instance, task -> {
+
+                    var manager = instance.getScatterManager();
+                    var world = Bukkit.getWorld("world_the_end");
+                    var loc = genLoc(world);
+                    loc.setY(100);
+                    manager.Qteleport(player, loc);
+
+                }, 20 * 5);
             }
 
         }
     }
 
-    public int getR(int i){
+    public int getR(int i) {
         var neg = random.nextBoolean();
-        var rand = random.nextInt(i)+1;
-        return neg ? rand*1 : rand*-1;
+        var rand = random.nextInt(i) + 1;
+        return neg ? rand * 1 : rand * -1;
     }
 
-    public Location genLoc(final World world){
+    public Location genLoc(final World world) {
         var worldBorder = 80;
         var loc = new Location(world, getR(worldBorder), 0, getR(worldBorder));
         loc.setY(world.getHighestBlockYAt(loc));
@@ -99,10 +83,11 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onCreature(EntityDamageByEntityEvent e){
+    public void onCreature(EntityDamageByEntityEvent e) {
         var entity = e.getEntity();
-        if(entity instanceof EnderDragon dragon){
-            if(e.getDamager() instanceof Player player && player.hasPermission("admin.perm")) return;
+        if (entity instanceof EnderDragon dragon) {
+            if (e.getDamager()instanceof Player player && player.hasPermission("admin.perm"))
+                return;
             e.setCancelled(true);
         }
     }
@@ -173,10 +158,10 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e){
+    public void onRespawn(PlayerRespawnEvent e) {
         var player = e.getPlayer();
         var lobby = Bukkit.getWorld("lobby");
-        if(player.getWorld() == lobby){
+        if (player.getWorld() == lobby) {
             var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
             e.setRespawnLocation(loc);
         }
@@ -192,27 +177,29 @@ public class GlobalListener implements Listener {
         if (player.getWorld() == lobby) {
             var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
             scatter.Qteleport(player, loc);
-            
-        }else if(game.getGameStage() == GameStage.INGAME){
+
+        } else if (game.getGameStage() == GameStage.INGAME) {
             player.setHealth(20);
             player.setGameMode(GameMode.SPECTATOR);
+            player.getInventory().clear();
+            player.setHealth(20.0);
+            player.setFoodLevel(20);
+            player.setExp(0);
+            player.setLevel(0);
 
             var loc = scatter.generateLocation();
-            Bukkit.getScheduler().runTaskLater(instance, task ->{
+            Bukkit.getScheduler().runTaskLater(instance, task -> {
                 scatter.Qteleport(player, loc);
-                player.getInventory().clear();
-                player.setHealth(20.0);
-                player.setFoodLevel(20);
-                player.setExp(0);
-            }, 20*BingoManager.respawnSeconds);
+            }, 20 * BingoManager.respawnSeconds);
 
         }
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent e){
+    public void onDamage(EntityDamageEvent e) {
         var entity = e.getEntity();
-        if(entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR && e.getCause() == DamageCause.VOID){
+        if (entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR
+                && e.getCause() == DamageCause.VOID) {
             e.setCancelled(true);
         }
     }
@@ -221,14 +208,17 @@ public class GlobalListener implements Listener {
     public void onStart(GameStartedEvent e) {
 
         Bukkit.getOnlinePlayers().forEach(player -> {
+            player.setHealth(20.0);
             player.getInventory().clear();
             player.setHealth(20.0);
             player.setFoodLevel(20);
+            player.setExp(0);
+            player.setLevel(0);
         });
 
-        Bukkit.getWorlds().forEach(world ->{
+        Bukkit.getWorlds().forEach(world -> {
             world.setTime(0L);
-            
+
         });
 
     }

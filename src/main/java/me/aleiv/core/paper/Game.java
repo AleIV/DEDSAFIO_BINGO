@@ -762,19 +762,19 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 5 tipos de animales diferentes."));
 		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 5 efectos de poción al mismo tiempo."));
 		challenges.put(Challenge.MILK_ZOMBIE, new ItemCode('\uEE82', 42, "Dale un cubo de leche a un zombie."));
-		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 5 tipos tipos de pociones diferentes."));
+		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 5 tipos de pociones diferentes."));
 		challenges.put(Challenge.EQUIP_DONKEY_CHEST, new ItemCode('\uEE84', 44, "Equipa un cofre a un burro."));
 		challenges.put(Challenge.HUNGER_DAMAGE, new ItemCode('\uEE85', 45, "Recibe daño por hambre."));
 		challenges.put(Challenge.HOGLIN_SCARE, new ItemCode('\uEE86', 46, "Asusta un hoglin usando un warped fungus."));
 		challenges.put(Challenge.PIGLIN_SCARE, new ItemCode('\uEE87', 47, "Asusta un piglin usando una antorcha o linterna de alma."));
-		challenges.put(Challenge.SHOOT_PORTAL, new ItemCode('\uEE88', 48, "Dispara a una entidad a través de un portal del nether"));
+		challenges.put(Challenge.SHOOT_PORTAL, new ItemCode('\uEE88', 48, "Dispara a una entidad a través de un portal del nether."));
 		challenges.put(Challenge.JARDINERO, new ItemCode('\uEE89', 49, "Coloca 5 flores diferentes en una maceta."));
 		challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE90', 50, "Monta a un caballo que este montando un minecart."));
                                 
 		challenges.put(Challenge.CAKE_EAT, new ItemCode('\uEE91', 51, "“Feliz Cumpleaños a ti” Todos los miembros del equipo deben comer de un mismo pastel."));
 		challenges.put(Challenge.END_LEAVE, new ItemCode('\uEE92', 52, "“De vuelta a casa” Regresa al overworld a través de un portal del end."));
 		challenges.put(Challenge.PLAYER_FISH, new ItemCode('\uEE93', 53, "Pesca un jugador de otro bando."));
-		challenges.put(Challenge.PIG_FALL, new ItemCode('\uEE94', 54, "“Cuando los cerdos vuelen” Guía a un cerdo a morir de caída"));
+		challenges.put(Challenge.PIG_FALL, new ItemCode('\uEE94', 54, "“Cuando los cerdos vuelen” Guía a un cerdo a morir de caída."));
 		challenges.put(Challenge.FULL_ARMOR, new ItemCode('\uEE95', 55, "“Equipados para todo” Todos los miembros deben llevar una armadura completa."));
 		challenges.put(Challenge.FIREWORK_CROSSBOW, new ItemCode('\uEE96', 56, "“Se fue con un BANG” Todos los miembros deben lanzar una ballesta cargada con fuegos artificiales"));
 		challenges.put(Challenge.CREEPER_TNT_KILL, new ItemCode('\uEE97', 57, "“Dulce Venganza” Mata a un creeper con tnt."));
@@ -793,7 +793,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.TEAM_DANCE, new ItemCode('\uEF11', 70, "Reproduce un disco en un tocadiscos y baila con todo tu equipo."));
 		challenges.put(Challenge.SNOWBALL_BLAZE_KILL, new ItemCode('\uEF12', 71, "Mata a un blaze usando bolas de nieve."));
 		challenges.put(Challenge.OBTAIN_MULE, new ItemCode('\uEF13', 72, "Consigue una Mula."));
-		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Haz crecer 5 cultivos diferentes al máximo."));
+		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Haz crecer 5 cultivos diferentes."));
 		challenges.put(Challenge.END_BINGO_MAX_HEIGHT, new ItemCode('\uEF15', 74, "“En la Cima” Todos los integrantes deben de estar juntos y en la capa 256 después de completar todos los otros logros."));
 		challenges.put(Challenge.OVER_ZOGLIN, new ItemCode('\uEF16', 75, "Mata un Zoglin."));
                 
