@@ -53,7 +53,7 @@ public class Game extends BukkitRunnable {
                 this.startTime = System.currentTimeMillis();
                 this.gameTime = 0;
                 this.gameStage = GameStage.INGAME;
-                this.bingoRound = BingoRound.THREE;
+                this.bingoRound = BingoRound.TWO;
                 this.bingoFase = BingoFase.CHALLENGE;
 
                 this.timer = new Timer(instance, (int) gameTime);

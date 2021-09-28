@@ -160,7 +160,8 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE) || !game.isChallengeEnabledFor(Challenge.HOGLIN_SCARE)) return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE) || !game.isChallengeEnabledFor(Challenge.HOGLIN_SCARE)
+                || !game.isChallengeEnabledFor(Challenge.PIGLIN_SCARE)) return;
 
 
         Block block = event.getBlockPlaced();
@@ -190,6 +191,15 @@ public class ChallengeMedium implements Listener{
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Game.Challenge.HOGLIN_SCARE, "");
+                }
+            }
+        } else if (block.getType() == Material.SOUL_TORCH) {
+            if (block.getWorld().getNearbyLivingEntities(block.getLocation(), 10).stream()
+                    .anyMatch(livingEntity -> livingEntity instanceof Piglin)) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Challenge.PIGLIN_SCARE, "");
                 }
             }
         }
