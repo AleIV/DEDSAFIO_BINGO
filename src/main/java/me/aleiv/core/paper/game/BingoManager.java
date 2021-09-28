@@ -264,6 +264,7 @@ public class BingoManager implements Listener {
                                 } break;
 
                                 //5 diff info case
+                                case NOTEBLOCK_INSTRUMENTS:
                                 case FARM_CROPS:
                                 case EAT_SUS_STEW:
                                 case JARDINERO:

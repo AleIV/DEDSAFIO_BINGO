@@ -52,9 +52,9 @@ public class Game extends BukkitRunnable {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameTime = 0;
-                this.gameStage = GameStage.INGAME;
-                this.bingoRound = BingoRound.THREE;
-                this.bingoFase = BingoFase.CHALLENGE;
+                this.gameStage = GameStage.LOBBY;
+                this.bingoRound = BingoRound.ONE;
+                this.bingoFase = BingoFase.ITEMS;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -783,7 +783,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
 		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion."));
 		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 300 bloques con una enderpearl"));
-		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 20 esmeraldas con un aldeano "));
+		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 40 esmeraldas con un aldeano."));
 		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 5 tipos diferentes de suspicious stew."));
 		challenges.put(Challenge.MINE_LIGHT_SOURCE, new ItemCode('\uEF06', 65, "Pica 10 bloques diferentes que den luz."));
 		challenges.put(Challenge.GLOWING_BAT, new ItemCode('\uEF07', 66, "Dispárale una flecha con glowing a un murciélago."));
