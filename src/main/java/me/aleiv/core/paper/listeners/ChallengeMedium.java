@@ -14,6 +14,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -40,6 +41,10 @@ public class ChallengeMedium implements Listener{
             Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED,
             Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED);
     private final List<Material> flowers = List.of(Material.RED_TULIP);
+    private final List<Material> lightBlocks = List.of(Material.SEA_LANTERN, Material.GLOWSTONE, Material.TORCH,
+            Material.REDSTONE_BLOCK, Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD,
+            Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.LANTERN, Material.SOUL_LANTERN,
+            Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
@@ -238,6 +243,23 @@ public class ChallengeMedium implements Listener{
                     clickedPlayer.getInventory().addItem(itemHand.clone());
                     player.getEquipment().setItemInMainHand(null);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        var game = instance.getGame();
+        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
+            return;
+
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if (lightBlocks.contains(block.getType())) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.MINE_LIGHT_SOURCE, block.getType().toString());
             }
         }
     }
