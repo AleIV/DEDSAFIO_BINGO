@@ -130,13 +130,13 @@ public class ChallengeEasy implements Listener {
         if(block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE){
             var manager = instance.getBingoManager();
 
-            var camping = block.getLocation().getNearbyPlayers(10).stream().map(p -> p.getUniqueId()).collect(Collectors.toList());
+            var camping = block.getLocation().getNearbyPlayers(10).stream().map(p -> p.getUniqueId()).toList();
             for (var uuid : camping) {
                 var table = manager.findTable(uuid);   
                 var players = table.getMembers();
                 var player = Bukkit.getPlayer(uuid);
 
-                if (player != null && table != null && isTeamCamping(players, camping)) {
+                if (player != null && table != null && isTeamNearby(players, camping)) {
 
                     manager.attempToFind(player, Challenge.CAMPFIRE_CAMPING, "");
                     return;
@@ -146,9 +146,9 @@ public class ChallengeEasy implements Listener {
         }
     }
 
-    public boolean isTeamCamping(List<UUID> players, List<UUID> camping){
+    public boolean isTeamNearby(List<UUID> players, List<UUID> uuidsTeam){
         for (UUID uuid : players) {
-            if(!camping.contains(uuid)){
+            if(!uuidsTeam.contains(uuid)){
                 return false;
             }
         }
