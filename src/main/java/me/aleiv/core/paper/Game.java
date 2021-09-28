@@ -750,7 +750,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.PIGLIN_BARTER, new ItemCode('\uEE68', 28, "Tradea con un piglin."));
 		challenges.put(Challenge.COMPLETE_MAP, new ItemCode('\uEE69', 29, "Completa un mapa."));
 		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
-		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Dispara a través de 3 miembros de tu equipo con un solo disparo de ballesta."));
+		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Recibe daño de piercing por un miembro de tu equipo."));
 		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo. (No cuenta color blanco)"));
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
@@ -762,7 +762,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 5 tipos de animales diferentes."));
 		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 5 efectos de poción al mismo tiempo."));
 		challenges.put(Challenge.MILK_ZOMBIE, new ItemCode('\uEE82', 42, "Dale un cubo de leche a un zombie."));
-		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Fabrica 3 tipos diferentes de pociones."));
+		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 5 tipos tipos de pociones diferentes."));
 		challenges.put(Challenge.EQUIP_DONKEY_CHEST, new ItemCode('\uEE84', 44, "Equipa un cofre a un burro."));
 		challenges.put(Challenge.HUNGER_DAMAGE, new ItemCode('\uEE85', 45, "Recibe daño por hambre."));
 		challenges.put(Challenge.HOGLIN_SCARE, new ItemCode('\uEE86', 46, "Asusta un hoglin usando un warped fungus."));
@@ -851,13 +851,13 @@ public class Game extends BukkitRunnable {
                 challenge_2.add(Challenge.BREED_ANIMALS);
                 challenge_2.add(Challenge.POTION_EFFECTS);
                 challenge_2.add(Challenge.MILK_ZOMBIE);
-                challenge_2.add(Challenge.POTION_TYPES);
                 challenge_2.add(Challenge.EQUIP_DONKEY_CHEST);
                 challenge_2.add(Challenge.HUNGER_DAMAGE);
                 challenge_2.add(Challenge.HOGLIN_SCARE);
                 challenge_2.add(Challenge.PIGLIN_SCARE);
                 challenge_2.add(Challenge.SHOOT_PORTAL);
                 challenge_2.add(Challenge.RIDE_HORSE_MINECART);
+                challenge_2.add(Challenge.ENDER_EYE_THROW);
                 
 
         }
@@ -873,7 +873,6 @@ public class Game extends BukkitRunnable {
                 challenge_3.add(Challenge.FIREWORK_CROSSBOW);
                 challenge_3.add(Challenge.CREEPER_TNT_KILL);
                 challenge_3.add(Challenge.NETHER_MOB_KILL);
-                challenge_3.add(Challenge.ENDER_EYE_THROW);
                 challenge_3.add(Challenge.FLYING_MOBS_KILL);
                 challenge_3.add(Challenge.LINGERING_WATER_POTION);
                 challenge_3.add(Challenge.ENDER_PEARL_TRAVEL);
@@ -890,6 +889,7 @@ public class Game extends BukkitRunnable {
                 challenge_3.add(Challenge.FARM_CROPS);
                 challenge_3.add(Challenge.END_BINGO_MAX_HEIGHT);
                 challenge_3.add(Challenge.OVER_ZOGLIN);
+                challenge_3.add(Challenge.POTION_TYPES);
 
         }
 
