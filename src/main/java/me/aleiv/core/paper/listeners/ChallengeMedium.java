@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -201,7 +202,7 @@ public class ChallengeMedium implements Listener{
     }
 
     @EventHandler
-    public void onBlockInteract(PlayerInteractEvent event) {
+    public void onBlockInteractRound2(PlayerInteractEvent event) {
         var game = instance.getGame();
         if (!game.isChallengeEnabledFor(Challenge.BED_EXPLODE)) return;
 
@@ -214,6 +215,35 @@ public class ChallengeMedium implements Listener{
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Game.Challenge.BED_EXPLODE, "");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockInteractRound3(PlayerInteractEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.TEAM_SPAWN_ANCHOR) || !game.isChallengeEnabledFor(Challenge.CAKE_EAT)) return;
+
+        Player player = event.getPlayer();
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock();
+            if (block != null && block.getType() == Material.RESPAWN_ANCHOR) {
+                RespawnAnchor respawnAnchor = (RespawnAnchor) block.getBlockData();
+                if (respawnAnchor.getCharges() > 0) {
+                    String data = block.getLocation().getBlockX() + ";" + block.getLocation().getBlockY() + ";" + block.getLocation().getBlockZ();
+                    var manager = instance.getBingoManager();
+                    var table = manager.findTable(player.getUniqueId());
+                    if (table != null) {
+                        manager.attempToFind(player, Game.Challenge.TEAM_SPAWN_ANCHOR, data);
+                    }
+                }
+            } else if (block != null && block.getType() == Material.CAKE) {
+                String data = block.getLocation().getBlockX() + ";" + block.getLocation().getBlockY() + ";" + block.getLocation().getBlockZ();
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.CAKE_EAT, data);
                 }
             }
         }
