@@ -22,8 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -260,6 +259,20 @@ public class ChallengeMedium implements Listener{
             var table = manager.findTable(player.getUniqueId());
             if (table != null) {
                 manager.attempToFind(player, Game.Challenge.MINE_LIGHT_SOURCE, block.getType().toString());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMobLove(EntityBreedEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.BREED_ANIMALS)) return;
+
+        if (event.getBreeder() instanceof Player player) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.BREED_ANIMALS, event.getEntity().getType().toString());
             }
         }
     }

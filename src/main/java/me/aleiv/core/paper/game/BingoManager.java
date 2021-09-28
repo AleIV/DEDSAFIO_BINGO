@@ -255,6 +255,7 @@ public class BingoManager implements Listener {
                                 case REDSTONE_SIGNAL:
                                 case FISH_ITEMS:
                                 case MINE_LIGHT_SOURCE:
+                                case BREED_ANIMALS:
                                 case HOSTILE_KILL: {
 
                                     if (challengeInfo.contains(info)) {
