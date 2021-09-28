@@ -10,7 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Piglin;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Strider;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -20,13 +25,16 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
 
 import io.papermc.paper.event.player.PlayerTradeEvent;
-
-import me.aleiv.core.paper.Game;
 import me.aleiv.core.paper.Core;
-import org.bukkit.inventory.ItemStack;
+import me.aleiv.core.paper.Game;
+import me.aleiv.core.paper.Game.Challenge;
 
 public class ChallengeMedium implements Listener{
     
@@ -49,8 +57,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.INVENTORY_STACKS)) return;
 
         if (event.getPlayer() instanceof Player player) {
             long stacks = Arrays.stream(player.getInventory().getContents())
@@ -68,8 +75,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onItemConsumed(PlayerItemConsumeEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.STRIDER_GAPPLE)) return;
 
         Player player = event.getPlayer();
         if (event.getItem().getType() == Material.GOLDEN_APPLE) {
@@ -86,8 +92,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onEntityDropItem(EntityDropItemEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.PIGLIN_BARTER)) return;
 
         if (event.getEntity() instanceof Piglin piglin) {
             var manager = instance.getBingoManager();
@@ -106,8 +111,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onTrading(PlayerTradeEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.VILLAGER_MAX_TRADE)) return;
 
         Player player = event.getPlayer();
         if (event.getVillager() instanceof Villager villager && villager.getVillagerLevel() >= 5) {
@@ -122,8 +126,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.CROSSBOW_SHOT)) return;
 
         if (event.getEntity() instanceof Player player && event.getDamager() instanceof Projectile projectile) {
             if (projectile.getShooter() instanceof Player shooter) {
@@ -146,8 +149,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onItemEnchant(EnchantItemEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.ENCHANT_LVL6)) return;
 
         Player player = event.getEnchanter();
         if (event.getExpLevelCost() == 6) {
@@ -162,8 +164,8 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE)) return;
+
 
         Block block = event.getBlockPlaced();
         Player player = event.getPlayer();
@@ -191,8 +193,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockInteract(PlayerInteractEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.BED_EXPLODE)) return;
 
         Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -211,8 +212,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.FISH_ITEMS)) return;
 
         Player player = event.getPlayer();
         if (event.getCaught() instanceof Item item) {
@@ -227,8 +227,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         var game = instance.getGame();
-        if (game.getBingoFase() != Game.BingoFase.CHALLENGE && game.getBingoRound() != Game.BingoRound.TWO)
-            return;
+        if (!game.isChallengeEnabledFor(Challenge.GIVE_PLAYER_FLOWER)) return;
 
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {

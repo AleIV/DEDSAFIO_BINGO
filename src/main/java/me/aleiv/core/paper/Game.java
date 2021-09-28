@@ -52,9 +52,9 @@ public class Game extends BukkitRunnable {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();
                 this.gameTime = 0;
-                this.gameStage = GameStage.LOBBY;
-                this.bingoRound = BingoRound.ONE;
-                this.bingoFase = BingoFase.ITEMS;
+                this.gameStage = GameStage.INGAME;
+                this.bingoRound = BingoRound.THREE;
+                this.bingoFase = BingoFase.CHALLENGE;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -85,6 +85,21 @@ public class Game extends BukkitRunnable {
                 gameTime = new_time;
 
                 Bukkit.getPluginManager().callEvent(new GameTickEvent(new_time, true));
+        }
+
+        public boolean isChallengeEnabledFor(Challenge ch){
+                return getCurrentChallengeF().contains(ch);
+        }
+
+        public List<Challenge> getCurrentChallengeF(){
+
+            switch (bingoRound) {
+                case ONE: return challengeRounds.get(BingoRound.ONE).stream().toList();
+                case TWO: return challengeRounds.get(BingoRound.TWO).stream().toList(); 
+                case THREE: return challengeRounds.get(BingoRound.THREE).stream().toList(); 
+                default: break;
+            }
+            return null;
         }
 
 
@@ -736,7 +751,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.COMPLETE_MAP, new ItemCode('\uEE69', 29, "Completa un mapa."));
 		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
 		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Dispara a través de 3 miembros de tu equipo con un solo disparo de ballesta."));
-		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo."));
+		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Todos los miembros del equipo deben cubrirse con un escudo con banner al mismo tiempo. (No cuenta color blanco)"));
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
 		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));
@@ -766,7 +781,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.NETHER_MOB_KILL, new ItemCode('\uEE98', 58, "Cada miembro del equipo debe matar un mob en un bioma del nether diferente."));
 		challenges.put(Challenge.ENDER_EYE_THROW, new ItemCode('\uEE99', 59, "“Veo veo con mi ojo feo” Todos los jugadores tienen que lanzar un ojo de ender"));
 		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
-		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion de agua."));
+		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion."));
 		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 300 bloques con una enderpearl"));
 		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 20 esmeraldas con un aldeano "));
 		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 5 tipos diferentes de suspicious stew."));

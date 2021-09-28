@@ -1,10 +1,8 @@
 package me.aleiv.core.paper.game;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -250,6 +248,7 @@ public class BingoManager implements Listener {
                                 } break;
                                 
                                 //5 diff info case
+                                case JARDINERO:
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
