@@ -349,4 +349,18 @@ public class ChallengeMedium implements Listener{
         }
     }
 
+    @EventHandler
+    public void onPortal(EntityPortalEnterEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.SHOOT_PORTAL)) return;
+
+        if (event.getEntity() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.SHOOT_PORTAL, "");
+            }
+        }
+    }
+
 }
