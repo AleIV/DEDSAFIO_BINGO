@@ -6,9 +6,15 @@ import java.util.UUID;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mule;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Zoglin;
@@ -18,6 +24,11 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.meta.SuspiciousStewMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.Challenge;
@@ -26,6 +37,9 @@ public class ChallengeHard implements Listener{
     
     Core instance;
 
+    private List<EntityType> flyingList = List.of(EntityType.BEE, EntityType.BAT, EntityType.PARROT, 
+        EntityType.GHAST, EntityType.BLAZE, EntityType.PHANTOM, EntityType.WITHER);
+
     public ChallengeHard(Core instance){
         this.instance = instance;
     }
@@ -33,10 +47,12 @@ public class ChallengeHard implements Listener{
     @EventHandler
     public void onKill(EntityDeathEvent e){
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.SNOWBALL_BLAZE_KILL) || !game.isChallengeEnabledFor(Challenge.OVER_ZOGLIN)) return;
+        if (!game.isChallengeEnabledFor(Challenge.SNOWBALL_BLAZE_KILL) || !game.isChallengeEnabledFor(Challenge.OVER_ZOGLIN)
+            || !game.isChallengeEnabledFor(Challenge.FLYING_MOBS_KILL) || !game.isChallengeEnabledFor(Challenge.NETHER_MOB_KILL)) return;
         var manager = instance.getBingoManager();
 
         var entity = e.getEntity();
+       
         if(entity instanceof Blaze blaze){
             var cause = blaze.getLastDamageCause();
             if(cause != null && cause instanceof EntityDamageByEntityEvent entityDamage 
@@ -52,7 +68,97 @@ public class ChallengeHard implements Listener{
             if(player != null){
                 manager.attempToFind(player, Challenge.OVER_ZOGLIN, "");
             }
+
+        }else if(flyingList.contains(entity.getType())){
+            var player = entity.getKiller();
+            if(player != null){
+                manager.attempToFind(player, Challenge.FLYING_MOBS_KILL, "");
+            }
+
+        }else if(entity.getWorld().getEnvironment() == Environment.NETHER){
+            var player = entity.getKiller();
+            
+            if(player != null){
+                var biome = entity.getLocation().getBlock().getBiome().toString();
+                manager.attempToFind(player, Challenge.NETHER_MOB_KILL, biome);
+            }
+        }else if(entity instanceof Pig pig && !pig.getPassengers().isEmpty() && pig.getPassengers().get(0) instanceof Player player){
+            if(player != null){
+                manager.attempToFind(player, Challenge.PIG_FALL, "");
+            }
         }
+    }
+
+    @EventHandler
+    public void damageEvent(EntityDamageByEntityEvent e){
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.GLOWING_BAT)) return;
+
+        var entity = e.getEntity();
+        var damager = e.getDamager();
+        if(entity instanceof Bat bat && damager instanceof Arrow arrow 
+            && arrow.getShooter() != null && arrow.getShooter() instanceof Player player){
+
+            var effects = arrow.getCustomEffects();
+            if(!effects.isEmpty()){
+                for (var effect : effects) {
+                    if(effect.getType() == PotionEffectType.GLOWING){
+                        var manager = instance.getBingoManager();
+                        
+                        manager.attempToFind(player, Challenge.GLOWING_BAT, "");
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onCatch(PlayerItemConsumeEvent e){
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.EAT_SUS_STEW)) return;
+
+        var item = e.getItem();
+        if(item.getType() == Material.SUSPICIOUS_STEW){
+            var meta = (SuspiciousStewMeta) item.getItemMeta();
+            var list = meta.getCustomEffects();
+            if(!list.isEmpty()){
+                var effect = list.get(0).toString().split(" ");
+                var str = new StringBuilder();
+                for (var string : effect) {
+                    str.append(string);
+                }
+                var nStr = str.toString().split(":");
+
+                var player = e.getPlayer();
+                var manager = instance.getBingoManager();
+                        
+                manager.attempToFind(player, Challenge.EAT_SUS_STEW, nStr[0]);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e){
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.ENDER_PEARL_TRAVEL)) return;
+
+        var cause = e.getCause();
+        if(cause == TeleportCause.ENDER_PEARL && getDistance(e.getFrom(), e.getTo()) >= 300){
+            var manager = instance.getBingoManager();
+            var player = e.getPlayer();
+            manager.attempToFind(player, Challenge.ENDER_PEARL_TRAVEL, "");
+        }
+    }
+
+    private double getDistance(Location loc1, Location loc2) {
+        final int x1 = (int) loc1.getX();
+        final int z1 = (int) loc1.getZ();
+
+        final int x2 = (int) loc2.getX();
+        final int z2 = (int) loc2.getZ();
+
+        return Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(z2 - z1, 2)));
     }
 
     @EventHandler
@@ -78,6 +184,15 @@ public class ChallengeHard implements Listener{
                     }
                 }, 20*5);
             }
+
+        }else if(hand != null && hand.getType() == Material.LINGERING_POTION){
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+
+            if (table != null) {
+                
+                manager.attempToFind(player, Challenge.LINGERING_WATER_POTION, "");
+            }
         }
     }
 
@@ -93,7 +208,6 @@ public class ChallengeHard implements Listener{
             manager.attempToFind(player, Challenge.OBTAIN_MULE, "");
             
         }
-
     }
 
     @EventHandler

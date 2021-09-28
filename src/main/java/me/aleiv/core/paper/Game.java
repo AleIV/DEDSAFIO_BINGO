@@ -793,7 +793,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.TEAM_DANCE, new ItemCode('\uEF11', 70, "Reproduce un disco en un tocadiscos y baila con todo tu equipo."));
 		challenges.put(Challenge.SNOWBALL_BLAZE_KILL, new ItemCode('\uEF12', 71, "Mata a un blaze usando bolas de nieve."));
 		challenges.put(Challenge.OBTAIN_MULE, new ItemCode('\uEF13', 72, "Consigue una Mula."));
-		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Crece 5 cultivos diferentes al máximo."));
+		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Haz crecer 5 cultivos diferentes al máximo."));
 		challenges.put(Challenge.END_BINGO_MAX_HEIGHT, new ItemCode('\uEF15', 74, "“En la Cima” Todos los integrantes deben de estar juntos y en la capa 256 después de completar todos los otros logros."));
 		challenges.put(Challenge.OVER_ZOGLIN, new ItemCode('\uEF16', 75, "Mata un Zoglin."));
                 

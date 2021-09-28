@@ -247,7 +247,23 @@ public class BingoManager implements Listener {
 
                                 } break;
                                 
+                                case FLYING_MOBS_KILL:{
+
+                                    if (challengeInfo.contains(info)) {
+                                        return;
+
+                                    } else {
+                                        challengeInfo.add(info);
+                                    }
+
+                                    if (challengeInfo.size() < 3) {
+                                        return;
+                                    }
+
+                                } break;
+
                                 //5 diff info case
+                                case EAT_SUS_STEW:
                                 case JARDINERO:
                                 case ACUATIC_KILL:
                                 case MINE_MINERALS:
@@ -269,6 +285,7 @@ public class BingoManager implements Listener {
 
                                 } break;
 
+                                case NETHER_MOB_KILL:
                                 case PINK_SHEEP_BIOME: {
 
                                     if (challengeInfo.contains(info) || infoPlayers.contains(playerName)) {
