@@ -277,4 +277,20 @@ public class ChallengeMedium implements Listener{
         }
     }
 
+    @EventHandler
+    public void onPotionEffect(EntityPotionEffectEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.POTION_EFFECTS)) return;
+
+        if (event.getEntity() instanceof Player player) {
+            if (player.getActivePotionEffects().size() >= 4) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.POTION_EFFECTS, "");
+                }
+            }
+        }
+    }
+
 }
