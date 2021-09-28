@@ -10,12 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Strider;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -290,6 +285,25 @@ public class ChallengeMedium implements Listener{
                     manager.attempToFind(player, Game.Challenge.POTION_EFFECTS, "");
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onEntityPickUp(EntityPickupItemEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.MILK_ZOMBIE)) return;
+
+        if (event.getEntity() instanceof Zombie zombie && event.getItem().getItemStack().getType() == Material.MILK_BUCKET) {
+            var manager = instance.getBingoManager();
+            Bukkit.getScheduler().runTaskLater(instance, task -> zombie.getNearbyEntities(10, 10, 10).stream()
+                    .filter(e -> e instanceof Player)
+                    .forEach(e -> {
+                        var player = (Player) e;
+                        var table = manager.findTable(player.getUniqueId());
+                        if (table != null) {
+                            manager.attempToFind(player, Game.Challenge.MILK_ZOMBIE, "");
+                        }
+                    }), 1);
         }
     }
 
