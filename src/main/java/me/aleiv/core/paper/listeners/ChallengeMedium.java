@@ -324,15 +324,15 @@ public class ChallengeMedium implements Listener{
 
         if (event.getEntity() instanceof Zombie zombie && event.getItem().getItemStack().getType() == Material.MILK_BUCKET) {
             var manager = instance.getBingoManager();
-            Bukkit.getScheduler().runTaskLater(instance, task -> zombie.getNearbyEntities(10, 10, 10).stream()
-                    .filter(e -> e instanceof Player)
-                    .forEach(e -> {
-                        var player = (Player) e;
+            zombie.getWorld().getNearbyLivingEntities(zombie.getLocation(), 10).stream()
+                    .filter(livingEntity -> livingEntity instanceof Player)
+                    .forEach(livingEntity -> {
+                        var player = (Player) livingEntity;
                         var table = manager.findTable(player.getUniqueId());
                         if (table != null) {
                             manager.attempToFind(player, Game.Challenge.MILK_ZOMBIE, "");
                         }
-                    }), 1);
+                    });
         }
     }
 
