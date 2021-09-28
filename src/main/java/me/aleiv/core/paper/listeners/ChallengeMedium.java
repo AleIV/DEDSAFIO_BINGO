@@ -29,6 +29,7 @@ import io.papermc.paper.event.player.PlayerTradeEvent;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game;
 import me.aleiv.core.paper.Game.Challenge;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 public class ChallengeMedium implements Listener{
     
@@ -359,6 +360,22 @@ public class ChallengeMedium implements Listener{
             var table = manager.findTable(player.getUniqueId());
             if (table != null) {
                 manager.attempToFind(player, Game.Challenge.SHOOT_PORTAL, "");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMount(EntityMountEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.RIDE_HORSE_MINECART)) return;
+
+        if (event.getEntity() instanceof Player player && event.getMount() instanceof Horse horse) {
+            if (horse.getVehicle() != null && horse.getVehicle() instanceof Minecart) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.RIDE_HORSE_MINECART, "");
+                }
             }
         }
     }
