@@ -10,19 +10,14 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Strider;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -47,7 +42,13 @@ public class ChallengeMedium implements Listener{
             Material.CYAN_BED, Material.GRAY_BED, Material.GREEN_BED, Material.LIGHT_BLUE_BED, Material.LIGHT_GRAY_BED,
             Material.LIME_BED, Material.MAGENTA_BED, Material.ORANGE_BED, Material.PINK_BED, Material.PURPLE_BED,
             Material.RED_BED, Material.WHITE_BED, Material.YELLOW_BED);
-    private final List<Material> flowers = List.of(Material.RED_TULIP);
+    private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY,
+            Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY,
+            Material.WITHER_ROSE, Material.SUNFLOWER, Material.PEONY, Material.CORNFLOWER);
+    private final List<Material> lightBlocks = List.of(Material.SEA_LANTERN, Material.GLOWSTONE, Material.TORCH,
+            Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD,
+            Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.LANTERN, Material.SOUL_LANTERN,
+            Material.CAMPFIRE, Material.SOUL_CAMPFIRE, Material.SHROOMLIGHT, Material.BEACON, Material.JACK_O_LANTERN);
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
@@ -227,7 +228,7 @@ public class ChallengeMedium implements Listener{
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof Player clickedPlayer && player.getEquipment() != null) {
             ItemStack itemHand = player.getEquipment().getItemInMainHand();
-            if (flowers.contains(itemHand.getType())) {
+            if (itemHand.getType().toString().contains("TULIP") || flowers.contains(itemHand.getType())) {
                 var manager = instance.getBingoManager();
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null ) {
@@ -238,6 +239,71 @@ public class ChallengeMedium implements Listener{
                     player.getEquipment().setItemInMainHand(null);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.MINE_LIGHT_SOURCE)) return;
+
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if (lightBlocks.contains(block.getType())) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.MINE_LIGHT_SOURCE, block.getType().toString());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMobLove(EntityBreedEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.BREED_ANIMALS)) return;
+
+        if (event.getBreeder() instanceof Player player) {
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(player.getUniqueId());
+            if (table != null) {
+                manager.attempToFind(player, Game.Challenge.BREED_ANIMALS, event.getEntity().getType().toString());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPotionEffect(EntityPotionEffectEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.POTION_EFFECTS)) return;
+
+        if (event.getEntity() instanceof Player player) {
+            if (player.getActivePotionEffects().size() >= 4) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.POTION_EFFECTS, "");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityPickUp(EntityPickupItemEvent event) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.MILK_ZOMBIE)) return;
+
+        if (event.getEntity() instanceof Zombie zombie && event.getItem().getItemStack().getType() == Material.MILK_BUCKET) {
+            var manager = instance.getBingoManager();
+            Bukkit.getScheduler().runTaskLater(instance, task -> zombie.getNearbyEntities(10, 10, 10).stream()
+                    .filter(e -> e instanceof Player)
+                    .forEach(e -> {
+                        var player = (Player) e;
+                        var table = manager.findTable(player.getUniqueId());
+                        if (table != null) {
+                            manager.attempToFind(player, Game.Challenge.MILK_ZOMBIE, "");
+                        }
+                    }), 1);
         }
     }
 
