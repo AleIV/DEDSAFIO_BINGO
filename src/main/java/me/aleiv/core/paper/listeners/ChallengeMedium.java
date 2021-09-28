@@ -92,15 +92,15 @@ public class ChallengeMedium implements Listener{
 
         if (event.getEntity() instanceof Piglin piglin) {
             var manager = instance.getBingoManager();
-            Bukkit.getScheduler().runTaskLater(instance, task -> piglin.getNearbyEntities(10, 10, 10).stream()
-                    .filter(e -> e instanceof Player)
-                    .forEach(e -> {
-                        var player = (Player) e;
+            piglin.getWorld().getNearbyLivingEntities(piglin.getLocation(), 10).stream()
+                    .filter(livingEntity -> livingEntity instanceof Player)
+                    .forEach(livingEntity -> {
+                        var player = (Player) livingEntity;
                         var table = manager.findTable(player.getUniqueId());
                         if (table != null) {
                             manager.attempToFind(player, Game.Challenge.PIGLIN_BARTER, "");
                         }
-                    }), 1);
+                    });
         }
     }
 
@@ -160,7 +160,7 @@ public class ChallengeMedium implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE)) return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_HAY_BALE) || !game.isChallengeEnabledFor(Challenge.HOGLIN_SCARE)) return;
 
 
         Block block = event.getBlockPlaced();
@@ -181,6 +181,15 @@ public class ChallengeMedium implements Listener{
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {
                     manager.attempToFind(player, Game.Challenge.CAMPFIRE_HAY_BALE, "");
+                }
+            }
+        } else if (block.getType() == Material.WARPED_FUNGUS) {
+            if (block.getWorld().getNearbyLivingEntities(block.getLocation(), 10).stream()
+                    .anyMatch(livingEntity -> livingEntity instanceof Hoglin)) {
+                var manager = instance.getBingoManager();
+                var table = manager.findTable(player.getUniqueId());
+                if (table != null) {
+                    manager.attempToFind(player, Game.Challenge.HOGLIN_SCARE, "");
                 }
             }
         }
