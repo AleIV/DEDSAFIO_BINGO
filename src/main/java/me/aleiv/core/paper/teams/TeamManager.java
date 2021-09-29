@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -106,7 +107,7 @@ public abstract class TeamManager {
     }
 
     public void printContentsOfSet() {
-        logger.info(gson.toJson(teams.values()));
+        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(teams.values()));
     }
 
     /**
@@ -231,6 +232,17 @@ public abstract class TeamManager {
      */
     public Team createTeam(String teamName, UUID... uuids) throws TeamAlreadyExistsException {
         return createTeam(teamName, UUID.randomUUID(), uuids);
+    }
+
+    /**
+     * Function intended to be called to forcibly update a team to the backend.
+     * NOTE: No checks are performed when this is called. Use with caution.
+     * 
+     * @param team The team to update.
+     */
+    public void modifyTeam(Team team) {
+        this.writeTeamUpdate(team);
+        this.communicateUpdate(team);
     }
 
     /**

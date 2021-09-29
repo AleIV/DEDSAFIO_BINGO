@@ -67,6 +67,15 @@ public class Program {
             }
         } else if (inputArray[0].equals("list")) {
             teamManager.printContentsOfSet();
+        } else if (inputArray[0].equals("update")) {
+            var id = inputArray[1];
+            var points = Integer.parseInt(inputArray[2]);
+            var team = teamManager.getTeamsMap().get(UUID.fromString(id));
+            if (team != null) {
+                team.addPoints(points);
+                team.setLastObtainedPoints(System.currentTimeMillis());
+                teamManager.modifyTeam(team);
+            }
         }
 
     }

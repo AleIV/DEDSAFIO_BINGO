@@ -67,17 +67,6 @@ public class BTeamManager extends TeamManager {
         this.communicateUpdate(team);
     }
 
-    /**
-     * Function intended to be called to forcibly update a team to the backend.
-     * NOTE: No checks are performed when this is called. Use with caution.
-     * 
-     * @param team The team to update.
-     */
-    public void modifyTeam(Team team) {
-        this.writeTeamUpdate(team);
-        this.communicateUpdate(team);
-    }
-
     public void callEvent(Event event) {
         Bukkit.getPluginManager().callEvent(event);
     }
