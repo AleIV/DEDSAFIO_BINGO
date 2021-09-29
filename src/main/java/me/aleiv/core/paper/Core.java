@@ -53,20 +53,19 @@ public class Core extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        try {
-            this.redisJsonConfig = new JsonConfig("secret.json");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        var redisUri = redisJsonConfig.getRedisUri();
-
         protocolManager = ProtocolLibrary.getProtocolManager();
         RapidInvManager.register(this);
         BukkitTCT.registerPlugin(this);
         NegativeSpaces.registerCodes();
 
-        // Hook the team manager
+        // Obtain the secret connection string
+        try {
+            this.redisJsonConfig = new JsonConfig("secret.json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        var redisUri = redisJsonConfig != null ? redisJsonConfig.getRedisUri() : null;
+        // Hook the team , ensure no nulls
         teamManager = new BTeamManager(this, redisUri != null ? redisUri : "redis://147.182.135.68");
 
         game = new Game(this);
