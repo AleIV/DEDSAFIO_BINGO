@@ -14,6 +14,7 @@ import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
+import net.md_5.bungee.api.ChatColor;
 
 public class Timer {
 
@@ -102,6 +103,12 @@ public class Timer {
         return (startTime + seconds) - currentTime;
     }
 
+    public void setPreStart(int time){
+        this.time = timeConvert(time);
+        this.getBossbar().setVisible(true);
+
+    }
+
     public void refreshTime(int currentTime){
         var time = (startTime + seconds) - currentTime;
         var game = instance.getGame();
@@ -116,7 +123,10 @@ public class Timer {
         if(time < 0){
             this.time = neg3 + neg4 + "00:00";
             if(game.getGameStage() == GameStage.INGAME){
-                instance.getBingoManager().restartGame();
+                game.setGameStage(GameStage.POSTGAME);
+                instance.broadcastMessage(ChatColor.of(game.getColor3()) + "TIME IS UP!");
+
+                //instance.getBingoManager().restartGame();
             }
 
         }else{
@@ -138,7 +148,7 @@ public class Timer {
     }
 
     public void start(int seconds, int startTime){
-        this.time = neg3 + neg4 + "00:00";
+        this.time = timeConvert(seconds);
         this.seconds = seconds;
         this.startTime = (int) instance.getGame().getGameTime();
         this.isActive = true;

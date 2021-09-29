@@ -65,6 +65,18 @@ public class AdminBingoCMD extends BaseCommand {
         sender.sendMessage(ChatColor.of(game.getColor1()) + "RESPAWB SECONDS SET TO " + seconds);
     }
 
+    @Subcommand("info")
+    public void info(CommandSender sender) {
+        var game = instance.getGame();
+        var str = new StringBuilder();
+        str.append("STAGE: " + game.getGameStage().toString() + " ");
+        str.append("ROUND: " + game.getBingoRound().toString() + " ");
+        str.append("FASE: " + game.getBingoFase().toString() + " ");
+        str.append("TABLES: " + game.getTables().size() + " ");
+
+        sender.sendMessage(str.toString());
+    }
+
 
 
 }

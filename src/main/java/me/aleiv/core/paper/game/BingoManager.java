@@ -32,7 +32,6 @@ import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
-import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class BingoManager implements Listener {
@@ -230,8 +229,9 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                } break;
-                                //5 diff player case
+                                }
+                                    break;
+                                // 5 diff player case
                                 case FIREWORK_CROSSBOW:
                                 case JUMP_BED: {
 
@@ -246,9 +246,10 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                } break;
-                                
-                                case FLYING_MOBS_KILL:{
+                                }
+                                    break;
+
+                                case FLYING_MOBS_KILL: {
 
                                     if (challengeInfo.contains(info)) {
                                         return;
@@ -261,9 +262,25 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
+                                case CAULDRON_WASH:{
 
-                                //5 diff info case
+                                    if (challengeInfo.contains(info)) {
+                                        return;
+
+                                    } else {
+                                        challengeInfo.add(info);
+                                    }
+
+                                    if (challengeInfo.size() < 4) {
+                                        return;
+                                    }
+
+                                }
+                                    break;
+                                // 5 diff info case
+                                
                                 case NOTEBLOCK_INSTRUMENTS:
                                 case FARM_CROPS:
                                 case EAT_SUS_STEW:
@@ -289,7 +306,8 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
 
                                 case NETHER_MOB_KILL:
                                 case PINK_SHEEP_BIOME: {
@@ -307,42 +325,50 @@ public class BingoManager implements Listener {
                                         return;
                                     }
 
-                                } break;
+                                }
+                                    break;
 
                                 case BREAK_RULE_1: {
                                     if (challengeInfo.size() == 0) {
                                         challengeInfo.add(info);
                                         return;
                                     }
-                                    int[] lastCoords = Arrays.stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
+                                    int[] lastCoords = Arrays
+                                            .stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
                                             .mapToInt(Integer::parseInt).toArray();
-                                    int[] currentCoords = Arrays.stream(info.split(";"))
-                                            .mapToInt(Integer::parseInt).toArray();
-                                    if (currentCoords[0] != lastCoords[0] || currentCoords[2] != lastCoords[2] ||
-                                        currentCoords[1] >= lastCoords[1]) {
+                                    int[] currentCoords = Arrays.stream(info.split(";")).mapToInt(Integer::parseInt)
+                                            .toArray();
+                                    if (currentCoords[0] != lastCoords[0] || currentCoords[2] != lastCoords[2]
+                                            || currentCoords[1] >= lastCoords[1]) {
                                         challengeInfo.clear();
                                         challengeInfo.add(info);
                                         return;
                                     }
                                     challengeInfo.add(info);
-                                    if (challengeInfo.size() < 30) return;
-                                } break;
+                                    if (challengeInfo.size() < 30)
+                                        return;
+                                }
+                                    break;
 
                                 case ANVIL_DAMAGE: {
-                                    if (infoPlayers.contains(playerName)) return;
+                                    if (infoPlayers.contains(playerName))
+                                        return;
                                     infoPlayers.add(playerName);
-                                    if (infoPlayers.size() < table.getMembers().size()) return;
-                                } break;
+                                    if (infoPlayers.size() < table.getMembers().size())
+                                        return;
+                                }
+                                    break;
 
                                 case TEAM_SPAWN_ANCHOR:
                                 case CAKE_EAT: {
                                     if (challengeInfo.size() == 0) {
                                         challengeInfo.add(info);
                                     }
-                                    int[] lastCoords = Arrays.stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
+                                    int[] lastCoords = Arrays
+                                            .stream(challengeInfo.get(challengeInfo.size() - 1).split(";"))
                                             .mapToInt(Integer::parseInt).toArray();
-                                    int[] currentCoords = Arrays.stream(info.split(";"))
-                                            .mapToInt(Integer::parseInt).toArray();
+                                    int[] currentCoords = Arrays.stream(info.split(";")).mapToInt(Integer::parseInt)
+                                            .toArray();
                                     boolean validCoords = true;
                                     for (int index = 0; index < 3; index++) {
                                         if (index < lastCoords.length && (lastCoords[index] != currentCoords[index])) {
@@ -355,14 +381,18 @@ public class BingoManager implements Listener {
                                         challengeInfo.add(info);
                                         infoPlayers.clear();
                                     } else {
-                                        if (infoPlayers.contains(playerName)) return;
+                                        if (infoPlayers.contains(playerName))
+                                            return;
                                         challengeInfo.add(info);
                                     }
                                     infoPlayers.add(playerName);
-                                    if (infoPlayers.size() < table.getMembers().size()) return;
-                                } break;
+                                    if (infoPlayers.size() < table.getMembers().size())
+                                        return;
+                                }
+                                    break;
 
-                                default: break;
+                                default:
+                                    break;
                             }
 
                             slot.setFound(true);
@@ -388,19 +418,12 @@ public class BingoManager implements Listener {
         var countDownStart = Character.toString('\uE360');
         var countdown = Frames.getFramesCharsIntegers(361, 489);
 
-        task.addWithDelay(new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    var loc = player.getLocation();
-                    instance.sendActionBar(player, countDownStart);
-                    player.playSound(loc, "bingo.countdown", 1, 1);
-                    game.setGameStage(GameStage.STARTING);
-                });
-
-            }
-
-        }, 50);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            var loc = player.getLocation();
+            instance.sendActionBar(player, countDownStart);
+            player.playSound(loc, "bingo.countdown", 1, 1);
+            game.setGameStage(GameStage.STARTING);
+        });
 
         countdown.forEach(frame -> {
             task.addWithDelay(new BukkitRunnable() {
@@ -435,7 +458,7 @@ public class BingoManager implements Listener {
                     scatter.Qteleport(player, loc);
                 }
 
-            }, 50);
+            }, 50*5);
         });
 
         task.addWithDelay(new BukkitRunnable() {
@@ -473,22 +496,15 @@ public class BingoManager implements Listener {
     public void restartGame() {
         var game = instance.getGame();
 
-        game.setGameStage(GameStage.POSTGAME);
-        instance.broadcastMessage(ChatColor.of(game.getColor3()) + "TIME IS UP!");
-
         var manager = instance.getScatterManager();
-        Bukkit.getScheduler().runTaskLater(instance, task -> {
+        game.setGameStage(GameStage.LOBBY);
 
-            game.setGameStage(GameStage.LOBBY);
+        var world = Bukkit.getWorld("lobby");
+        var loc = new Location(world, 0.5, 126, 0.5, 90, -0);
 
-            var world = Bukkit.getWorld("lobby");
-            var loc = new Location(world, 0.5, 126, 0.5, 90, -0);
-
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                manager.Qteleport(player, loc);
-            });
-
-        }, 20 * 5);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            manager.Qteleport(player, loc);
+        });
 
     }
 

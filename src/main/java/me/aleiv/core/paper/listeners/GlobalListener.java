@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EnderSignal;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -221,6 +222,27 @@ public class GlobalListener implements Listener {
 
         });
 
+    }
+
+    @EventHandler
+    public void onFriendlyFire(EntityDamageByEntityEvent e){
+        var damaged = e.getEntity();
+        var entity = e.getDamager();
+        if(damaged instanceof Player playerDamaged){
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(playerDamaged.getUniqueId());
+            if(table != null){
+                if(entity instanceof Player player){
+                    if(table.isPlaying(player.getUniqueId()))
+                        e.setCancelled(true);
+                    
+                }else if(entity instanceof Projectile proj && proj.getShooter() != null && proj instanceof Player player){
+                    if(table.isPlaying(player.getUniqueId()))
+                        e.setCancelled(true);
+                    
+                }
+            }
+        }
     }
 
 }

@@ -79,7 +79,7 @@ public class BingoCMD extends BaseCommand {
     @Subcommand("restart")
     public void restart(CommandSender sender){
         var game = instance.getGame();
-        if(game.getGameStage() == GameStage.INGAME){
+        if(game.getGameStage() == GameStage.INGAME || game.getGameStage() == GameStage.POSTGAME){
             instance.getBingoManager().restartGame();
 
         }else{
@@ -105,23 +105,33 @@ public class BingoCMD extends BaseCommand {
             player.playSound(loc, "bingo.horn", 1, 1);
         });
 
+        var timer = game.getTimer();
+        var time = 0;
+
         switch (round) {
             case ONE:{
-                game.getTimer().start(1200, (int) game.getGameTime());
+                time = 1200;
 
             }break;
             case TWO:{
-                game.getTimer().start(1800, (int) game.getGameTime());
+                time = 1800;
 
             }break;
             case THREE:{
-                game.getTimer().start(3600, (int) game.getGameTime());
+                time = 3600;
 
             }break;
         
             default:
                 break;
         }
+
+        final var v = time;
+        timer.setPreStart(time);
+
+        Bukkit.getScheduler().runTaskLater(instance, task->{
+            timer.start(v, (int) game.getGameTime());
+        }, 20*5);
 
         manager.selectTables();
         sender.sendMessage(ChatColor.of(color) + "Tables selected & timer set.");

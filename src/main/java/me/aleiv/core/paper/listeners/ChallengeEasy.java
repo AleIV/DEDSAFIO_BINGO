@@ -65,74 +65,78 @@ public class ChallengeEasy implements Listener {
     private final List<Material> redstoneBlocks = List.of(Material.REDSTONE_BLOCK, Material.REDSTONE_TORCH);
     private final List<String> interactableBlock = List.of("BUTTON", "LEVER", "PRESSURE");
 
-    private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, 
-        Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY, 
-            Material.WITHER_ROSE, Material.SUNFLOWER, Material.PEONY, Material.CORNFLOWER);//CONSIDER TULIP
+    private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
+            Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY, Material.WITHER_ROSE, Material.SUNFLOWER,
+            Material.PEONY, Material.CORNFLOWER);// CONSIDER TULIP
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent e){
+    public void onInteract(PlayerInteractEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.JARDINERO) || !game.isChallengeEnabledFor(Challenge.SHIELD_BANNER)) return;
+        if (!game.isChallengeEnabledFor(Challenge.JARDINERO) || !game.isChallengeEnabledFor(Challenge.SHIELD_BANNER))
+            return;
         var block = e.getClickedBlock();
         var hand = e.getItem();
         var player = e.getPlayer();
         var manager = instance.getBingoManager();
         var table = manager.findTable(player.getUniqueId());
 
-        if(table == null) return;
+        if (table == null)
+            return;
 
-        if(block != null && hand != null && block.getType() == Material.FLOWER_POT 
-            && (flowers.contains(hand.getType()) || hand.getType().toString().contains("TULIP"))){
+        if (block != null && hand != null && block.getType() == Material.FLOWER_POT
+                && (flowers.contains(hand.getType()) || hand.getType().toString().contains("TULIP"))) {
 
-                manager.attempToFind(player, Challenge.JARDINERO, hand.getType().toString());
+            manager.attempToFind(player, Challenge.JARDINERO, hand.getType().toString());
 
-        }else if(hand != null && hand.getType() == Material.SHIELD){
+        } else if (hand != null && hand.getType() == Material.SHIELD) {
 
-            var list = table.getPlayerStream().toList();
-            if(list.size() != table.getMembers().size()) return;
-            
-            if(isTeamBlocking(list, player)){
-
-                manager.attempToFind(player, Challenge.SHIELD_BANNER, hand.getType().toString());
+            var meta = (BlockStateMeta) hand.getItemMeta();
+            var state = meta.getBlockState();
+            var banner = (Banner) state;
+            if (banner.getPatterns().size() >= 5) {
+                manager.attempToFind(player, Challenge.SHIELD_BANNER, "");
             }
         }
     }
 
-    public boolean isTeamBlocking(List<Player> players, Player p){
+    public boolean isTeamBlocking(List<Player> players, Player p) {
 
         for (var player : players) {
-            if(player.getUniqueId().getMostSignificantBits() == p.getUniqueId().getMostSignificantBits()) continue;
+            if (player.getUniqueId().getMostSignificantBits() == p.getUniqueId().getMostSignificantBits())
+                continue;
 
             var item = player.getInventory().getItemInMainHand();
-            if(item == null || item.getType() != Material.SHIELD || !player.isBlocking()){
+            if (item == null || item.getType() != Material.SHIELD || !player.isBlocking()) {
                 return false;
             }
             var meta = (BlockStateMeta) item.getItemMeta();
             var state = meta.getBlockState();
             var banner = (Banner) state;
 
-            if(banner.getBaseColor().toString().contains("WHITE")){
+            if (banner.getBaseColor().toString().contains("WHITE")) {
                 return false;
             }
-        } 
+        }
 
-        if(players.isEmpty()) return false;
-    
+        if (players.isEmpty())
+            return false;
+
         return true;
     }
 
     @EventHandler
-    public void onCampfire(BlockCookEvent e){
+    public void onCampfire(BlockCookEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_CAMPING)) return;
+        if (!game.isChallengeEnabledFor(Challenge.CAMPFIRE_CAMPING))
+            return;
 
         var block = e.getBlock();
-        if(block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE){
+        if (block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE) {
             var manager = instance.getBingoManager();
 
             var camping = block.getLocation().getNearbyPlayers(10).stream().map(p -> p.getUniqueId()).toList();
             for (var uuid : camping) {
-                var table = manager.findTable(uuid);   
+                var table = manager.findTable(uuid);
                 var players = table.getMembers();
                 var player = Bukkit.getPlayer(uuid);
 
@@ -146,9 +150,9 @@ public class ChallengeEasy implements Listener {
         }
     }
 
-    public boolean isTeamNearby(List<UUID> players, List<UUID> uuidsTeam){
+    public boolean isTeamNearby(List<UUID> players, List<UUID> uuidsTeam) {
         for (UUID uuid : players) {
-            if(!uuidsTeam.contains(uuid)){
+            if (!uuidsTeam.contains(uuid)) {
                 return false;
             }
         }
@@ -158,7 +162,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onJump(PlayerJumpEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.JUMP_BED)) return;
+        if (!game.isChallengeEnabledFor(Challenge.JUMP_BED))
+            return;
 
         var block = e.getPlayer().getLocation().getBlock().getType().toString();
 
@@ -179,7 +184,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onLVL(PlayerLevelChangeEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.LVL_40)) return;
+        if (!game.isChallengeEnabledFor(Challenge.LVL_40))
+            return;
 
         var manager = instance.getBingoManager();
 
@@ -203,7 +209,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.HALF_HEART)) return;
+        if (!game.isChallengeEnabledFor(Challenge.HALF_HEART))
+            return;
 
         var entity = e.getEntity();
 
@@ -232,7 +239,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onShield(PlayerItemBreakEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.SHIELD_BREAK)) return;
+        if (!game.isChallengeEnabledFor(Challenge.SHIELD_BREAK))
+            return;
 
         var item = e.getBrokenItem();
 
@@ -252,7 +260,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onEntityPotionEffect(EntityPotionEffectEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.DOLPHIN_SWIM) || !game.isChallengeEnabledFor(Challenge.GET_POISON)) return;
+        if (!game.isChallengeEnabledFor(Challenge.DOLPHIN_SWIM) || !game.isChallengeEnabledFor(Challenge.GET_POISON))
+            return;
 
         if (e.getEntity() instanceof Player) {
 
@@ -282,7 +291,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onSkyHigh(PlayerJumpEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.MAXIMUM_HEIGHT)) return;
+        if (!game.isChallengeEnabledFor(Challenge.MAXIMUM_HEIGHT))
+            return;
 
         var manager = instance.getBingoManager();
         var player = e.getPlayer();
@@ -297,10 +307,12 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void growTree(StructureGrowEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.NETHER_TREE)) return;
+        if (!game.isChallengeEnabledFor(Challenge.NETHER_TREE))
+            return;
 
         var player = e.getPlayer();
-        if (player == null) return;
+        if (player == null)
+            return;
 
         var manager = instance.getBingoManager();
         var table = manager.findTable(player.getUniqueId());
@@ -316,7 +328,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onShootTarget(ProjectileHitEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.SHOOT_TARGET)) return;
+        if (!game.isChallengeEnabledFor(Challenge.SHOOT_TARGET))
+            return;
 
         var block = e.getHitBlock();
         if (block != null && block.getType() == Material.TARGET) {
@@ -338,7 +351,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.EAT_FOOD)) return;
+        if (!game.isChallengeEnabledFor(Challenge.EAT_FOOD))
+            return;
 
         var item = e.getItem();
         if (item != null && (item.getType() != Material.POTION || item.getType() != Material.MILK_BUCKET
@@ -359,13 +373,15 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void mineMinerals(BlockBreakEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.BREAK_RULE_1) || !game.isChallengeEnabledFor(Challenge.MINE_MINERALS)) return;
+        if (!game.isChallengeEnabledFor(Challenge.BREAK_RULE_1) || !game.isChallengeEnabledFor(Challenge.MINE_MINERALS))
+            return;
 
         var block = e.getBlock();
         var manager = instance.getBingoManager();
         var player = e.getPlayer();
 
-        if(player == null) return;
+        if (player == null)
+            return;
 
         if (listMaterials.contains(block.getType())) {
             manager.attempToFind(player, Challenge.MINE_MINERALS, block.getType().toString());
@@ -379,30 +395,13 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void entityDeath(EntityDeathEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.DROWN_VILLAGER) || !game.isChallengeEnabledFor(Challenge.PINK_SHEEP_BIOME) 
-            || !game.isChallengeEnabledFor(Challenge.HOSTILE_KILL) || !game.isChallengeEnabledFor(Challenge.ANIMAL_KILL)
-            || !game.isChallengeEnabledFor(Challenge.ACUATIC_KILL)) return;
+        if (!game.isChallengeEnabledFor(Challenge.HOSTILE_KILL) || !game.isChallengeEnabledFor(Challenge.ANIMAL_KILL))
+            return;
 
         var entity = e.getEntity();
         var player = entity.getKiller();
 
         var manager = instance.getBingoManager();
-
-        if (player == null) {
-
-            if (entity instanceof Villager villager) {
-
-                var cause = villager.getLastDamageCause().getCause();
-                if (cause == DamageCause.DROWNING || cause == DamageCause.SUFFOCATION) {
-
-                    var nearby = villager.getLocation().getNearbyPlayers(10).stream().collect(Collectors.toList());
-                    nearby.forEach(p ->{
-                        manager.attempToFind(p, Challenge.DROWN_VILLAGER, "");
-                    });
-                }
-            }
-            return;
-        }
 
         var table = manager.findTable(player.getUniqueId());
 
@@ -413,15 +412,6 @@ public class ChallengeEasy implements Listener {
 
             manager.attempToFind(player, Challenge.HOSTILE_KILL, monster.getType().toString());
 
-        } else if (entity instanceof Fish || entity instanceof Squid || entity instanceof Turtle
-                || entity instanceof Drowned || entity instanceof Guardian) {
-            manager.attempToFind(player, Challenge.ACUATIC_KILL, entity.getType().toString());
-
-        } else if (entity instanceof Sheep sheep && sheep.getColor() == DyeColor.PINK) {
-
-            var biome = sheep.getLocation().getBlock().getBiome().toString();
-            manager.attempToFind(player, Challenge.PINK_SHEEP_BIOME, biome);
-
         } else if (entity instanceof Animals animal) {
 
             manager.attempToFind(player, Challenge.ANIMAL_KILL, animal.getType().toString());
@@ -431,9 +421,60 @@ public class ChallengeEasy implements Listener {
     }
 
     @EventHandler
+    public void onEntDeath(EntityDeathEvent e) {
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.ACUATIC_KILL)
+                || !game.isChallengeEnabledFor(Challenge.DROWN_VILLAGER))
+            return;
+
+        var entity = e.getEntity();
+        var player = entity.getKiller();
+        var manager = instance.getBingoManager();
+        if (player == null) {
+
+            if (entity instanceof Villager villager) {
+
+                var cause = villager.getLastDamageCause().getCause();
+                if (cause == DamageCause.DROWNING || cause == DamageCause.SUFFOCATION) {
+                    var nearby = villager.getLocation().getNearbyPlayers(10).stream().collect(Collectors.toList());
+                    nearby.forEach(p -> {
+                        manager.attempToFind(p, Challenge.DROWN_VILLAGER, "");
+                    });
+                }
+            }
+            return;
+        }
+
+        if (entity instanceof Fish || entity instanceof Squid || entity instanceof Turtle || entity instanceof Drowned
+                || entity instanceof Guardian) {
+            manager.attempToFind(player, Challenge.ACUATIC_KILL, entity.getType().toString());
+
+        }
+    }
+
+    @EventHandler
+    public void onEntDeath2(EntityDeathEvent e) {
+        var game = instance.getGame();
+
+        if (!game.isChallengeEnabledFor(Challenge.PINK_SHEEP_BIOME))
+            return;
+
+        var killer = e.getEntity().getKiller();
+
+        var entity = e.getEntity();
+        if (killer != null && entity instanceof Sheep sheep && sheep.getColor() == DyeColor.PINK) {
+            var manager = instance.getBingoManager();
+            var biome = sheep.getLocation().getBlock().getBiome().toString();
+            manager.attempToFind(killer, Challenge.PINK_SHEEP_BIOME, biome);
+
+        }
+    }
+
+    @EventHandler
     public void entityInteractEvent(PlayerInteractAtEntityEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.CREEPER_IGNITE) || !game.isChallengeEnabledFor(Challenge.COLOR_SHEEP)) return;
+        if (!game.isChallengeEnabledFor(Challenge.CREEPER_IGNITE) || !game.isChallengeEnabledFor(Challenge.COLOR_SHEEP))
+            return;
 
         var player = e.getPlayer();
         var entity = e.getRightClicked();
@@ -459,15 +500,18 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void armorEquipped(PlayerArmorChangeEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.ARMOR_MATERIALS)) return;
+        if (!game.isChallengeEnabledFor(Challenge.ARMOR_MATERIALS))
+            return;
 
         Player player = event.getPlayer();
         List<String> equippedItems = new ArrayList<>();
         for (ItemStack item : player.getInventory().getArmorContents()) {
-            if (item == null) break;
+            if (item == null)
+                break;
             Material material = item.getType();
             String baseMaterial = material.name().split("_")[0];
-            if (equippedItems.contains(baseMaterial)) break;
+            if (equippedItems.contains(baseMaterial))
+                break;
             equippedItems.add(baseMaterial);
         }
 
@@ -483,7 +527,9 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void playerInteractBlock(PlayerInteractEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL) || !game.isChallengeEnabledFor(Challenge.BONE_MEAL_COMPOSTER)) return;
+        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL)
+                || !game.isChallengeEnabledFor(Challenge.BONE_MEAL_COMPOSTER))
+            return;
 
         var player = event.getPlayer();
         var block = event.getClickedBlock();
@@ -497,8 +543,7 @@ public class ChallengeEasy implements Listener {
                     manager.attempToFind(player, Challenge.BONE_MEAL_COMPOSTER, "");
                 }
             }
-        } else if (block != null && interactableBlock.stream()
-                .anyMatch(b -> block.getType().toString().contains(b))) {
+        } else if (block != null && interactableBlock.stream().anyMatch(b -> block.getType().toString().contains(b))) {
             var manager = instance.getBingoManager();
             var table = manager.findTable(player.getUniqueId());
             if (table != null) {
@@ -510,9 +555,10 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onMount(EntityMountEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.PURPLE_LLAMA)) return;
+        if (!game.isChallengeEnabledFor(Challenge.PURPLE_LLAMA))
+            return;
 
-        if (event.getEntity() instanceof Player player && event.getMount() instanceof Llama llama) {
+        if (event.getEntity()instanceof Player player && event.getMount()instanceof Llama llama) {
             if (llama.getInventory().contains(new ItemStack(Material.PURPLE_CARPET))) {
                 var manager = instance.getBingoManager();
                 var table = manager.findTable(player.getUniqueId());
@@ -526,10 +572,12 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.ANVIL_DAMAGE)) return;
+        if (!game.isChallengeEnabledFor(Challenge.ANVIL_DAMAGE))
+            return;
 
-        if (event.getEntity() instanceof Player player) {
-            if (event.getCause() == DamageCause.FALLING_BLOCK && event.getDamager() instanceof FallingBlock fallingBlock) {
+        if (event.getEntity()instanceof Player player) {
+            if (event.getCause() == DamageCause.FALLING_BLOCK
+                    && event.getDamager()instanceof FallingBlock fallingBlock) {
                 if (fallingBlock.getBlockData().getMaterial() == Material.ANVIL) {
                     var manager = instance.getBingoManager();
                     var table = manager.findTable(player.getUniqueId());
@@ -544,7 +592,8 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL)) return;
+        if (!game.isChallengeEnabledFor(Challenge.REDSTONE_SIGNAL))
+            return;
 
         Player player = event.getPlayer();
         if (redstoneBlocks.contains(event.getBlockPlaced().getType())) {
@@ -555,7 +604,5 @@ public class ChallengeEasy implements Listener {
             }
         }
     }
-
-
 
 }
