@@ -8,9 +8,10 @@ import com.google.gson.JsonSyntaxException;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import me.aleiv.core.paper.teams.TeamManager;
-import me.aleiv.core.paper.teams.objects.PipelineChangeSet;
 import me.aleiv.core.paper.teams.objects.Team;
-import me.aleiv.core.paper.teams.objects.TeamCreationUpdate;
+import me.aleiv.core.paper.teams.objects.events.PipelineChangeSet;
+import me.aleiv.core.paper.teams.objects.events.SendCommandToNodes;
+import me.aleiv.core.paper.teams.objects.events.TeamCreationUpdate;
 
 /**
  * Redis pipeline for team synchronization. Uses a Redis PubSub connection to
@@ -27,7 +28,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
         this.pubSubConnection = teamManager.getRedisClient().connectPubSub();
         /** Add the listener */
         this.pubSubConnection.addListener(this);
-        this.pubSubConnection.async().subscribe("dedsafio:events", "dedsafio:sync", "dedsafio:auth");
+        this.pubSubConnection.async().subscribe(DedsafioChannels.getAllChannels());
         this.logger = Logger.getLogger("sync-" + teamManager.getNodeId().toString().split("-")[0]);
     }
 
@@ -55,6 +56,18 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
     }
 
     /**
+     * Method that communicates to all the other nodes a command to be executed.
+     * 
+     * @param cmd The command to be executed.
+     * @return Integer indicating how many nodes recieved the command.
+     */
+    public long communicateCommandExecution(String cmd) {
+        logger.info("Attempting to communicate a command execution to " + cmd);
+        return this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.CMD.fullName(),
+                gson.toJson(new SendCommandToNodes(cmd, teamManager.getNodeId())));
+    }
+
+    /**
      * @return true if the pipeline is connected to the Redis server.
      */
     public boolean isPipelineUp() {
@@ -71,9 +84,10 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
             return;
         }
         if (split[0].equals("dedsafio")) {
-            switch (split[1].toLowerCase()) {
+            var dChannel = DedsafioChannels.valueOf(split[1]);
+            switch (dChannel) {
                 // Process logic based on the channel that recieved the message.
-                case "events": {
+                case EVENTS: {
                     try {
                         var creationUpdate = gson.fromJson(message, TeamCreationUpdate.class);
                         // Check if message is not comming from this node
@@ -96,7 +110,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
 
                     break;
                 }
-                case "sync": {
+                case SYNC: {
                     try {
                         var changeSet = gson.fromJson(message, PipelineChangeSet.class);
                         // Check if message is not comming from this node
@@ -118,7 +132,24 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
                     }
                     break;
                 }
-                case "auth": {
+                case CMD: {
+                    try {
+                        var cmd = gson.fromJson(message, SendCommandToNodes.class);
+                        if (cmd != null) {
+                            if (cmd.getFrom().compareTo(teamManager.getNodeId()) == 0) {
+                                logger.info(String.format("Received command from ourselves, ignoring."));
+                            } else {
+                                logger.info("Received command from node " + cmd.getFrom());
+                                // Run the command
+
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+                case AUTH: {
                     break;
                 }
                 default: {
@@ -131,37 +162,31 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
 
     @Override
     public void message(String pattern, String channel, String message) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void subscribed(String channel, long count) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void psubscribed(String pattern, long count) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void unsubscribed(String channel, long count) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void punsubscribed(String pattern, long count) {
-        // TODO Auto-generated method stub
 
     }
 
     public void closePubSubConnection() {
         this.pubSubConnection.close();
     }
-    // TODO: Add logic to stop repeating this.pubSubConnection all the time.
 
 }

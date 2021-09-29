@@ -49,7 +49,21 @@ public abstract class TeamManager {
         this.logger = Logger.getLogger("TeamManager-" + nodeId.toString().split("-")[0]);
     }
 
+    /**
+     * Updates the team with the given UUID.
+     * 
+     * @param team   The team to update.
+     * @param nodeId The nodeId of the node that is updating the team.
+     */
     public abstract void updateTeam(Team team, UUID nodeId);
+
+    /**
+     * Processes the recieved command.
+     * 
+     * @param cmd    The command to process.
+     * @param nodeId The nodeId of the node that is processing the command.
+     */
+    public abstract void processCommand(String cmd, UUID nodeId);
 
     /**
      * @return Returns the player team, it doesn't have one return null.
@@ -240,17 +254,6 @@ public abstract class TeamManager {
     }
 
     /**
-     * Function intended to be called to forcibly update a team to the backend.
-     * NOTE: No checks are performed when this is called. Use with caution.
-     * 
-     * @param team The team to update.
-     */
-    public void modifyTeam(Team team) {
-        this.writeTeamUpdate(team);
-        this.communicateUpdate(team);
-    }
-
-    /**
      * A method that registers a new team in the database. Throws an exception if
      * the team already exists.
      * 
@@ -272,17 +275,6 @@ public abstract class TeamManager {
     }
 
     /**
-     * A method that write an update of a team to the database.
-     * 
-     * @param team The team to update.
-     * @return true if field is a new field in the hash and value was set. false if
-     *         field already exists in the hash and the value was updated.
-     */
-    public boolean writeTeamUpdate(Team team) {
-        return getRedisSyncConnection().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
-    }
-
-    /**
      * A method that validates if a team already exists in some part of the state.
      * 
      * @param team The team to validate.
@@ -298,6 +290,38 @@ public abstract class TeamManager {
             return !getRedisSyncConnection().hexists(dataset, team.getTeamID().toString());
 
         return team != null;
+    }
+
+    /**
+     * A method that write an update of a team to the database.
+     * 
+     * @param team The team to update.
+     * @return true if field is a new field in the hash and value was set. false if
+     *         field already exists in the hash and the value was updated.
+     */
+    public boolean writeTeamUpdate(Team team) {
+        return getRedisSyncConnection().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
+    }
+
+    /**
+     * Function intended to be called to forcibly update a team to the backend.
+     * NOTE: No checks are performed when this is called. Use with caution.
+     * 
+     * @param team The team to update.
+     */
+    public void modifyTeam(Team team) {
+        this.writeTeamUpdate(team);
+        this.communicateUpdate(team);
+    }
+
+    /**
+     * A method that communicates other nodes of a command to be executed.
+     * 
+     * @param cmd The command to be executed.
+     * @return Integer indicating how many nodes recieved the command.
+     */
+    public long sendCommandToNodes(String cmd) {
+        return this.syncPipeline.communicateCommandExecution(cmd);
     }
 
     public RedisClient getRedisClient() {

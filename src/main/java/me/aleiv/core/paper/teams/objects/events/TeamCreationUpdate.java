@@ -1,6 +1,8 @@
-package me.aleiv.core.paper.teams.objects;
+package me.aleiv.core.paper.teams.objects.events;
 
 import java.util.UUID;
+
+import me.aleiv.core.paper.teams.objects.Team;
 
 /**
  * An object to represent an abstract update of data across the many different

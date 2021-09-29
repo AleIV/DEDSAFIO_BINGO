@@ -1,7 +1,7 @@
 package me.aleiv.core.paper.teams.sync;
 
 public enum DedsafioChannels {
-    EVENTS, SYNC, AUTH;
+    EVENTS, SYNC, AUTH, CMD;
 
     @Override
     public String toString() {
@@ -13,5 +13,17 @@ public enum DedsafioChannels {
      */
     public String fullName() {
         return "dedsafio:" + this.toString();
+    }
+
+    /**
+     * @return An array containing all the channels in the enum
+     */
+    public static String[] getAllChannels(){
+        return new String[]{
+                EVENTS.fullName(),
+                SYNC.fullName(),
+                AUTH.fullName(),
+                CMD.fullName()
+        };
     }
 }
