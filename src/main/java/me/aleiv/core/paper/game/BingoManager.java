@@ -1,6 +1,8 @@
 package me.aleiv.core.paper.game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -32,6 +34,7 @@ import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class BingoManager implements Listener {
@@ -42,6 +45,10 @@ public class BingoManager implements Listener {
     Random random = new Random();
 
     boolean blankTab = false;
+
+    List<UUID> topLine = new ArrayList<>();
+    List<UUID> topFull = new ArrayList<>();
+
 
     public BingoManager(Core instance) {
         this.instance = instance;
@@ -249,6 +256,7 @@ public class BingoManager implements Listener {
                                 }
                                     break;
 
+                                case FISH_ITEMS:
                                 case FLYING_MOBS_KILL: {
 
                                     if (challengeInfo.contains(info)) {
@@ -289,7 +297,6 @@ public class BingoManager implements Listener {
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
                                 case REDSTONE_SIGNAL:
-                                case FISH_ITEMS:
                                 case MINE_LIGHT_SOURCE:
                                 case BREED_ANIMALS:
                                 case POTION_TYPES:
@@ -437,15 +444,16 @@ public class BingoManager implements Listener {
             }, 100);
         });
 
-        Bukkit.getOnlinePlayers().forEach(player -> {
+        var teamsOnline = instance.getTeamManager().getTeamsOnlineList();
+        var scatter = instance.getScatterManager();
+        var safeLocations = scatter.getSafeLocations();
+        
+        teamsOnline.forEach(team ->{
             task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
                     // SCATTER
-                    var scatter = instance.getScatterManager();
-                    var safeLocations = scatter.getSafeLocations();
-
-                    // TODO: ADD TEAM SUPPORT
+                
                     Location loc;
                     if (safeLocations.size() == 0) {
                         loc = scatter.generateLocation();
@@ -455,10 +463,12 @@ public class BingoManager implements Listener {
                         safeLocations.remove(0);
                     }
 
-                    scatter.Qteleport(player, loc);
+                    team.getPlayerStream().forEach(player ->{
+                        scatter.Qteleport(player, loc);
+                    });
                 }
 
-            }, 50*5);
+            }, 50);
         });
 
         task.addWithDelay(new BukkitRunnable() {
@@ -481,15 +491,12 @@ public class BingoManager implements Listener {
         var game = instance.getGame();
         game.getTables().clear();
 
-        // TODO: ADD TEAM SUPPORT
+        var teamsOnline = instance.getTeamManager().getTeamsOnlineList();
 
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            var player = (Player) p;
-            var table = new Table();
+        teamsOnline.forEach(team ->{
+            var table = new Table(team.getTeamID(), team.getMembers());
             game.getTables().add(table);
             table.selectItems(instance);
-            table.getMembers().add(player.getUniqueId());
-
         });
     }
 
@@ -517,22 +524,73 @@ public class BingoManager implements Listener {
     }
 
     public void checkBingo(Table table, Slot slot, Player player) {
-
+        var teamManager = instance.getTeamManager();
         Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
 
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
             table.addItemFound();
+            table.addPoints(1, " point.");
 
             if (!table.isFoundFull() && table.isBingoFull()) {
+                
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.FULL, true));
                 table.setFoundFull(true);
                 table.playFullFoundAnimation();
+                var team = teamManager.getPlayerTeam(player.getUniqueId());
+                if(topFull.size() < 1){
+                    table.addPoints(5, " points! 1st place BINGO FULL!");
+                    topFull.add(table.getUuid());
+
+                    if(team != null) 
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 1st place BINGO FULL!");
+
+                }else if(topFull.size() < 2){
+                    table.addPoints(3, " points! 2nd place BINGO FULL!");
+                    topFull.add(table.getUuid());
+
+                    if(team != null) 
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 2nd place BINGO FULL!");
+
+                }else if(topFull.size() < 3){
+                    table.addPoints(1, " points! 3rd place BINGO FULL!");
+                    topFull.add(table.getUuid());
+
+                    if(team != null) 
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 3rd place BINGO FULL!");
+
+                }
+                table.addPoints(5, " points.");
 
             } else if (!table.isFoundLine() && table.isBingoLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
                 table.setFoundLine(true);
                 table.playLineFoundAnimation();
+
+                var team = teamManager.getPlayerTeam(player.getUniqueId());
+                if(topLine.size() < 1){
+                    table.addPoints(5, " points! 1st place BINGO LINE!");
+                    topLine.add(table.getUuid());
+
+                    if(team != null) 
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 1st place BINGO LINE!");
+
+                }else if(topLine.size() < 2){
+                    table.addPoints(3, " points! 2nd place BINGO LINE!");
+                    topLine.add(table.getUuid());
+
+                    if(team != null) 
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 2nd place BINGO LINE!");
+
+                }else if(topLine.size() < 3){
+                    table.addPoints(1, " point! 3rd place BINGO LINE!");
+                    topLine.add(table.getUuid());
+
+                    if(team != null)
+                        instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 3rd place BINGO LINE!");
+
+                }
+                table.addPoints(5, " points.");
 
             } else {
                 table.playItemFoundAnimation();

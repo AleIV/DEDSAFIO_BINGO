@@ -1,5 +1,7 @@
 package me.aleiv.core.paper.teams.bukkit;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -49,6 +51,22 @@ public class BTeamManager extends TeamManager {
             put(team);
             callEvent(new TeamCreatedEvent(team, from, !Bukkit.isPrimaryThread()));
         }
+    }
+
+    /**
+     * Gets a list of online Teams, if at least one of the members is online is considered as team online.
+     */
+
+    public List<Team> getTeamsOnlineList(){
+        List<Team> teamsOnline = new ArrayList<>();
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            var uuid = player.getUniqueId();
+            var team = getPlayerTeam(uuid);
+            if(team != null){
+                teamsOnline.add(team);
+            }
+        });
+        return teamsOnline;
     }
 
     /**

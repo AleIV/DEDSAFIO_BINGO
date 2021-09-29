@@ -26,7 +26,6 @@ import me.aleiv.core.paper.listeners.ChallengeMedium;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
-import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.teams.bukkit.BTeamManager;
 import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
 import me.aleiv.core.paper.utilities.NegativeSpaces;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +25,7 @@ import me.aleiv.core.paper.Game.Challenge;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import net.md_5.bungee.api.ChatColor;
 
 public class Table {
 
@@ -50,6 +52,7 @@ public class Table {
 
     private static String neg2 = NegativeSpaces.get(-8);
     private static String neg3 = NegativeSpaces.get(-6);
+    private static String star = Character.toString('\uEAA6');
 
     private static List<Character> animation1 = Frames.getFramesCharsIntegers(490, 589);
     private static List<Character> animation2 = Frames.getFramesCharsIntegers(590, 689);
@@ -71,6 +74,36 @@ public class Table {
         this.foundFull = false;
         this.objectsFound = 0;
 
+    }
+
+    public Table(UUID uuid, List<UUID> members) {
+        this.uuid = uuid;
+        this.members = members;
+        this.selectedItems = new ArrayList<>();
+        this.selectedChallenge = new ArrayList<>();
+        this.foundLine = false;
+        this.foundFull = false;
+        this.objectsFound = 0;
+
+    }
+
+    public void addPoints(int points, String text){
+        var manager = instance.getTeamManager();
+        var map = manager.getTeamsMap();
+        CompletableFuture.supplyAsync(() -> {
+            if(map.containsKey(uuid)){
+                var team = map.get(uuid);
+                manager.addPoints(team, points);
+            }else{
+                return false;
+            }
+            return true;
+        }).thenAccept(added -> {
+            if(added){
+                sendMessageMembers(star + " " + ChatColor.of("#e0a84d") + (points > 0 ? "+" : "-") + points + text);
+            }
+
+        });
     }
 
     public Stream<Player> getPlayerStream() {

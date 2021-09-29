@@ -436,7 +436,7 @@ public class ChallengeEasy implements Listener {
 
                 var cause = villager.getLastDamageCause().getCause();
                 if (cause == DamageCause.DROWNING || cause == DamageCause.SUFFOCATION) {
-                    var nearby = villager.getLocation().getNearbyPlayers(10).stream().collect(Collectors.toList());
+                    var nearby = villager.getLocation().getNearbyPlayers(10).stream().toList();
                     nearby.forEach(p -> {
                         manager.attempToFind(p, Challenge.DROWN_VILLAGER, "");
                     });

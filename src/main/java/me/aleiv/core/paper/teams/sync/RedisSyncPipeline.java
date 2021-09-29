@@ -131,31 +131,31 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
 
     @Override
     public void message(String pattern, String channel, String message) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void subscribed(String channel, long count) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void psubscribed(String pattern, long count) {
-        // TODO Auto-generated method stub
+       
 
     }
 
     @Override
     public void unsubscribed(String channel, long count) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     @Override
     public void punsubscribed(String pattern, long count) {
-        // TODO Auto-generated method stub
+       
 
     }
 

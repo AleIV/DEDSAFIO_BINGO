@@ -757,7 +757,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
 		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));
-		challenges.put(Challenge.FISH_ITEMS, new ItemCode('\uEE76', 36, "Pesca 5 items diferentes."));
+		challenges.put(Challenge.FISH_ITEMS, new ItemCode('\uEE76', 36, "Pesca 3 items diferentes."));
 		challenges.put(Challenge.GIVE_PLAYER_FLOWER, new ItemCode('\uEE77', 37, "Regala una flor a un jugador de otro equipo con click derecho sobre ellos."));
 		challenges.put(Challenge.WATER_DROP, new ItemCode('\uEE78', 38, "“Salto de fe” Consigue un WaterDrop perfecto de más de 75 bloques de altura."));
 		challenges.put(Challenge.CAULDRON_WASH, new ItemCode('\uEE79', 39, "Destiñe una armadura de cuero completa usando un cauldron."));
