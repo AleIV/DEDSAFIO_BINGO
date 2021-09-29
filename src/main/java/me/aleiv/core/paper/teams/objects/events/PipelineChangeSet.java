@@ -1,4 +1,4 @@
-package me.aleiv.core.paper.teams.objects;
+package me.aleiv.core.paper.teams.objects.events;
 
 import java.util.UUID;
 

@@ -89,4 +89,11 @@ public class BTeamManager extends TeamManager {
         Bukkit.getPluginManager().callEvent(event);
     }
 
+    @Override
+    public void processCommand(String cmd, UUID nodeId) {
+        // Called when a command is received from a node.
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+
+    }
+
 }
