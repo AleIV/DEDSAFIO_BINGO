@@ -62,7 +62,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
      * @return Integer indicating how many nodes recieved the command.
      */
     public long communicateCommandExecution(String cmd) {
-        logger.info("Attempting to communicate a command execution to " + cmd);
+        logger.info("Attempting to communicate a command execution " + cmd + " to other nodes.");
         return this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.CMD.fullName(),
                 gson.toJson(new SendCommandToNodes(cmd, teamManager.getNodeId())));
     }
@@ -84,7 +84,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
             return;
         }
         if (split[0].equals("dedsafio")) {
-            var dChannel = DedsafioChannels.valueOf(split[1]);
+            var dChannel = DedsafioChannels.valueOf(split[1].toUpperCase());
             switch (dChannel) {
                 // Process logic based on the channel that recieved the message.
                 case EVENTS: {
@@ -139,8 +139,9 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
                             if (cmd.getFrom().compareTo(teamManager.getNodeId()) == 0) {
                                 logger.info(String.format("Received command from ourselves, ignoring."));
                             } else {
-                                logger.info("Received command from node " + cmd.getFrom());
+                                logger.info("Received command " + cmd.getCommand() + " from node " + cmd.getFrom());
                                 // Run the command
+                                teamManager.processCommand(cmd.getCommand(), cmd.getFrom());
 
                             }
                         }

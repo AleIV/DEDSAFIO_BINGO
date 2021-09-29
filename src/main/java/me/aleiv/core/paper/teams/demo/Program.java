@@ -76,6 +76,11 @@ public class Program {
                 team.setLastObtainedPoints(System.currentTimeMillis());
                 teamManager.modifyTeam(team);
             }
+        } else if (inputArray[0].equals("command")) {
+            // Get the rest of the arguments as a single string
+            var command = input.substring(input.indexOf(" ") + 1);
+            teamManager.sendCommandToNodes(command);
+
         }
 
     }

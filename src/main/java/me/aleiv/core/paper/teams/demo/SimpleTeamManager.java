@@ -21,7 +21,8 @@ public class SimpleTeamManager extends TeamManager {
 
     @Override
     public void processCommand(String cmd, UUID nodeId) {
-        
+        System.out.println(nodeId + " sent command: " + cmd);
+
     }
 
 }
