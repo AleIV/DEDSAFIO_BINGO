@@ -401,8 +401,8 @@ public class ChallengeEasy implements Listener {
         var entity = e.getEntity();
         var player = entity.getKiller();
 
+        if(player == null) return;
         var manager = instance.getBingoManager();
-
         var table = manager.findTable(player.getUniqueId());
 
         if (table == null)
