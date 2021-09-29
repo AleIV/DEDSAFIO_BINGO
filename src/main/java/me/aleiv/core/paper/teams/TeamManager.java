@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -309,6 +310,24 @@ public abstract class TeamManager {
     public void disconect() {
         this.redisConnection.close();
         this.syncPipeline.closePubSubConnection();
+    }
+
+    /**
+     * Ejemplo de como hacer un team usando completable futures para hacerlo
+     * non-blocking.
+     */
+    void comoHacerUnTeamXd() {
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                return createTeam("teamName", UUID.randomUUID(), new UUID[] { UUID.randomUUID() });
+            } catch (TeamAlreadyExistsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).thenAccept(teamOrNull -> {
+            System.out.println(teamOrNull.getTeamName() + " fue creado.");
+
+        });
     }
 
 }
