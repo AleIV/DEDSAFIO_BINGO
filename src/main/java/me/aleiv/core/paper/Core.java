@@ -28,6 +28,7 @@ import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
 import me.aleiv.core.paper.teams.bukkit.BTeamManager;
 import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
+import me.aleiv.core.paper.utilities.JsonConfig;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -46,10 +47,19 @@ public class Core extends JavaPlugin {
     private @Getter BTeamManager teamManager;
     private @Getter ProtocolManager protocolManager;
     private @Getter ScatterManager scatterManager;
+    private JsonConfig redisJsonConfig;
 
     @Override
     public void onEnable() {
         instance = this;
+
+        try {
+            this.redisJsonConfig = new JsonConfig("secret.json");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        var redisUri = redisJsonConfig.getRedisUri();
 
         protocolManager = ProtocolLibrary.getProtocolManager();
         RapidInvManager.register(this);
@@ -57,7 +67,7 @@ public class Core extends JavaPlugin {
         NegativeSpaces.registerCodes();
 
         // Hook the team manager
-        teamManager = new BTeamManager(this, "redis://147.182.135.68");
+        teamManager = new BTeamManager(this, redisUri != null ? redisUri : "redis://147.182.135.68");
 
         game = new Game(this);
         game.runTaskTimerAsynchronously(this, 0L, 20L);

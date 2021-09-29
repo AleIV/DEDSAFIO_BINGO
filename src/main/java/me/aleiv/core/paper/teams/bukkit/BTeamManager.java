@@ -53,16 +53,23 @@ public class BTeamManager extends TeamManager {
         }
     }
 
-    /**
-     * Gets a list of online Teams, if at least one of the members is online is considered as team online.
-     */
+    @Override
+    public void processCommand(String cmd, UUID nodeId) {
+        // Called when a command is received from a node.
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
 
-    public List<Team> getTeamsOnlineList(){
+    }
+
+    /**
+     * Gets a list of online Teams, if at least one of the members is online is
+     * considered as team online.
+     */
+    public List<Team> getTeamsOnlineList() {
         List<Team> teamsOnline = new ArrayList<>();
-        Bukkit.getOnlinePlayers().forEach(player ->{
+        Bukkit.getOnlinePlayers().forEach(player -> {
             var uuid = player.getUniqueId();
             var team = getPlayerTeam(uuid);
-            if(team != null){
+            if (team != null) {
                 teamsOnline.add(team);
             }
         });
@@ -85,15 +92,8 @@ public class BTeamManager extends TeamManager {
         this.communicateUpdate(team);
     }
 
-    public void callEvent(Event event) {
+    private void callEvent(Event event) {
         Bukkit.getPluginManager().callEvent(event);
-    }
-
-    @Override
-    public void processCommand(String cmd, UUID nodeId) {
-        // Called when a command is received from a node.
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-
     }
 
 }
