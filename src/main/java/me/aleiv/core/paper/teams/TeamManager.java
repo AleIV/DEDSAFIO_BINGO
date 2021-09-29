@@ -122,14 +122,6 @@ public abstract class TeamManager {
         }
     }
 
-    public UUID getNodeId() {
-        return nodeId;
-    }
-
-    public void printContentsOfSet() {
-        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(teams.values()));
-    }
-
     /**
      * Util function that returns the status of the pipeline.
      * 
@@ -335,8 +327,25 @@ public abstract class TeamManager {
         return this.syncPipeline.communicateCommandExecution(cmd);
     }
 
+    /**
+     * @return The redis client.
+     */
     public RedisClient getRedisClient() {
         return this.redisClient;
+    }
+
+    /**
+     * @return The node's UUID.
+     */
+    public UUID getNodeId() {
+        return nodeId;
+    }
+
+    /**
+     * Helper function to pretty print the current state of the system.
+     */
+    public void printContentsOfSet() {
+        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(teams.values()));
     }
 
     /**
