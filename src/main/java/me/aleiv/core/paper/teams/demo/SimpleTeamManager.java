@@ -21,7 +21,6 @@ public class SimpleTeamManager extends TeamManager {
 
     @Override
     public void processCommand(String cmd, UUID nodeId) {
-        // TODO Auto-generated method stub
         
     }
 

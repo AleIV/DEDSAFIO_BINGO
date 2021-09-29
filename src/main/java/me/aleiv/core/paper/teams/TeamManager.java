@@ -108,6 +108,11 @@ public abstract class TeamManager {
     public void initialize() {
         // Ask redis if there is an ongoing sync in the db
         var syncConn = getRedisSyncConnection();
+        // Pull the dataset name
+        var datasetOnBackend = syncConn.get("dataset_name");
+        if (datasetOnBackend != null) {
+            this.dataset = datasetOnBackend;
+        }
         if (syncConn.hlen(dataset) != 0) {
             // Restore all the current data
             syncConn.hgetall(dataset).forEach((k, v) -> {
@@ -147,9 +152,10 @@ public abstract class TeamManager {
         backupDataset();
         teams.clear();
         this.dataset = newSet;
-        // TODO: STORE THE CHANGED SET SOMEWHERE ELSE BESIDES RAM
-        if (communicate)
+        if (communicate) {
+            getRedisSyncConnection().set("dataset_name", newSet);
             this.syncPipeline.communicateChangeOfDataset(newSet);
+        }
     }
 
     /**
@@ -281,13 +287,18 @@ public abstract class TeamManager {
      * @return True if the team exists, false otherwise.
      */
     private boolean validateTeam(Team team) {
-        // TODO: Validate if the team is not already present elsewhere.
         /**
          * Should check locally, then remotely. Also, ensure a user is not present in
          * two teams at once.
          */
         if (redisConnection.isOpen())
             return !getRedisSyncConnection().hexists(dataset, team.getTeamID().toString());
+        // Check if player is already member of a team
+        for (var teamEntry : teams.entrySet()) {
+            var queryTeam = teamEntry.getValue();
+            if (queryTeam.getMembers().contains(team.getTeamID()))
+                return false;
+        }
 
         return team != null;
     }

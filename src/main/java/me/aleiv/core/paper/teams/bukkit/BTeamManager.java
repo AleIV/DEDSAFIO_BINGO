@@ -44,11 +44,9 @@ public class BTeamManager extends TeamManager {
         var oldTeam = put(team);
         // If old team exists, then it is an update and not a creation.
         if (oldTeam != null) {
-            // TODO: IMPLEMENT LOGIC TO VALIDATE THE DIFFERENCES AND PUT THEM INTO RAM COPY.
             callEvent(new TeamUpdatedEvent(team, from, !Bukkit.isPrimaryThread()));
         } else {
             // If old team does not exist, then it is a creation.
-            put(team);
             callEvent(new TeamCreatedEvent(team, from, !Bukkit.isPrimaryThread()));
         }
     }
@@ -63,6 +61,8 @@ public class BTeamManager extends TeamManager {
     /**
      * Gets a list of online Teams, if at least one of the members is online is
      * considered as team online.
+     * 
+     * @return A list of online Teams.
      */
     public List<Team> getTeamsOnlineList() {
         List<Team> teamsOnline = new ArrayList<>();
@@ -92,6 +92,9 @@ public class BTeamManager extends TeamManager {
         this.communicateUpdate(team);
     }
 
+    /**
+     * Helper method to call a Bukkit event.
+     */
     private void callEvent(Event event) {
         Bukkit.getPluginManager().callEvent(event);
     }
