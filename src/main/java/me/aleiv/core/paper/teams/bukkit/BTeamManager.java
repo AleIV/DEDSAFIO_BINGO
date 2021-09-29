@@ -43,14 +43,23 @@ public class BTeamManager extends TeamManager {
         } else {
             // If old team does not exist, then it is a creation.
             put(team);
-            Bukkit.broadcastMessage("Team created: " + team.getTeamName());
             callEvent(new TeamCreatedEvent(team, from, !Bukkit.isPrimaryThread()));
         }
 
     }
 
+    /**
+     * Adds points to a team and broadcasts update to other nodes.
+     * 
+     * @param team
+     * @param points
+     */
+    public void addPoints(Team team, int points) {
+        team.setPoints(team.getPoints() + points);
+
+    }
+
     public void callEvent(Event event) {
-        Bukkit.broadcastMessage("Event called " + event.getEventName());
         Bukkit.getPluginManager().callEvent(event);
     }
 
