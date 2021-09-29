@@ -267,7 +267,7 @@ public class GlobalListener implements Listener {
                     if(!table.isPlaying(player.getUniqueId()))
                         e.setCancelled(true);
                     
-                }else if(entity instanceof Projectile proj && proj.getShooter() != null && proj instanceof Player player){
+                }else if(entity instanceof Projectile proj && proj.getShooter() != null && proj.getShooter() instanceof Player player){
                     if(!table.isPlaying(player.getUniqueId()))
                         e.setCancelled(true);
                     

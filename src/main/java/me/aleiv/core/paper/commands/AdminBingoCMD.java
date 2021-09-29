@@ -89,7 +89,7 @@ public class AdminBingoCMD extends BaseCommand {
 
             var arr = playerUuids.toArray(new UUID[] {});
             var map = manager.getTeamsMap();
-            var name = "#" + map.values().size() + 1;
+            var name = "#" + (map.values().size() + 1);
 
             try {
                 manager.createTeam(name, arr);
@@ -128,6 +128,26 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
+    @Subcommand("destroy-all-teams")
+    public void destroyTeamAll(CommandSender sender) {
+        var manager = instance.getTeamManager();
+        var game = instance.getGame();
+        var map = manager.getTeamsMap();
+
+        CompletableFuture.supplyAsync(() -> {
+
+            map.values().forEach(team ->{
+                manager.destroyTeam(team);
+            });
+
+            return true;
+        }).thenAccept(bool -> {
+            sender.sendMessage(ChatColor.of(game.getColor1()) + "Teams destroyed.");
+
+        });
+
+    }
+
     @Subcommand("create-global-ffa-teams")
     public void createAllTeams(CommandSender sender) {
         var manager = instance.getTeamManager();
@@ -139,7 +159,8 @@ public class AdminBingoCMD extends BaseCommand {
                 var uuid = player.getUniqueId();
                 if (manager.getPlayerTeam(uuid) == null) {
                     try {
-                        var name = "#" + map.values().size() + 1;
+
+                        var name = "#" + (map.values().size() + 1);
                         var list = List.of(uuid);
                         var arr = list.toArray(new UUID[] {});
                         manager.createTeam(name, arr);
