@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import me.aleiv.core.paper.teams.TeamManager;
+import me.aleiv.core.paper.teams.objects.PipelineChangeSet;
 import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.teams.objects.TeamCreationUpdate;
 
@@ -38,10 +39,24 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
      */
     public void communicateCreationOrUpdate(Team team) {
         logger.info("Attempting to communicate creation or update for " + team);
-        this.teamManager.getRedisSyncConnection().publish("dedsafio:events",
+        this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.EVENTS.fullName(),
                 gson.toJson(new TeamCreationUpdate(team, teamManager.getNodeId())));
     }
 
+    /**
+     * Method that communicates to all the other nodes about the change of a set.
+     * 
+     * @param newDataset The new dataset.
+     */
+    public void communicateChangeOfDataset(String newDataset) {
+        logger.info("Attempting to communicate a change of dataset to " + newDataset);
+        this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.SYNC.fullName(),
+                gson.toJson(new PipelineChangeSet(newDataset, teamManager.getNodeId())));
+    }
+
+    /**
+     * @return true if the pipeline is connected to the Redis server.
+     */
     public boolean isPipelineUp() {
         return this.pubSubConnection.isOpen();
     }
@@ -82,6 +97,25 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
                     break;
                 }
                 case "sync": {
+                    try {
+                        var changeSet = gson.fromJson(message, PipelineChangeSet.class);
+                        // Check if message is not comming from this node
+                        if (changeSet != null) {
+                            if (changeSet.getFrom().compareTo(teamManager.getNodeId()) == 0) {
+                                logger.info(String.format(
+                                        "Received change set for %s, ignorning since it comes from ourselves.",
+                                        changeSet.getNewDataset()));
+                            } else {
+                                logger.info("Changing to dataset " + changeSet.getNewDataset()
+                                        + " as indicated from node " + changeSet.getFrom());
+                                teamManager.changeDataset(changeSet.getNewDataset(), false);
+                            }
+                            break;
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     break;
                 }
                 case "auth": {

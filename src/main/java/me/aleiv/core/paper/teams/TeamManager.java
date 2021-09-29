@@ -123,14 +123,18 @@ public abstract class TeamManager {
      * It changes the dataset that is used to store the teams. both locally and
      * remotely. This method will block until the operation is completed.
      * 
-     * @param newSet The new dataset name.
+     * @param newSet      The new dataset name.
+     * @param communicate If true, it will communicate the change to the other
+     *                    nodes.
      */
-    public void changeDataset(String newSet) {
+    public void changeDataset(String newSet, boolean communicate) {
         // Nill all the data, dump it somewhere.
         backupDataset();
         teams.clear();
         this.dataset = newSet;
-        // TODO: Communicate to other nodes the result of the change.
+        // TODO: STORE THE CHANGED SET SOMEWHERE ELSE BESIDES RAM
+        if (communicate)
+            this.syncPipeline.communicateChangeOfDataset(newSet);
     }
 
     /**
