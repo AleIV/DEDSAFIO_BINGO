@@ -58,6 +58,14 @@ public abstract class TeamManager {
     public abstract void updateTeam(Team team, UUID nodeId);
 
     /**
+     * Destroys the given team from the local copy.
+     * 
+     * @param team   The team to be destroyed.
+     * @param nodeId The nodeId of the node that is updating the team.
+     */
+    public abstract void processDestroyTeam(Team team, UUID nodeId);
+
+    /**
      * Processes the recieved command.
      * 
      * @param cmd    The command to process.
@@ -100,6 +108,18 @@ public abstract class TeamManager {
      */
     public Team put(Team team) {
         return this.teams.put(team.getTeamID(), team);
+    }
+
+    /**
+     * Just plainly removes the team object from the map. No security checks are
+     * taken, so use this with caution.
+     * 
+     * @param team The team to add to the map.
+     * @return The previous value associated with key, or null if there was no
+     *         mapping for key
+     */
+    public Team remove(Team team) {
+        return this.teams.remove(team.getTeamID());
     }
 
     /**
@@ -270,6 +290,18 @@ public abstract class TeamManager {
         teams.put(team.getTeamID(), team);
 
         return team;
+    }
+
+    /**
+     * A method that destroys a team and communicates update to other nodes.
+     * 
+     * @param team The team to destroy.
+     * @return The destroyed team or null if not present.
+     */
+    public Team destroyTeam(Team team) {
+        var affected = getRedisSyncConnection().hdel(dataset, team.getTeamID().toString());
+        this.syncPipeline.communicateDestructionOfTeam(team);
+        return affected > 0 ? teams.remove(team.getTeamID()) : null;
     }
 
     /**

@@ -12,6 +12,7 @@ import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.teams.objects.events.PipelineChangeSet;
 import me.aleiv.core.paper.teams.objects.events.SendCommandToNodes;
 import me.aleiv.core.paper.teams.objects.events.TeamCreationUpdate;
+import me.aleiv.core.paper.teams.objects.events.TeamDeletion;
 
 /**
  * Redis pipeline for team synchronization. Uses a Redis PubSub connection to
@@ -41,7 +42,13 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
     public void communicateCreationOrUpdate(Team team) {
         logger.info("Attempting to communicate creation or update for " + team);
         this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.EVENTS.fullName(),
-                gson.toJson(new TeamCreationUpdate(team, teamManager.getNodeId())));
+                "create@:@" + gson.toJson(new TeamCreationUpdate(team, teamManager.getNodeId())));
+    }
+
+    public void communicateDestructionOfTeam(Team team) {
+        logger.info("Attempting to communicate creation or update for " + team);
+        this.teamManager.getRedisSyncConnection().publish(DedsafioChannels.EVENTS.fullName(),
+                "destroy@:@" + gson.toJson(new TeamDeletion(team, teamManager.getNodeId())));
     }
 
     /**
@@ -88,24 +95,50 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
             switch (dChannel) {
                 // Process logic based on the channel that recieved the message.
                 case EVENTS: {
-                    try {
-                        var creationUpdate = gson.fromJson(message, TeamCreationUpdate.class);
-                        // Check if message is not comming from this node
-                        if (creationUpdate != null) {
-                            if (creationUpdate.getFrom().compareTo(teamManager.getNodeId()) == 0) {
-                                logger.info(String.format(
-                                        "Received creation update for %s, ignorning since it comes from ourselves.",
-                                        creationUpdate.getTeam()));
-                            } else {
-                                logger.info("Updating " + creationUpdate.getTeam() + " from node "
-                                        + creationUpdate.getFrom());
-                                teamManager.updateTeam(creationUpdate.getTeam(), creationUpdate.getFrom());
+                    var splitMessage = message.split("@:@");
+                    var type = splitMessage[0];
+                    var json = splitMessage[1];
+                    if (type.equalsIgnoreCase("create")) {
+                        try {
+                            var creationUpdate = gson.fromJson(json, TeamCreationUpdate.class);
+                            // Check if message is not comming from this node
+                            if (creationUpdate != null) {
+                                if (creationUpdate.getFrom().compareTo(teamManager.getNodeId()) == 0) {
+                                    logger.info(String.format(
+                                            "Received creation update for %s, ignorning since it comes from ourselves.",
+                                            creationUpdate.getTeam()));
+                                } else {
+                                    logger.info("Updating " + creationUpdate.getTeam() + " from node "
+                                            + creationUpdate.getFrom());
+                                    teamManager.updateTeam(creationUpdate.getTeam(), creationUpdate.getFrom());
+                                }
+                                break;
                             }
-                            break;
+
+                        } catch (JsonSyntaxException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else if (type.equalsIgnoreCase("destroy")) {
+                        try {
+                            var creationUpdate = gson.fromJson(json, TeamDeletion.class);
+                            // Check if message is not comming from this node
+                            if (creationUpdate != null) {
+                                if (creationUpdate.getFrom().compareTo(teamManager.getNodeId()) == 0) {
+                                    logger.info(String.format(
+                                            "Received deletion update for %s, ignorning since it comes from ourselves.",
+                                            creationUpdate.getTeam()));
+                                } else {
+                                    logger.info("Deleting " + creationUpdate.getTeam() + " from node "
+                                            + creationUpdate.getFrom());
+                                    teamManager.processDestroyTeam(creationUpdate.getTeam(), creationUpdate.getFrom());
+                                }
+                                break;
+                            }
+
+                        } catch (JsonSyntaxException ex) {
+                            ex.printStackTrace();
                         }
 
-                    } catch (JsonSyntaxException ex) {
-                        ex.printStackTrace();
                     }
 
                     break;

@@ -2,6 +2,13 @@ package me.aleiv.core.paper.teams.objects.events;
 
 import java.util.UUID;
 
+import me.aleiv.core.paper.teams.bukkit.BTeamManager;
+
+/**
+ * This class represents a command to send to a node. A command is a string
+ * command and by default {@link BTeamManager} will execute the command using
+ * the console dispatcher.
+ */
 public class SendCommandToNodes {
     private String command;
     private UUID from;

@@ -61,10 +61,11 @@ public class Program {
             }
 
         } else if (inputArray[0].equals("remove")) {
-            if (inputArray.length == 2) {
-            } else {
-                logger.warning("Invalid input");
-            }
+
+            var id = inputArray[1];
+            var team = teamManager.destroyTeam(teamManager.getTeamsMap().get(UUID.fromString(id)));
+            logger.info("Team removed: " + team.getTeamID());
+
         } else if (inputArray[0].equals("list")) {
             teamManager.printContentsOfSet();
         } else if (inputArray[0].equals("update")) {

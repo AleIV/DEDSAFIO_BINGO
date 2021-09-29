@@ -25,4 +25,11 @@ public class SimpleTeamManager extends TeamManager {
 
     }
 
+    @Override
+    public void processDestroyTeam(Team team, UUID nodeId) {
+        System.out.println("removing team " + team);
+        remove(team);
+        
+    }
+
 }

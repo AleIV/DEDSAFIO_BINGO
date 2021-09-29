@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import me.aleiv.core.paper.teams.TeamManager;
 import me.aleiv.core.paper.teams.bukkit.events.TeamCreatedEvent;
+import me.aleiv.core.paper.teams.bukkit.events.TeamDestroyedEvent;
 import me.aleiv.core.paper.teams.bukkit.events.TeamUpdatedEvent;
 import me.aleiv.core.paper.teams.objects.Team;
 
@@ -55,6 +56,17 @@ public class BTeamManager extends TeamManager {
     public void processCommand(String cmd, UUID nodeId) {
         // Called when a command is received from a node.
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+
+    }
+
+    @Override
+    public void processDestroyTeam(Team team, UUID nodeId) {
+        var oldTeam = remove(team);
+        if (oldTeam != null) {
+            callEvent(new TeamDestroyedEvent(team, nodeId, !Bukkit.isPrimaryThread()));
+        } else {
+            // Team didn't actually exist.
+        }
 
     }
 

@@ -2,6 +2,10 @@ package me.aleiv.core.paper.teams.objects.events;
 
 import java.util.UUID;
 
+/**
+ * An event representing a change in the sync pipeline of the system. Used to
+ * keep all nodes up to date.
+ */
 public class PipelineChangeSet {
     private String newDataset;
     private UUID from;

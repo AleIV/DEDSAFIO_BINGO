@@ -78,8 +78,8 @@ public class Team extends BaseTeam {
 
     @Override
     public String toString() {
-        return "Team{" + "points=" + points + ", teamID=" + teamID + ", members=" + members + ", teamName='" + teamName
-                + '\'' + '}';
+        return "Team [points=" + points + ", lastObtainedPoints=" + lastObtainedPoints + ", teamID=" + teamID
+                + ", members=" + members + ", teamName=" + teamName + "]";
     }
 
 }
