@@ -52,7 +52,7 @@ public class Table {
 
     private static String neg2 = NegativeSpaces.get(-8);
     private static String neg3 = NegativeSpaces.get(-6);
-    private static String star = Character.toString('\uEAA6');
+    private @Getter static String star = Character.toString('\uEAA6');
 
     private static List<Character> animation1 = Frames.getFramesCharsIntegers(490, 589);
     private static List<Character> animation2 = Frames.getFramesCharsIntegers(590, 689);
@@ -100,7 +100,7 @@ public class Table {
             return true;
         }).thenAccept(added -> {
             if(added){
-                sendMessageMembers(star + " " + ChatColor.of("#e0a84d") + (points > 0 ? "+" : "-") + points + text);
+                sendMessageMembers(ChatColor.of("#e0a84d") + "" + points + ChatColor.RESET + star + ChatColor.of("#e0a84d") + text);
             }
 
         });

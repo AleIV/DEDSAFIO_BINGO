@@ -13,6 +13,8 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.BingoFase;
+import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.objects.BingoTableGUI;
 import net.md_5.bungee.api.ChatColor;
@@ -45,7 +47,7 @@ public class BingoCMD extends BaseCommand {
 
     @Subcommand("table")
     @CommandCompletion("@players")
-    @CommandPermission("admin.perm")
+    @CommandPermission("table.perm")
     public void checkPlayer(Player sender, @Flags("other") Player target) {
         var game = instance.getGame();
         var uuid = target.getUniqueId();
@@ -135,6 +137,49 @@ public class BingoCMD extends BaseCommand {
 
         manager.selectTables();
         sender.sendMessage(ChatColor.of(color) + "Tables selected & timer set.");
+
+    }
+
+    @Subcommand("round")
+    @CommandPermission("admin.perm")
+    public void round(CommandSender sender, BingoRound round){
+        var game = instance.getGame();
+
+        game.setBingoRound(round);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo round switched to " + round.toString());
+
+    }
+
+    @Subcommand("fase")
+    @CommandPermission("admin.perm")
+    public void fase(CommandSender sender, BingoFase fase){
+        var game = instance.getGame();
+
+        game.setBingoFase(fase);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        sender.sendMessage(senderName + ChatColor.of(game.getColor4()) + "Bingo fase switched to " + fase.toString());
+
+    }
+
+    @Subcommand("select-tables")
+    public void setTables(CommandSender sender) {
+        var manager = instance.getBingoManager();
+        final var color = instance.getGame().getColor1();
+        
+        manager.selectTables();
+        sender.sendMessage(ChatColor.of(color) + "Tables selected.");
+
+    }
+
+    @Subcommand("remove-tables")
+    public void removeTables(CommandSender sender) {
+        var game = instance.getGame();
+
+        game.getTables().clear();
+        
+        final var color = instance.getGame().getColor1();
+        sender.sendMessage(ChatColor.of(color) + "Tables cleared.");
 
     }
 

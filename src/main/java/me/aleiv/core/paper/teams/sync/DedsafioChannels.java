@@ -1,3 +1,4 @@
+
 package me.aleiv.core.paper.teams.sync;
 
 public enum DedsafioChannels {

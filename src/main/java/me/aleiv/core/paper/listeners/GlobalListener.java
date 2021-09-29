@@ -30,6 +30,7 @@ import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.objects.Table;
 import me.aleiv.core.paper.utilities.FastBoard;
+import net.md_5.bungee.api.ChatColor;
 
 public class GlobalListener implements Listener {
 
@@ -65,6 +66,7 @@ public class GlobalListener implements Listener {
                     manager.Qteleport(player, loc);
 
                 }, 20 * 5);
+
             }
 
         }
@@ -113,6 +115,12 @@ public class GlobalListener implements Listener {
 
             }
 
+            if(e.getSecond() % 5 == 0){
+                Bukkit.getOnlinePlayers().forEach(player ->{
+                    instance.sendHeader(player, getPlayerHeader(player));
+                });
+            }
+
         });
     }
 
@@ -138,11 +146,34 @@ public class GlobalListener implements Listener {
         instance.getBingoManager().updateBoard(board, table);
         boards.put(uuid, board);
 
-        instance.sendHeader(player, "<gradient:#5e4fa2:#f79459>Welcome to BINGOOOO!</gradient>");
-
         var timer = game.getTimer();
         timer.getBossbar().addPlayer(player);
 
+        instance.sendHeader(player, getPlayerHeader(player));
+
+    }
+
+    public String getPlayerHeader(Player player){
+        var manager = instance.getTeamManager();
+        var header = new StringBuilder();
+        var team = manager.getPlayerTeam(player.getUniqueId());
+
+        if(team != null){
+            var points = team.getPoints() == null || team.getPoints() < 1 ? 0 : team.getPoints();
+            header.append("\n");
+            header.append(team.getTeamName() + " ");
+            header.append(ChatColor.GOLD + "" + points + Table.getStar() + " ");
+            var uuids = team.getMembers();
+            for (UUID uuid : uuids){
+                var p = Bukkit.getPlayer(uuid);
+                if(p != null){
+                    header.append(ChatColor.DARK_RED + p.getName() + " ");
+                }
+            }
+        }
+        
+
+        return header.toString();
     }
 
     @EventHandler
@@ -233,11 +264,11 @@ public class GlobalListener implements Listener {
             var table = manager.findTable(playerDamaged.getUniqueId());
             if(table != null){
                 if(entity instanceof Player player){
-                    if(table.isPlaying(player.getUniqueId()))
+                    if(!table.isPlaying(player.getUniqueId()))
                         e.setCancelled(true);
                     
                 }else if(entity instanceof Projectile proj && proj.getShooter() != null && proj instanceof Player player){
-                    if(table.isPlaying(player.getUniqueId()))
+                    if(!table.isPlaying(player.getUniqueId()))
                         e.setCancelled(true);
                     
                 }

@@ -530,7 +530,7 @@ public class BingoManager implements Listener {
             var found = new FoundItemEvent(table, slot, player, true);
             Bukkit.getPluginManager().callEvent(found);
             table.addItemFound();
-            table.addPoints(1, " point.");
+            table.addPoints(1, "point");
 
             if (!table.isFoundFull() && table.isBingoFull()) {
                 
@@ -539,28 +539,28 @@ public class BingoManager implements Listener {
                 table.playFullFoundAnimation();
                 var team = teamManager.getPlayerTeam(player.getUniqueId());
                 if(topFull.size() < 1){
-                    table.addPoints(5, " points! 1st place BINGO FULL!");
+                    table.addPoints(5, "points! 1st place BINGO FULL!");
                     topFull.add(table.getUuid());
 
                     if(team != null) 
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 1st place BINGO FULL!");
 
                 }else if(topFull.size() < 2){
-                    table.addPoints(3, " points! 2nd place BINGO FULL!");
+                    table.addPoints(3, "points! 2nd place BINGO FULL!");
                     topFull.add(table.getUuid());
 
                     if(team != null) 
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 2nd place BINGO FULL!");
 
                 }else if(topFull.size() < 3){
-                    table.addPoints(1, " points! 3rd place BINGO FULL!");
+                    table.addPoints(1, "points! 3rd place BINGO FULL!");
                     topFull.add(table.getUuid());
 
                     if(team != null) 
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 3rd place BINGO FULL!");
 
                 }
-                table.addPoints(5, " points.");
+                table.addPoints(5, "points");
 
             } else if (!table.isFoundLine() && table.isBingoLine()) {
                 Bukkit.getPluginManager().callEvent(new BingoEvent(found, BingoType.LINE, true));
@@ -569,28 +569,28 @@ public class BingoManager implements Listener {
 
                 var team = teamManager.getPlayerTeam(player.getUniqueId());
                 if(topLine.size() < 1){
-                    table.addPoints(5, " points! 1st place BINGO LINE!");
+                    table.addPoints(5, "points! 1st place BINGO LINE!");
                     topLine.add(table.getUuid());
 
                     if(team != null) 
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 1st place BINGO LINE!");
 
                 }else if(topLine.size() < 2){
-                    table.addPoints(3, " points! 2nd place BINGO LINE!");
+                    table.addPoints(3, "points! 2nd place BINGO LINE!");
                     topLine.add(table.getUuid());
 
                     if(team != null) 
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 2nd place BINGO LINE!");
 
                 }else if(topLine.size() < 3){
-                    table.addPoints(1, " point! 3rd place BINGO LINE!");
+                    table.addPoints(1, "point! 3rd place BINGO LINE!");
                     topLine.add(table.getUuid());
 
                     if(team != null)
                         instance.broadcastMessage(ChatColor.of("#e04d4d") + "Team " + team.getTeamName() + " 3rd place BINGO LINE!");
 
                 }
-                table.addPoints(5, " points.");
+                table.addPoints(5, "points");
 
             } else {
                 table.playItemFoundAnimation();

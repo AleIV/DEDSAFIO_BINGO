@@ -18,6 +18,7 @@ import lombok.Getter;
 import me.aleiv.core.paper.commands.AdminBingoCMD;
 import me.aleiv.core.paper.commands.BingoCMD;
 import me.aleiv.core.paper.commands.ConfigCMD;
+import me.aleiv.core.paper.commands.InfoCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
 import me.aleiv.core.paper.listeners.ChallengeEasy;
@@ -90,7 +91,9 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new AdminBingoCMD(this));
         commandManager.registerCommand(new ConfigCMD(this));
         commandManager.registerCommand(new BingoCMD(this));
+        commandManager.registerCommand(new InfoCMD(this));
         commandManager.registerCommand(new TeamCMD(this));
+
 
         Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
