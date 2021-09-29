@@ -44,7 +44,7 @@ public class Core extends JavaPlugin {
     private @Getter PaperCommandManager commandManager;
     private @Getter static MiniMessage miniMessage = MiniMessage.get();
     private @Getter BingoManager bingoManager;
-    private @Getter TeamManager teamManager;
+    private @Getter BTeamManager teamManager;
     private @Getter ProtocolManager protocolManager;
     private @Getter ScatterManager scatterManager;
 

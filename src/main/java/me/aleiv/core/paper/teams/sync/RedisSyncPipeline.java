@@ -36,19 +36,8 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
      * 
      * @param team The team that was created.
      */
-    public void communicateCreation(Team team) {
-        logger.info("Attempting to communicate creation for " + team);
-        this.teamManager.getRedisSyncConnection().publish("dedsafio:events",
-                gson.toJson(new TeamCreationUpdate(team, teamManager.getNodeId())));
-    }
-
-    /**
-     * Method that communicates an update to a teams score to all the other nodes.
-     * 
-     * @param team The team that was created.
-     */
-    public void communicateUpdate(Team team) {
-        logger.info("Attempting to communicate creation for " + team);
+    public void communicateCreationOrUpdate(Team team) {
+        logger.info("Attempting to communicate creation or update for " + team);
         this.teamManager.getRedisSyncConnection().publish("dedsafio:events",
                 gson.toJson(new TeamCreationUpdate(team, teamManager.getNodeId())));
     }
@@ -83,7 +72,7 @@ public class RedisSyncPipeline implements RedisPubSubListener<String, String> {
                                         + creationUpdate.getFrom());
                                 teamManager.updateTeam(creationUpdate.getTeam(), creationUpdate.getFrom());
                             }
-
+                            break;
                         }
 
                     } catch (JsonSyntaxException ex) {

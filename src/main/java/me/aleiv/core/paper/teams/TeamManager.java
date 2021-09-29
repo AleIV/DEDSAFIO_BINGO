@@ -52,11 +52,13 @@ public abstract class TeamManager {
     /**
      * @return Returns the player team, it doesn't have one return null.
      */
-    public Team getPlayerTeam(UUID uuid){
+    public Team getPlayerTeam(UUID uuid) {
 
-        if (teams.isEmpty()) return null;
+        if (teams.isEmpty())
+            return null;
         return teams.values().stream().filter(team -> team.isMember(uuid)).findFirst().orElse(null);
     }
+
     /**
      * @return The common redis sync connection used to send messages or use any
      *         other command. This object blocks the thread that executes it.
@@ -68,7 +70,7 @@ public abstract class TeamManager {
     /**
      * @return The concurrent map of teams currently in ram.
      */
-    public ConcurrentHashMap<UUID, Team> getTeamsMap() { 
+    public ConcurrentHashMap<UUID, Team> getTeamsMap() {
         return this.teams;
     }
 
@@ -146,6 +148,15 @@ public abstract class TeamManager {
     }
 
     /**
+     * It will tell the other nodes of the update or creation that has taken place.
+     * 
+     * @param team The team that has been updated or created.
+     */
+    public void communicateUpdate(Team team) {
+        this.syncPipeline.communicateCreationOrUpdate(team);
+    }
+
+    /**
      * It restores the old dataset. Once the update is deamed succesful, the
      * function will communicate to other nodes of the changes.
      * 
@@ -205,7 +216,7 @@ public abstract class TeamManager {
     public Team createTeam(String teamName, UUID teamId, UUID... uuids) throws TeamAlreadyExistsException {
         var team = registerTeam(new Team(teamId, Arrays.asList(uuids), teamName));
         // Communicate the update as succesful.
-        syncPipeline.communicateCreation(team);
+        communicateUpdate(team);
         return team;
     }
 
@@ -241,6 +252,17 @@ public abstract class TeamManager {
         teams.put(team.getTeamID(), team);
 
         return team;
+    }
+
+    /**
+     * A method that write an update of a team to the database.
+     * 
+     * @param team The team to update.
+     * @return true if field is a new field in the hash and value was set. false if
+     *         field already exists in the hash and the value was updated.
+     */
+    public boolean writeTeamUpdate(Team team) {
+        return getRedisSyncConnection().hset(dataset, team.getTeamID().toString(), gson.toJson(team));
     }
 
     /**

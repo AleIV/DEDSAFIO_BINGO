@@ -34,29 +34,48 @@ public class BTeamManager extends TeamManager {
         this.initialize();
     }
 
+    /**
+     * Do not use this method. It is only for internal use.
+     */
     @Override
     public void updateTeam(Team team, UUID from) {
         var oldTeam = put(team);
         // If old team exists, then it is an update and not a creation.
         if (oldTeam != null) {
+            // TODO: IMPLEMENT LOGIC TO VALIDATE THE DIFFERENCES AND PUT THEM INTO RAM COPY.
             callEvent(new TeamUpdatedEvent(team, from, !Bukkit.isPrimaryThread()));
         } else {
             // If old team does not exist, then it is a creation.
             put(team);
             callEvent(new TeamCreatedEvent(team, from, !Bukkit.isPrimaryThread()));
         }
-
     }
 
     /**
-     * Adds points to a team and broadcasts update to other nodes.
+     * Adds points to a team and broadcasts update to other nodes. This method is
+     * blocking.
      * 
-     * @param team
-     * @param points
+     * @param team   The team to add points to.
+     * @param points The amount of points to add.
      */
     public void addPoints(Team team, int points) {
-        team.setPoints(team.getPoints() + points);
+        // Update the local copy.
+        team.addPoints(points);
+        team.setLastObtainedPoints(System.currentTimeMillis());
+        // Communicate to the backend and propagate the update
+        this.writeTeamUpdate(team);
+        this.communicateUpdate(team);
+    }
 
+    /**
+     * Function intended to be called to forcibly update a team to the backend.
+     * NOTE: No checks are performed when this is called. Use with caution.
+     * 
+     * @param team The team to update.
+     */
+    public void modifyTeam(Team team) {
+        this.writeTeamUpdate(team);
+        this.communicateUpdate(team);
     }
 
     public void callEvent(Event event) {

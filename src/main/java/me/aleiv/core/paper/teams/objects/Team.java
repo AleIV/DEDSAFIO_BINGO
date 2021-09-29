@@ -18,9 +18,26 @@ import org.bukkit.entity.Player;
  */
 public class Team extends BaseTeam {
     protected Integer points;
+    protected Long lastObtainedPoints;
 
     public Team(UUID teamID, List<UUID> members, String teamName) {
         super(teamID, members, teamName);
+    }
+
+    /**
+     * 
+     * @return The last time the team obtained points.
+     */
+    public Long getLastObtainedPoints() {
+        return lastObtainedPoints;
+    }
+
+    /**
+     * @return the points
+     * @param lastObtainedPoints The last milliseconds the points were obtained
+     */
+    public void setLastObtainedPoints(Long lastObtainedPoints) {
+        this.lastObtainedPoints = lastObtainedPoints;
     }
 
     /*
@@ -38,13 +55,21 @@ public class Team extends BaseTeam {
      * 
      * @param points
      */
-    public void setPoints(Integer points) {
-        this.points = points;
+    public void setPoints(Integer newPoints) {
+        this.points = newPoints;
+    }
+
+    public void addPoints(Integer extraPoints) {
+        if (points != null) {
+            points += extraPoints;
+        } else {
+            points = extraPoints;
+        }
     }
 
     public Stream<Player> getPlayerStream() {
-        return members.stream().map(Bukkit::getOfflinePlayer).filter(Objects::nonNull)
-                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer);
+        return members.stream().map(Bukkit::getOfflinePlayer).filter(Objects::nonNull).filter(OfflinePlayer::isOnline)
+                .map(OfflinePlayer::getPlayer);
     }
 
     public boolean isMember(UUID uuid) {
