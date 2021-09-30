@@ -10,6 +10,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
@@ -138,6 +140,7 @@ public class ScatterManager {
         task.addWithDelay(new BukkitRunnable() {
             @Override
             public void run() {
+
                 instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
                 player.playSound(loc, "bingo.tpstart", 1, 1);
 
@@ -162,6 +165,9 @@ public class ScatterManager {
                 player.teleport(loc);
                 player.setGameMode(GameMode.SURVIVAL);
                 player.playSound(loc, "bingo.tpfinish", 1, 1);
+
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
 
             }
 

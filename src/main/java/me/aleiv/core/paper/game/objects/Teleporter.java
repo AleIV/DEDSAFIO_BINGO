@@ -7,8 +7,6 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.aleiv.core.paper.Core;
@@ -45,7 +43,6 @@ public class Teleporter extends BukkitRunnable {
         Location location = playerLocationEntry.getValue();
 
         instance.getScatterManager().Qteleport(player, location);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
 
         count++;
         instance.adminMessage(ChatColor.RED + "" + count + " " + player.getName() + " scattered.");

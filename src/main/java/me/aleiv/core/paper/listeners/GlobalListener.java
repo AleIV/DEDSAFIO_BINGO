@@ -224,6 +224,7 @@ public class GlobalListener implements Listener {
             var loc = scatter.generateLocation();
             Bukkit.getScheduler().runTaskLater(instance, task -> {
                 scatter.Qteleport(player, loc);
+                player.getActivePotionEffects().forEach(all -> player.removePotionEffect(all.getType()));
             }, 20 * BingoManager.respawnSeconds);
 
         }
