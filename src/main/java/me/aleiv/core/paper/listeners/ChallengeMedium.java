@@ -71,10 +71,10 @@ public class ChallengeMedium implements Listener {
     private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
             Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY, Material.WITHER_ROSE, Material.SUNFLOWER,
             Material.PEONY, Material.CORNFLOWER);
+
     private final List<Material> lightBlocks = List.of(Material.SEA_LANTERN, Material.GLOWSTONE, Material.TORCH,
-            Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD,
-            Material.ENCHANTING_TABLE, Material.ENDER_CHEST, Material.LANTERN, Material.SOUL_LANTERN, Material.CAMPFIRE,
-            Material.SOUL_CAMPFIRE, Material.SHROOMLIGHT, Material.BEACON, Material.JACK_O_LANTERN);
+            Material.SOUL_TORCH, Material.REDSTONE_TORCH, Material.SEA_PICKLE, Material.END_ROD, Material.ENDER_CHEST, Material.LANTERN, Material.SOUL_LANTERN, Material.CAMPFIRE,
+            Material.SOUL_CAMPFIRE, Material.SHROOMLIGHT, Material.BEACON, Material.JACK_O_LANTERN, Material.REDSTONE_LAMP);
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {

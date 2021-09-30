@@ -64,7 +64,8 @@ public class InfoCMD extends BaseCommand {
         var team = man.getPlayerTeam(uuid);
 
         if(team != null){
-            sender.sendMessage(ChatColor.GREEN + player.getName() + " IS " + team.getTeamName() + ": " + "POINTS: " + team.getPoints());   
+            sender.sendMessage(ChatColor.GREEN + player.getName() + " IS " + team.getTeamName() + ": " + "POINTS: " + team.getPoints()); 
+              
         }else{
             sender.sendMessage(ChatColor.DARK_RED + "Team is null");
         }

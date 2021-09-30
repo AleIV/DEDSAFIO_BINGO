@@ -2,10 +2,9 @@ package me.aleiv.core.paper.game.objects;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.bukkit.GameMode;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -13,28 +12,31 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.aleiv.core.paper.Core;
-import me.aleiv.core.paper.utilities.Frames;
-import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import me.aleiv.core.paper.Game.GameStage;
+import net.md_5.bungee.api.ChatColor;
 
 public class Teleporter extends BukkitRunnable {
-    private static String fullTeleport = Character.toString('\uE309');
-    private static String startTeleport = Character.toString('\uE260');
-    private static List<Character> preTeleport = Frames.getFramesCharsIntegers(261, 308);
-    private static List<Character> postTeleport = Frames.getFramesCharsIntegers(310, 359);
 
     private final Iterator<Map.Entry<Player, Location>> players;
 
     Core instance;
+    int count = 0;
 
     public Teleporter(Core instance, HashMap<Player, Location> players){
         this.players = players.entrySet().iterator();
         this.instance = instance;
+        instance.getGame().setGameStage(GameStage.STARTING);
     }
 
     @Override
     public void run() {
         if (!players.hasNext()) {
             this.cancel();
+
+            Bukkit.getScheduler().runTaskLater(instance, task->{
+                instance.getBingoManager().totalStart();
+            }, 20*5);
+
             return;
         }
 
@@ -42,57 +44,10 @@ public class Teleporter extends BukkitRunnable {
         var player = playerLocationEntry.getKey();
         Location location = playerLocationEntry.getValue();
 
-        player.teleportAsync(location);
-    }
+        instance.getScatterManager().Qteleport(player, location);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
 
-    public void Qteleport(Player player, Location loc) {
-        var task = new BukkitTCT();
-
-        task.addWithDelay(new BukkitRunnable() {
-            @Override
-            public void run() {
-                instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
-                player.playSound(loc, "bingo.tpstart", 1, 1);
-
-            }
-
-        }, 50);
-
-        preTeleport.forEach(frame -> {
-            task.addWithDelay(new BukkitRunnable() {
-                @Override
-                public void run() {
-                    instance.showTitle(player, frame + "", "", 0, 20, 0);
-                }
-
-            }, 50);
-        });
-
-        task.addWithDelay(new BukkitRunnable() {
-            @Override
-            public void run() {
-                instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
-                player.teleport(loc);
-                player.setGameMode(GameMode.SURVIVAL);
-                player.playSound(loc, "bingo.tpfinish", 1, 1);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 15, 20));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
-
-            }
-
-        }, 50);
-
-        postTeleport.forEach(frame -> {
-            task.addWithDelay(new BukkitRunnable() {
-                @Override
-                public void run() {
-                    instance.showTitle(player, frame + "", "", 0, 20, 0);
-                }
-
-            }, 50);
-        });
-
-        task.execute();
-
+        count++;
+        instance.adminMessage(ChatColor.RED + "" + count + " " + player.getName() + " scattered.");
     }
 }

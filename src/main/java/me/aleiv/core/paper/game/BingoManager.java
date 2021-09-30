@@ -450,7 +450,74 @@ public class BingoManager implements Listener {
                 // SCATTER
 
                 scatter.runKernelScatter();
-                game.setGameStage(GameStage.INGAME);
+                
+            }
+
+        }, 50);
+
+        task.execute();
+
+    }
+
+    public void totalStart(){
+        var game = instance.getGame();
+        var round = game.getBingoRound();
+
+        var task = new BukkitTCT();
+
+        var countDownStart = Character.toString('\uE360');
+        var countdown = Frames.getFramesCharsIntegers(360, 489);
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            var loc = player.getLocation();
+            instance.sendActionBar(player, countDownStart);
+            player.playSound(loc, "bingo.countdown", 1, 1);
+        });
+
+        countdown.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        instance.sendActionBar(player, frame + "");
+                    });
+                }
+
+            }, 100);
+        });
+
+        task.addWithDelay(new BukkitRunnable() {
+            @Override
+            public void run() {
+        
+                var timer = game.getTimer();
+                var time = 0;
+        
+                switch (round) {
+                    case ONE:{
+                        time = 1200;
+        
+                    }break;
+                    case TWO:{
+                        time = 1800;
+        
+                    }break;
+                    case THREE:{
+                        time = 3600;
+        
+                    }break;
+                
+                    default:
+                        break;
+                }
+        
+                final var v = time;
+                timer.setPreStart(time);
+        
+                Bukkit.getScheduler().runTaskLater(instance, task->{
+                    timer.start(v, (int) game.getGameTime());
+                }, 20*5);
+        
                 Bukkit.getPluginManager().callEvent(new GameStartedEvent());
                 
             }

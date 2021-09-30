@@ -122,6 +122,12 @@ public class Core extends JavaPlugin {
         Bukkit.broadcast(miniMessage.parse(text));
     }
 
+    public void adminMessage(String text) {
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            if(player.hasPermission("admin.perm")) player.sendMessage(text);
+        });
+    }
+
     public void sendActionBar(Player player, String text) {
         player.sendActionBar(miniMessage.parse(text));
     }

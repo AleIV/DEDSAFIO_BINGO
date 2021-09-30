@@ -1,6 +1,5 @@
 package me.aleiv.core.paper.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -72,7 +71,8 @@ public class BingoCMD extends BaseCommand {
 
         }else{
         
-            instance.getBingoManager().startGame();
+            instance.broadcastMessage(ChatColor.of("#74ebfb") + "Starting scatter...");
+            instance.getScatterManager().runKernelScatter();
         }
 
     }
@@ -99,43 +99,7 @@ public class BingoCMD extends BaseCommand {
         var game = instance.getGame();
         final var color = game.getColor1();
 
-        var round = game.getBingoRound();
-        var manager = instance.getBingoManager();
-
-        Bukkit.getOnlinePlayers().forEach(player ->{
-            var loc = player.getLocation();
-            player.playSound(loc, "bingo.horn", 1, 1);
-        });
-
-        var timer = game.getTimer();
-        var time = 0;
-
-        switch (round) {
-            case ONE:{
-                time = 1200;
-
-            }break;
-            case TWO:{
-                time = 1800;
-
-            }break;
-            case THREE:{
-                time = 3600;
-
-            }break;
-        
-            default:
-                break;
-        }
-
-        final var v = time;
-        timer.setPreStart(time);
-
-        Bukkit.getScheduler().runTaskLater(instance, task->{
-            timer.start(v, (int) game.getGameTime());
-        }, 20*5);
-
-        manager.selectTables();
+        instance.getBingoManager().totalStart();
         sender.sendMessage(ChatColor.of(color) + "Tables selected & timer set.");
 
     }

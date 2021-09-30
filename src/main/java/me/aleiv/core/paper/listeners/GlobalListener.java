@@ -22,6 +22,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
@@ -246,12 +248,19 @@ public class GlobalListener implements Listener {
             player.setFoodLevel(20);
             player.setExp(0);
             player.setLevel(0);
+            player.getActivePotionEffects().forEach(all -> player.removePotionEffect(all.getType()));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 5, 20));
         });
 
         Bukkit.getWorlds().forEach(world -> {
             world.setTime(0L);
 
         });
+
+        var manager = instance.getBingoManager();
+        manager.selectTables();
+        instance.getGame().setGameStage(GameStage.INGAME);
         instance.broadcastMessage(ChatColor.of("#74ebfb") + "Game started!");
 
     }

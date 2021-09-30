@@ -251,7 +251,7 @@ public class ChallengeHard implements Listener {
                     var chest = inv.getChestplate();
                     var legs = inv.getLeggings();
                     var boots = inv.getBoots();
-                    if (helmet == null && chest == null && legs == null && boots == null) {
+                    if (helmet == null || chest == null || legs == null || boots == null) {
                         return;
                     }
                 }

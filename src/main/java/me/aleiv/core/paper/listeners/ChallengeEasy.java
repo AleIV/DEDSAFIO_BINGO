@@ -15,6 +15,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Dolphin;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fish;
@@ -230,7 +231,7 @@ public class ChallengeEasy implements Listener {
     public boolean isTeamAtHalf(List<Player> players) {
         var count = 0;
         for (Player player : players) {
-            if (player.getHealth() < 2)
+            if (player.getHealth() < 1.5)
                 count++;
         }
         return players.size() == count;
@@ -387,6 +388,8 @@ public class ChallengeEasy implements Listener {
             manager.attempToFind(player, Challenge.MINE_MINERALS, block.getType().toString());
         }
 
+        if(block.getLocation().getY() > 70) return;
+
         var l = block.getLocation();
         String formattedLoc = l.getBlockX() + ";" + l.getBlockY() + ";" + l.getBlockZ();
         manager.attempToFind(player, Challenge.BREAK_RULE_1, formattedLoc);
@@ -446,7 +449,7 @@ public class ChallengeEasy implements Listener {
         }
 
         if (entity instanceof Fish || entity instanceof Squid || entity instanceof Turtle || entity instanceof Drowned
-                || entity instanceof Guardian) {
+                || entity instanceof Guardian || entity instanceof Dolphin) {
             manager.attempToFind(player, Challenge.ACUATIC_KILL, entity.getType().toString());
 
         }
