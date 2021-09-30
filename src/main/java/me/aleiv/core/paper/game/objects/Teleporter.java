@@ -42,10 +42,7 @@ public class Teleporter extends BukkitRunnable {
         var player = playerLocationEntry.getKey();
         Location location = playerLocationEntry.getValue();
 
-        Qteleport(player, location);
-
-
-
+        player.teleportAsync(location);
     }
 
     public void Qteleport(Player player, Location loc) {
