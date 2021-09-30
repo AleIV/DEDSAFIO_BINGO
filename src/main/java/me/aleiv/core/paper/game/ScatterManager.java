@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -44,7 +45,7 @@ public class ScatterManager {
         return null;
     }
 
-    public void loadChunks(){
+    public void loadChunks() {
 
     }
 
@@ -56,7 +57,6 @@ public class ScatterManager {
         teamsOnline.forEach(team -> {
             var list = team.getPlayerStream().toList();
 
-            
             Location loc;
             if (safeLocations.size() == 0) {
                 loc = scatter.generateLocation();
@@ -66,14 +66,14 @@ public class ScatterManager {
                 safeLocations.remove(0);
             }
 
-            list.forEach(player ->{
+            list.forEach(player -> {
                 map.put(player, loc);
             });
 
         });
 
         Teleporter bukkitTask = new Teleporter(instance, map);
-        bukkitTask.runTaskTimer(instance, 10L, 10L);
+        bukkitTask.runTaskTimerAsynchronously(instance, 10L, 10L);
 
     }
 
@@ -134,7 +134,7 @@ public class ScatterManager {
         task.execute();
     }
 
-    public void Qteleport(Player player, Location loc) {
+    public CompletableFuture<Boolean> Qteleport(Player player, Location loc) {
         var task = new BukkitTCT();
 
         task.addWithDelay(new BukkitRunnable() {
@@ -183,7 +183,7 @@ public class ScatterManager {
             }, 50);
         });
 
-        task.execute();
+        return task.execute();
 
     }
 
