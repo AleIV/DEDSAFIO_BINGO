@@ -252,6 +252,7 @@ public class GlobalListener implements Listener {
             world.setTime(0L);
 
         });
+        instance.broadcastMessage(ChatColor.of("#74ebfb") + "Game started!");
 
     }
 
