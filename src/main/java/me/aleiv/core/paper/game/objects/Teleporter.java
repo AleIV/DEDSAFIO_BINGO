@@ -35,6 +35,7 @@ public class Teleporter extends BukkitRunnable {
             // Schedule a task to run 5 seconds later (compensate for lag) to actually
             // start.
             Bukkit.getScheduler().runTaskLater(instance, __ -> instance.getBingoManager().totalStart(), 20 * 5);
+
             return;
         }
         // Obtain the entry
@@ -44,7 +45,7 @@ public class Teleporter extends BukkitRunnable {
         var location = playerLocationEntry.getValue();
         // Teleport and hold until that task is completed.
         var esto = instance.getScatterManager().Qteleport(player, location);
-        while(!esto.isDone()){
+        while (!esto.isDone()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -53,13 +54,12 @@ public class Teleporter extends BukkitRunnable {
             }
         }
 
-        
         // Dont move forward unless is actually done.
 
         // Now that we are guaranteed that task is done, we can actually increase the
         // count and move to the next tick
         count++;
-        // Communicate the message to everyone
         instance.adminMessage(ChatColor.RED + "" + count + " " + player.getName() + " scattered.");
+        // Communicate the message to everyone
     }
 }

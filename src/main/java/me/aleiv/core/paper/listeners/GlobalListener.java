@@ -65,7 +65,7 @@ public class GlobalListener implements Listener {
                     var world = Bukkit.getWorld("world_the_end");
                     var loc = genLoc(world);
                     loc.setY(100);
-                    manager.Qteleport(player, loc);
+                    manager.QteleportS(player, loc);
 
                 }, 20 * 5);
 
@@ -210,7 +210,7 @@ public class GlobalListener implements Listener {
 
         if (player.getWorld() == lobby) {
             var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
-            scatter.Qteleport(player, loc);
+            scatter.QteleportS(player, loc);
 
         } else if (game.getGameStage() == GameStage.INGAME) {
             player.setHealth(20);
@@ -223,7 +223,7 @@ public class GlobalListener implements Listener {
 
             var loc = scatter.generateLocation();
             Bukkit.getScheduler().runTaskLater(instance, task -> {
-                scatter.Qteleport(player, loc);
+                scatter.QteleportS(player, loc);
                 player.getActivePotionEffects().forEach(all -> player.removePotionEffect(all.getType()));
             }, 20 * BingoManager.respawnSeconds);
 
