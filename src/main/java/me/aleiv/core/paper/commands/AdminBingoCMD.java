@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -21,6 +22,8 @@ import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
+import me.aleiv.core.paper.utilities.Frames;
+import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("admin|ad|a")
@@ -212,6 +215,28 @@ public class AdminBingoCMD extends BaseCommand {
             sender.sendMessage(ChatColor.of(game.getColor1()) + "Points " + player.getName() + " to " + i);
 
         });
+
+    }
+
+    @Subcommand("play-animation")
+    public void playAnimation(CommandSender sender, Integer from, Integer until, String... text) {
+        var task = new BukkitTCT();
+        var animation = Frames.getFramesCharsIntegersAll(from, until);
+        animation.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.getOnlinePlayers().forEach(player ->{
+                        instance.showTitle(player, frame + "", ChatColor.GOLD + text.toString(), 0, 20, 0);
+                    });
+
+                }
+
+            }, 50);
+        });
+
+        task.execute();
+        
 
     }
 
