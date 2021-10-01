@@ -9,7 +9,7 @@ public class TabEntry implements Cloneable {
 
     public String text = "";
 
-    public int ping = 10000;
+    public int ping = 50;
 
     public Property head;
 

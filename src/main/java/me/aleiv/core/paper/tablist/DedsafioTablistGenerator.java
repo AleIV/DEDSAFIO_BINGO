@@ -3,16 +3,23 @@ package me.aleiv.core.paper.tablist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.teams.objects.Team;
+import net.md_5.bungee.api.ChatColor;
 
 public class DedsafioTablistGenerator extends TablistGenerator {
+    private HashMap<UUID, String> cachedNames = new HashMap<>();
+    private Gson gson = new Gson();
 
     class SortByPoints implements Comparator<Team> {
 
@@ -25,6 +32,18 @@ public class DedsafioTablistGenerator extends TablistGenerator {
 
     public DedsafioTablistGenerator(Core plugin) {
         super(plugin);
+        plugin.getTeamManager().getRedisSyncConnection().hgetall("uuids:names").entrySet().forEach(entry -> {
+            var name = gson.fromJson(entry.getValue(), JsonObject.class);
+            System.out.println(entry.getValue());
+            if (name != null) {
+                var actualName = name.get("name");
+                if (actualName != null && !actualName.isJsonNull()) {
+                    cachedNames.put(UUID.fromString(entry.getKey()), actualName.getAsString());
+                    return;
+                }
+            }
+            cachedNames.put(UUID.fromString(entry.getKey()), "null");
+        });
     }
 
     @Override
@@ -33,47 +52,50 @@ public class DedsafioTablistGenerator extends TablistGenerator {
     }
 
     private static final String STAR = Character.toString('\uEAA6');
+    private static final String teamTag = ChatColor.of("#59e4fc") + "Team %s " + ChatColor.WHITE + "%d"
+            + ChatColor.RESET + STAR;
+    private static final String teamMemberTag = ChatColor.of("#fef1aa") + "%s";
+    private static final String ffaTag = "%d" + STAR + " " + ChatColor.of("#fef1aa") + "%s";
 
     @Override
     public TabEntry[] generateBars(Player paramPlayer) {
         var array = new TabEntry[80];
         int i = 0;
-        if (plugin.getTeamManager().getDataset().equalsIgnoreCase("ffa")) {
-            var entries = new ArrayList<Team>(plugin.getTeamManager().getTeamsMap().values());
-            Collections.sort(entries, new SortByPoints());
+        // Obtain all the entries
+        var entries = new ArrayList<Team>(plugin.getTeamManager().getTeamsMap().values());
+        // Sort them by points
+        Collections.sort(entries, new SortByPoints());
+        // Handle the ffa case
+        if (!plugin.getTeamManager().getDataset().equalsIgnoreCase("ffa")) {
             var iter = entries.iterator();
-            var random = new Random();
-            while (iter.hasNext()) {
+            while (iter.hasNext() && i < 80) {
                 var team = iter.next();
                 var id = team.getMembers().get(0);
-                var player = Bukkit.getOfflinePlayer(id);
-                if (player.getName() != null) {
-                    var name = player.getName().substring(0, Math.min(12, player.getName().length()));
-                    var entry = new TabEntry(team.getPoints() + STAR + " " + name);
-                    array[i] = entry;
-                } else {
-                    var falseName = "NoName" + random.nextInt(999999);
-                    var name = falseName.substring(0, Math.min(12, falseName.length()));
-                    var entry = new TabEntry(team.getPoints() + STAR + " " + name);
-                    array[i] = entry;
+                var name = getNameForId(id);
+                var shortName = name.substring(0, Math.min(12, name.length()));
+                var entry = new TabEntry(String.format(ffaTag, team.getPoints(), shortName));
+                array[i] = entry;
+                i++;
+            }
+
+            for (; i < 79; i++) {
+                array[i] = new TabEntry(" ");
+
+            }
+        } else { // Handle team case
+            var iter = entries.iterator();
+            while (iter.hasNext() && i < 80) {
+                var next = iter.next();
+                array[i] = new TabEntry(String.format(teamTag, next.getTeamName(), next.getPoints()));
+                for (var member : next.getMembers()) {
+                    i++;
+                    if (i < 80) {
+                        array[i] = new TabEntry(String.format(teamMemberTag, getNameForId(member)));
+                    } else {
+                        break;
+                    }
 
                 }
-                i++;
-            }
-
-            for (; i < 79; i++) {
-                array[i] = new TabEntry(" ");
-
-            }
-            array[79] = new TabEntry("§7§lDEDSAFIO");
-        } else {
-            var entries = new ArrayList<Team>(plugin.getTeamManager().getTeamsMap().values());
-            Collections.sort(entries, new SortByPoints());
-            var iter = entries.iterator();
-            while (iter.hasNext()) {
-                var next = iter.next();
-                
-                
 
                 i++;
             }
@@ -82,11 +104,22 @@ public class DedsafioTablistGenerator extends TablistGenerator {
                 array[i] = new TabEntry(" ");
 
             }
-            array[79] = new TabEntry("§7§lDEDSAFIO");
 
         }
 
         return array;
+    }
+
+    private String getNameForId(UUID name) {
+        var player = Bukkit.getOfflinePlayer(name);
+        if (player.getName() != null) {
+            return player.getName();
+        }
+        var cachedName = cachedNames.get(name);
+        if (cachedName != null) {
+            return cachedName;
+        }
+        return "null";
     }
 
 }
