@@ -19,6 +19,7 @@ import me.aleiv.core.paper.commands.AdminBingoCMD;
 import me.aleiv.core.paper.commands.BingoCMD;
 import me.aleiv.core.paper.commands.ConfigCMD;
 import me.aleiv.core.paper.commands.InfoCMD;
+import me.aleiv.core.paper.commands.TeamChatCMD;
 import me.aleiv.core.paper.game.BingoManager;
 import me.aleiv.core.paper.game.ScatterManager;
 import me.aleiv.core.paper.listeners.ChallengeEasy;
@@ -93,6 +94,7 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new BingoCMD(this));
         commandManager.registerCommand(new InfoCMD(this));
         commandManager.registerCommand(new TeamCMD(this));
+        commandManager.registerCommand(new TeamChatCMD(this));
 
 
         Bukkit.getScheduler().runTaskLater(this, task -> {
