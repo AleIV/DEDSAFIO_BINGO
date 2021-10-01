@@ -48,6 +48,8 @@ public class Game extends BukkitRunnable {
         HashMap<BingoRound, List<List<Material>>> itemRounds = new HashMap<>();
         HashMap<BingoRound, List<Challenge>> challengeRounds = new HashMap<>();
 
+        Boolean globalmute = false;
+
         public Game(Core instance) {
                 this.instance = instance;
                 this.startTime = System.currentTimeMillis();

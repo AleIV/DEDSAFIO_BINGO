@@ -250,4 +250,14 @@ public class AdminBingoCMD extends BaseCommand {
 
     }
 
+    @Subcommand("globalmute")
+    public void globalmute(CommandSender sender) {
+        var game = instance.getGame();
+        game.setGlobalmute(!game.getGlobalmute());
+        instance.adminMessage("GLOBALMUTE " + game.getGlobalmute());
+
+    }
+
+
+
 }

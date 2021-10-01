@@ -13,6 +13,7 @@ import org.bukkit.entity.EnderSignal;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -25,6 +26,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.events.GameStartedEvent;
@@ -284,6 +286,14 @@ public class GlobalListener implements Listener {
                     
                 }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void checkForMute(AsyncChatEvent e) {
+        var game = instance.getGame();
+        if (game.getGlobalmute() && !e.getPlayer().hasPermission("globalmute.talk")) {
+            e.setCancelled(true);
         }
     }
 
