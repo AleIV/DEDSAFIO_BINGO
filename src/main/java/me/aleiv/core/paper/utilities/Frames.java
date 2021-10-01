@@ -54,7 +54,7 @@ public class Frames {
         List<Character> chars = new ArrayList<>();
 
         while (from <= until)
-            chars.add(unescapeString(String.format("\\u%03d", from++)).charAt(0));
+            chars.add(unescapeString(String.format("\\u%04d", from++)).charAt(0));
 
         return chars;
     }
