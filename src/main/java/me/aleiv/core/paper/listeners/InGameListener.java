@@ -1,6 +1,7 @@
 package me.aleiv.core.paper.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,11 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.BingoType;
 import me.aleiv.core.paper.events.BingoEvent;
 import me.aleiv.core.paper.events.FoundItemEvent;
+import me.aleiv.core.paper.game.objects.BingoTableGUI;
 import net.md_5.bungee.api.ChatColor;
 
 public class InGameListener implements Listener {
@@ -24,12 +27,13 @@ public class InGameListener implements Listener {
     }
 
     @EventHandler
-    public void onItem(FoundItemEvent e){
+    public void onItem(FoundItemEvent e) {
         var bingoManager = instance.getBingoManager();
         var slot = e.getSlot();
         var player = e.getPlayer();
         var table = bingoManager.findTable(player.getUniqueId());
-        table.sendMessageMembers(ChatColor.of("#f89a16") + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
+        table.sendMessageMembers(
+                ChatColor.of("#f89a16") + player.getName() + " found " + ChatColor.RESET + slot.getDisplay());
         table.sendMessageMembers("");
     }
 
@@ -57,24 +61,43 @@ public class InGameListener implements Listener {
         var player = e.getFoundItemEvent().getPlayer();
         var table = manager.findTable(player.getUniqueId());
 
-        if(e.getBingoType() == BingoType.LINE){
+        if (e.getBingoType() == BingoType.LINE) {
             table.sendMessageMembers(ChatColor.of("#52abfa") + player.getName() + " completed a line! ");
 
-        }else{
-            
+        } else {
+
             table.sendMessageMembers(ChatColor.of("#52abfa") + player.getName() + " BINGOOOOOOOOOO! ");
         }
 
     }
 
     @EventHandler
-    public void cancelSpawners(BlockBreakEvent e){
+    public void cancelSpawners(BlockBreakEvent e) {
         var block = e.getBlock();
         var world = Bukkit.getWorld("lobby");
-        if(world == block.getWorld() && block.getType() == Material.SPAWNER){
+        if (world == block.getWorld() && block.getType() == Material.SPAWNER) {
             e.setCancelled(true);
         }
     }
-    
+
+    @EventHandler
+    public void invSpecEvent(PlayerInteractAtEntityEvent e) {
+        if (e.getRightClicked() == null
+                || !(e.getRightClicked() instanceof Player || e.getPlayer().getGameMode() != GameMode.SPECTATOR))
+            return;
+
+        var player = e.getPlayer();
+
+        if (player.hasPermission("table.perm")) {
+            var clicked = (Player) e.getRightClicked();
+            var manager = instance.getBingoManager();
+            var table = manager.findTable(clicked.getUniqueId());
+
+            if (table != null) {
+                var gui = new BingoTableGUI(table).getGui();
+                gui.open(player);
+            }
+        }
+    }
 
 }

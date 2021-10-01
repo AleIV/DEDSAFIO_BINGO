@@ -3,7 +3,6 @@ package me.aleiv.core.paper.tablist.gameprofile;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 public class Bar extends GameProfile {
     private String text;

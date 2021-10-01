@@ -49,7 +49,6 @@ public class ConfigCMD extends BaseCommand {
             sender.sendMessage(color1 + "Bingo player " + player1.getName() + " is not playing.");
 
         }else{
-            
             if(table2 != null){
                 table2.getMembers().remove(uuid2);
             }

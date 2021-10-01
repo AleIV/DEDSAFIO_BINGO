@@ -169,18 +169,17 @@ public class GlobalListener implements Listener {
         if(team != null){
             var points = team.getPoints() == null || team.getPoints() < 1 ? 0 : team.getPoints();
             header.append("\n");
-            header.append(team.getTeamName() + " ");
-            header.append(ChatColor.GOLD + "" + points + Table.getStar() + " ");
+            header.append(ChatColor.AQUA + "" + team.getTeamName() + " ");
             var uuids = team.getMembers();
             for (UUID uuid : uuids){
                 var p = Bukkit.getPlayer(uuid);
                 if(p != null){
-                    header.append(ChatColor.DARK_RED + p.getName() + " ");
+                    header.append(ChatColor.YELLOW + p.getName() + " ");
                 }
             }
+            header.append(ChatColor.WHITE + "" + points + ChatColor.RESET + Table.getStar() + " ");
         }
         
-
         return header.toString();
     }
 
