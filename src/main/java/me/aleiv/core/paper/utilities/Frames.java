@@ -50,6 +50,15 @@ public class Frames {
         return chars;
     }
 
+    public static List<Character> getFramesCharsIntegersAll(int from, int until) {
+        List<Character> chars = new ArrayList<>();
+
+        while (from <= until)
+            chars.add(unescapeString(String.format("\\u%03d", from++)).charAt(0));
+
+        return chars;
+    }
+
     /**
      * From
      * https://stackoverflow.com/questions/3537706/how-to-unescape-a-java-string-literal-in-java
