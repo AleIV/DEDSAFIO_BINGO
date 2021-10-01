@@ -16,6 +16,7 @@ import me.aleiv.core.paper.Game.BingoFase;
 import me.aleiv.core.paper.Game.BingoRound;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.game.objects.BingoTableGUI;
+import me.aleiv.core.paper.game.objects.Table;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("bingo")
@@ -127,7 +128,8 @@ public class BingoCMD extends BaseCommand {
     }
 
     @Subcommand("select-tables")
-    public void setTables(CommandSender sender) {
+    @CommandPermission("admin.perm")
+    public void setTables(CommandSender sender, Boolean bool) {
         var manager = instance.getBingoManager();
         final var color = instance.getGame().getColor1();
         
@@ -136,8 +138,60 @@ public class BingoCMD extends BaseCommand {
 
     }
 
+    @Subcommand("select-table")
+    @CommandPermission("admin.perm")
+    public void selectTable(CommandSender sender, @Flags("other") Player target) {
+        var manager = instance.getBingoManager();
+        var man = instance.getTeamManager();
+        final var color = instance.getGame().getColor1();
+
+        var table = manager.findTable(target.getUniqueId());
+        var team = man.getPlayerTeam(target.getUniqueId());
+
+        if(table != null){
+            sender.sendMessage(ChatColor.of(color) + "Player already has a table.");
+
+        }else if(team != null){
+            table = new Table(team.getTeamID(), team.getMembers());
+            table.selectItems(instance);
+            instance.getGame().getTables().add(table);
+
+            sender.sendMessage(ChatColor.of(color) + "Added table for the player.");
+        }else{
+            sender.sendMessage(ChatColor.of(color) + "Player doesn't have a team.");
+            
+        }
+
+    }
+
+    @Subcommand("remove-table")
+    @CommandPermission("admin.perm")
+    public void removeTable(CommandSender sender, @Flags("other") Player target) {
+        var manager = instance.getBingoManager();
+        var man = instance.getTeamManager();
+        final var color = instance.getGame().getColor1();
+
+        var table = manager.findTable(target.getUniqueId());
+        var team = man.getPlayerTeam(target.getUniqueId());
+
+        if(table == null){
+            sender.sendMessage(ChatColor.of(color) + "Player doesn't have a table.");
+
+        }else if(team != null){
+            table.getMembers().clear();
+            instance.getGame().getTables().remove(table);
+
+            sender.sendMessage(ChatColor.of(color) + "Removed table for the player.");
+        }else{
+            sender.sendMessage(ChatColor.of(color) + "Player doesn't have a team.");
+            
+        }
+
+    }
+
     @Subcommand("remove-tables")
-    public void removeTables(CommandSender sender) {
+    @CommandPermission("admin.perm")
+    public void removeTable(CommandSender sender, Boolean bool) {
         var game = instance.getGame();
 
         game.getTables().clear();
