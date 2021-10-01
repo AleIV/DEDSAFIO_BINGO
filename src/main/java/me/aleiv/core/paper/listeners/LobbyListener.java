@@ -21,23 +21,27 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
+import me.aleiv.core.paper.tablist.DedsafioTablistGenerator;
+import me.aleiv.core.paper.tablist.TablistLoadEvent;
+import me.aleiv.core.paper.tablist.TablistManager;
 
 public class LobbyListener implements Listener {
 
     Core instance;
-    
+
     public LobbyListener(Core instance) {
         this.instance = instance;
     }
 
-    public boolean shouldInteract(Player player){
+    public boolean shouldInteract(Player player) {
         var lobby = Bukkit.getWorld("lobby");
         var game = instance.getGame();
 
-        if(player.getWorld() == lobby && !player.hasPermission("admin.perm")){
+        if (player.getWorld() == lobby && !player.hasPermission("admin.perm")) {
             return false;
 
-        }else if(player.getWorld() != lobby && game.getGameStage() != GameStage.INGAME && !player.hasPermission("admin.perm")){
+        } else if (player.getWorld() != lobby && game.getGameStage() != GameStage.INGAME
+                && !player.hasPermission("admin.perm")) {
             return false;
         }
 
@@ -45,11 +49,12 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void sit(PlayerInteractAtEntityEvent e){
+    public void sit(PlayerInteractAtEntityEvent e) {
         var entity = e.getRightClicked();
         var player = e.getPlayer();
-        
-        if(entity != null && entity instanceof ArmorStand stand && !stand.hasBasePlate() && stand.getPassengers().isEmpty()){
+
+        if (entity != null && entity instanceof ArmorStand stand && !stand.hasBasePlate()
+                && stand.getPassengers().isEmpty()) {
             stand.addPassenger(player);
         }
     }
@@ -63,7 +68,7 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void onHunger(FoodLevelChangeEvent e){
+    public void onHunger(FoodLevelChangeEvent e) {
         var world = Bukkit.getWorld("lobby");
         var player = (Player) e.getEntity();
         if (player.getWorld() == world) {
@@ -113,9 +118,9 @@ public class LobbyListener implements Listener {
         }
 
     }
-    
+
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         var player = e.getPlayer();
         var game = instance.getGame();
         var manager = instance.getBingoManager();
@@ -123,12 +128,21 @@ public class LobbyListener implements Listener {
         var lobby = Bukkit.getWorld("lobby");
         var loc = new Location(lobby, 0.5, 126, 0.5, 90, -0);
 
-        if(game.getGameStage() != GameStage.INGAME){
+        if (game.getGameStage() != GameStage.INGAME) {
             player.teleport(loc);
 
-        }else if(table == null){
-            
+        } else if (table == null) {
+
             player.setGameMode(GameMode.SPECTATOR);
+        }
+    }
+
+    @EventHandler
+    public void onTablistLoadEvent(TablistLoadEvent e) {
+        try {
+            e.setTablistManager(new TablistManager(new DedsafioTablistGenerator(instance)));
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 
@@ -136,7 +150,7 @@ public class LobbyListener implements Listener {
     public void onEntityDamage(EntityDamageEvent e) {
         var entity = e.getEntity();
         if (entity instanceof Player player) {
-            if(!shouldInteract(player)){
+            if (!shouldInteract(player)) {
                 e.setCancelled(true);
             }
 
@@ -151,14 +165,11 @@ public class LobbyListener implements Listener {
         }
     }
 
-    /*@EventHandler
-    public void physics(BlockPhysicsEvent e){
-        var block = e.getBlock();
-        var lobby = Bukkit.getWorld("lobby");
-        if(block.getWorld() == lobby && block != null){
-            e.setCancelled(true);
-        }
-    }*/
+    /*
+     * @EventHandler public void physics(BlockPhysicsEvent e){ var block =
+     * e.getBlock(); var lobby = Bukkit.getWorld("lobby"); if(block.getWorld() ==
+     * lobby && block != null){ e.setCancelled(true); } }
+     */
 
     @EventHandler
     public void onPickedUpItems(PlayerAttemptPickupItemEvent e) {
@@ -167,6 +178,5 @@ public class LobbyListener implements Listener {
             e.setCancelled(true);
         }
     }
-
 
 }

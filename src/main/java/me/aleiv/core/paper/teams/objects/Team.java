@@ -44,7 +44,7 @@ public class Team extends BaseTeam {
      * @return Team's current points.
      */
     public Integer getPoints() {
-        return points;
+        return points != null ? points : 0;
     }
 
     /**

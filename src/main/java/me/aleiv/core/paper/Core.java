@@ -28,6 +28,7 @@ import me.aleiv.core.paper.listeners.ChallengeMedium;
 import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.InGameListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
+import me.aleiv.core.paper.tablist.Tablist;
 import me.aleiv.core.paper.teams.bukkit.BTeamManager;
 import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
 import me.aleiv.core.paper.utilities.JsonConfig;
@@ -50,6 +51,7 @@ public class Core extends JavaPlugin {
     private @Getter ProtocolManager protocolManager;
     private @Getter ScatterManager scatterManager;
     private JsonConfig redisJsonConfig;
+    private @Getter Tablist tablist;
 
     @Override
     public void onEnable() {
@@ -96,7 +98,6 @@ public class Core extends JavaPlugin {
         commandManager.registerCommand(new TeamCMD(this));
         commandManager.registerCommand(new TeamChatCMD(this));
 
-
         Bukkit.getScheduler().runTaskLater(this, task -> {
             WorldCreator worldCreator = new WorldCreator("lobby");
             worldCreator.environment(Environment.THE_END);
@@ -112,11 +113,15 @@ public class Core extends JavaPlugin {
             });
         }, 20);
 
+        // WIP Tablist
+        tablist = new Tablist(this);
+        tablist.onEnable();
     }
 
     @Override
     public void onDisable() {
         teamManager.disconect();
+        tablist.onDisable();
 
     }
 
@@ -125,8 +130,9 @@ public class Core extends JavaPlugin {
     }
 
     public void adminMessage(String text) {
-        Bukkit.getOnlinePlayers().forEach(player ->{
-            if(player.hasPermission("admin.perm")) player.sendMessage(text);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if (player.hasPermission("admin.perm"))
+                player.sendMessage(text);
         });
     }
 
