@@ -32,6 +32,20 @@ public class ChunksManager {
 
     }
 
+    /**
+     * Releases all chunks forcefully loaded. This does not unload them. Call this
+     * after the scatter is finished.
+     */
+    public void releaseAllChunksForcefullyLoaded() {
+        var entrys = chunksForceLoaded.entrySet();
+        var iter = entrys.iterator();
+        while (iter.hasNext()) {
+            var entry = iter.next();
+            entry.getValue().setForceLoaded(false);
+        }
+        chunksForceLoaded.clear();
+    }
+
     public static Collection<ChunkObject> getNeighbouringChunks(final ChunkObject chunkObject, final int distance) {
         return getNeighbouringChunks(chunkObject.getX(), chunkObject.getZ(), distance);
     }
