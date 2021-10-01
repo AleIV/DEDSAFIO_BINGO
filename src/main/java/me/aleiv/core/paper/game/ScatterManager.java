@@ -183,12 +183,15 @@ public class ScatterManager {
     public CompletableFuture<Boolean> Qteleport(Player player, Location loc) {
         var task = new BukkitTCT();
 
+        var location = loc.clone();
+        location.setY(200);
+
         task.addWithDelay(new BukkitRunnable() {
             @Override
             public void run() {
 
                 instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
-                player.playSound(loc, "bingo.tpstart", 1, 1);
+                player.playSound(location, "bingo.tpstart", 1, 1);
 
             }
 
@@ -208,9 +211,11 @@ public class ScatterManager {
             @Override
             public void run() {
                 instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
-                player.teleport(loc);
+                
+                player.teleport(location);
+
                 player.setGameMode(GameMode.SURVIVAL);
-                player.playSound(loc, "bingo.tpfinish", 1, 1);
+                player.playSound(location, "bingo.tpfinish", 1, 1);
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
@@ -333,7 +338,7 @@ public class ScatterManager {
         while (!isSafeLocation(loc)) {
             loc = genLoc(world);
         }
-        loc.setY(200f);
+        loc.setY(200);
 
         return loc;
     }

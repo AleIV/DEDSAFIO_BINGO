@@ -19,8 +19,10 @@ public class Teleporter extends BukkitRunnable {
 
     Core instance;
     int count = 0;
+    int totalSize = 0;
 
     public Teleporter(Core instance, HashMap<Player, Location> players) {
+        this.totalSize = players.size();
         this.players = players.entrySet().iterator();
         this.instance = instance;
         instance.getGame().setGameStage(GameStage.STARTING);
@@ -29,7 +31,8 @@ public class Teleporter extends BukkitRunnable {
     @Override
     public void run() {
         // Once the iterator is empty, this task should be done.
-        if (!players.hasNext()) {
+        if (count == totalSize){
+            instance.broadcastMessage(ChatColor.of("#74ebfb") + "Scatter finished.");
             // Cancel this task
             this.cancel();
             // Schedule a task to run 5 seconds later (compensate for lag) to actually
@@ -38,6 +41,8 @@ public class Teleporter extends BukkitRunnable {
 
             return;
         }
+
+        if(!players.hasNext()) return;
         // Obtain the entry
         var playerLocationEntry = players.next();
         // Obtain the key and value
@@ -47,7 +52,6 @@ public class Teleporter extends BukkitRunnable {
         var esto = instance.getScatterManager().Qteleport(player, location);
         while (!esto.isDone()) {
             try {
-                System.out.println("Esperando que animacion espere");
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
