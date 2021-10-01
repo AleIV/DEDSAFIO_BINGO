@@ -57,6 +57,21 @@ public class InfoCMD extends BaseCommand {
         sender.sendMessage(str.toString());
     }
 
+    @Subcommand("team-list-no-team")
+    public void infoTeamss(CommandSender sender) {
+        var man = instance.getTeamManager();
+        var str = new StringBuilder();
+        
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            var team = man.getPlayerTeam(player.getUniqueId());
+            if(team == null){
+                str.append(player.getName() + " ");
+            }
+        });
+
+        sender.sendMessage("NO TEAM LIST: " + str.toString());
+    }
+
     @Subcommand("info")
     public void infoPlayer(CommandSender sender, @Flags("other") Player player) {
         var man = instance.getTeamManager();
