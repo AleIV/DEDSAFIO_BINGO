@@ -221,22 +221,6 @@ public class BingoManager implements Listener {
                             var infoPlayers = slotC.getInfoPlayers();
 
                             switch (challenge) {
-                                case COLOR_SHEEP:
-                                case EAT_FOOD: {
-
-                                    if (challengeInfo.contains(info)) {
-                                        return;
-
-                                    } else {
-                                        challengeInfo.add(info);
-                                    }
-
-                                    if (challengeInfo.size() < 10) {
-                                        return;
-                                    }
-
-                                }
-                                    break;
                                 // 5 diff player case
                                 case FIREWORK_CROSSBOW:
                                 case JUMP_BED: {
@@ -255,7 +239,15 @@ public class BingoManager implements Listener {
                                 }
                                     break;
 
+                                case NOTEBLOCK_INSTRUMENTS:
+                                case FARM_CROPS:
+                                case EAT_SUS_STEW:
+                                case JARDINERO:
+                                case BREED_ANIMALS:
+                                case MINE_LIGHT_SOURCE:
+                                case ACUATIC_KILL:
                                 case FISH_ITEMS:
+                                case POTION_TYPES:
                                 case FLYING_MOBS_KILL: {
 
                                     if (challengeInfo.contains(info)) {
@@ -271,6 +263,9 @@ public class BingoManager implements Listener {
 
                                 }
                                     break;
+
+                                case ANIMAL_KILL:
+                                case HOSTILE_KILL:
                                 case CAULDRON_WASH: {
 
                                     if (challengeInfo.contains(info)) {
@@ -288,18 +283,10 @@ public class BingoManager implements Listener {
                                     break;
                                 // 5 diff info case
 
-                                case NOTEBLOCK_INSTRUMENTS:
-                                case FARM_CROPS:
-                                case EAT_SUS_STEW:
-                                case JARDINERO:
-                                case ACUATIC_KILL:
+                                case COLOR_SHEEP:
+                                case EAT_FOOD:
                                 case MINE_MINERALS:
-                                case ANIMAL_KILL:
-                                case REDSTONE_SIGNAL:
-                                case MINE_LIGHT_SOURCE:
-                                case BREED_ANIMALS:
-                                case POTION_TYPES:
-                                case HOSTILE_KILL: {
+                                case REDSTONE_SIGNAL: {
 
                                     if (challengeInfo.contains(info)) {
                                         return;

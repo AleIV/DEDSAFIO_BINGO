@@ -205,7 +205,7 @@ public class ChallengeHard implements Listener {
             return;
 
         var trade = e.getTrade().getIngredients().get(0);
-        if (trade.getAmount() >= 40) {
+        if (trade.getAmount() >= 20) {
             var manager = instance.getBingoManager();
             var player = e.getPlayer();
             manager.attempToFind(player, Challenge.VILLAGER_EXPENSIVE_TRADE, "");
@@ -362,7 +362,7 @@ public class ChallengeHard implements Listener {
             return;
 
         var cause = e.getCause();
-        if (cause == TeleportCause.ENDER_PEARL && getDistance(e.getFrom(), e.getTo()) >= 300) {
+        if (cause == TeleportCause.ENDER_PEARL && getDistance(e.getFrom(), e.getTo()) >= 200) {
             var manager = instance.getBingoManager();
             var player = e.getPlayer();
             manager.attempToFind(player, Challenge.ENDER_PEARL_TRAVEL, "");

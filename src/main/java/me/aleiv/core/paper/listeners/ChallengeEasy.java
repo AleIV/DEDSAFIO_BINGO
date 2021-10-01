@@ -68,7 +68,7 @@ public class ChallengeEasy implements Listener {
 
     private final List<Material> flowers = List.of(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID,
             Material.ALLIUM, Material.AZURE_BLUET, Material.OXEYE_DAISY, Material.WITHER_ROSE, Material.SUNFLOWER,
-            Material.PEONY, Material.CORNFLOWER);// CONSIDER TULIP
+            Material.PEONY, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY);// CONSIDER TULIP
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
@@ -94,7 +94,7 @@ public class ChallengeEasy implements Listener {
             var meta = (BlockStateMeta) hand.getItemMeta();
             var state = meta.getBlockState();
             var banner = (Banner) state;
-            if (banner.getPatterns().size() >= 5) {
+            if (banner.getPatterns().size() >= 3) {
                 manager.attempToFind(player, Challenge.SHIELD_BANNER, "");
             }
         }

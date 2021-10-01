@@ -8,13 +8,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EnderSignal;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -93,7 +96,8 @@ public class GlobalListener implements Listener {
     public void onCreature(EntityDamageByEntityEvent e) {
         var entity = e.getEntity();
         if (entity instanceof EnderDragon dragon) {
-            if (e.getDamager()instanceof Player player && player.hasPermission("admin.perm"))
+            if (e.getDamager() instanceof Projectile) return;
+            if (e.getDamager() instanceof Player player && player.hasPermission("admin.perm"))
                 return;
             e.setCancelled(true);
         }
@@ -286,6 +290,17 @@ public class GlobalListener implements Listener {
                     
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onSpawn(CreatureSpawnEvent e){
+        var entity = e.getEntity();
+        if(entity instanceof Drowned drowned){
+            drowned.setCanPickupItems(true);
+
+        }else if(entity instanceof Zombie zombie){
+            zombie.setCanPickupItems(true);
         }
     }
 

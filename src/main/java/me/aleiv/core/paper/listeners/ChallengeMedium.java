@@ -440,7 +440,7 @@ public class ChallengeMedium implements Listener {
             return;
 
         if (event.getEntity()instanceof Player player) {
-            if (player.getActivePotionEffects().size() >= 4) {
+            if (player.getActivePotionEffects().size() >= 3) {
                 var manager = instance.getBingoManager();
                 var table = manager.findTable(player.getUniqueId());
                 if (table != null) {

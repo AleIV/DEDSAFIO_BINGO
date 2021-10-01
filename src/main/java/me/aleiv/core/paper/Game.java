@@ -730,8 +730,8 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.MAXIMUM_HEIGHT, new ItemCode('\uEE45', 5, "Alcanza la altura máxima."));
                 challenges.put(Challenge.NETHER_TREE, new ItemCode('\uEE46', 6, "Haz crecer un árbol en el nether."));
                 challenges.put(Challenge.SHOOT_TARGET, new ItemCode('\uEE47', 7, "Dispara a un target block."));
-                challenges.put(Challenge.HOSTILE_KILL, new ItemCode('\uEE48', 8, "Mata a 5 mobs hostiles diferentes."));
-                challenges.put(Challenge.ANIMAL_KILL, new ItemCode('\uEE49', 9, "Mata a 5 animales diferentes."));
+                challenges.put(Challenge.HOSTILE_KILL, new ItemCode('\uEE48', 8, "Mata a 4 mobs hostiles diferentes."));
+                challenges.put(Challenge.ANIMAL_KILL, new ItemCode('\uEE49', 9, "Mata a 4 animales diferentes."));
                 challenges.put(Challenge.CAMPFIRE_CAMPING, new ItemCode('\uEE50', 10, "“Acampanding” Cocina en una hoguera con todo tu equipo cerca."));
                 challenges.put(Challenge.PINK_SHEEP_BIOME, new ItemCode('\uEE51', 11, "Cada miembro del equipo debe matar una oveja rosa en un bioma diferente."));
                 challenges.put(Challenge.BREAK_RULE_1, new ItemCode('\uEE52', 12, "Rompe la regla #1 de Minecraft."));
@@ -741,12 +741,12 @@ public class Game extends BukkitRunnable {
                 challenges.put(Challenge.DROWN_VILLAGER, new ItemCode('\uEE56', 16, "Observa como se ahoga un aldeano."));
                 challenges.put(Challenge.REDSTONE_SIGNAL, new ItemCode('\uEE57', 17, "Activa 5 objetos diferentes que emitan una señal de redstone."));
                 challenges.put(Challenge.PURPLE_LLAMA, new ItemCode('\uEE58', 18, "Monta una llama con una alfombra morada."));
-                challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 10 tipos de comida diferentes."));
-                challenges.put(Challenge.COLOR_SHEEP, new ItemCode('\uEE60', 20, "Cambia el color de una oveja con 10 tipos de tinte distintos."));
+                challenges.put(Challenge.EAT_FOOD, new ItemCode('\uEE59', 19, "Come 5 tipos de comida diferentes."));
+                challenges.put(Challenge.COLOR_SHEEP, new ItemCode('\uEE60', 20, "Cambia el color de una oveja con 5 tipos de tinte distintos."));
                 challenges.put(Challenge.LVL_40, new ItemCode('\uEE61', 21, "Todos los miembros deben sumar más de 40 niveles de experiencia."));
                 challenges.put(Challenge.ANVIL_DAMAGE, new ItemCode('\uEE62', 22, "Cada miembro del equipo debe tomar daño por un yunque."));
-                challenges.put(Challenge.ACUATIC_KILL, new ItemCode('\uEE63', 23, "Mata 5 mobs acuaticos diferentes."));
-                challenges.put(Challenge.MINE_MINERALS, new ItemCode('\uEE64', 24, "Mina 5 minerales diferentes."));
+                challenges.put(Challenge.ACUATIC_KILL, new ItemCode('\uEE63', 23, "Mata 3 mobs acuaticos diferentes."));
+                challenges.put(Challenge.MINE_MINERALS, new ItemCode('\uEE64', 24, "Mina 4 minerales diferentes."));
                 challenges.put(Challenge.GET_POISON, new ItemCode('\uEE65', 25, "Consigue el efecto de veneno."));
                 
                 challenges.put(Challenge.INVENTORY_STACKS, new ItemCode('\uEE66', 26, "Un integrante debe de llenar todo su inventario con stacks de 64 de cualquier item."));
@@ -755,7 +755,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.DROWN_FISH, new ItemCode('\uEE69', 29, "Ahoga un pez en el nether."));
 		challenges.put(Challenge.VILLAGER_MAX_TRADE, new ItemCode('\uEE70', 30, "Tradea con un aldeano de nivel máximo."));
 		challenges.put(Challenge.CROSSBOW_SHOT, new ItemCode('\uEE71', 31, "Recibe daño de piercing por un miembro de tu equipo."));
-		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Cubrete con un escudo que tenga un banner de 5 patterns o más."));
+		challenges.put(Challenge.SHIELD_BANNER, new ItemCode('\uEE72', 32, "Cúbrete con un escudo que tenga un banner de 3 patterns o más."));
 		challenges.put(Challenge.ENCHANT_LVL6, new ItemCode('\uEE73', 33, "Encanta un item a nivel 6."));
 		challenges.put(Challenge.CAMPFIRE_HAY_BALE, new ItemCode('\uEE74', 34, "Extiende la señal de humo de un campfire con un bloque de heno."));
 		challenges.put(Challenge.BED_EXPLODE, new ItemCode('\uEE75', 35, "Almost Intentional Game Design."));
@@ -764,15 +764,15 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.WATER_DROP, new ItemCode('\uEE78', 38, "“Salto de fe” Consigue un WaterDrop perfecto de más de 75 bloques de altura."));
 		challenges.put(Challenge.CAULDRON_WASH, new ItemCode('\uEE79', 39, "Destiñe una armadura de cuero completa usando un cauldron."));
 		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 5 tipos de animales diferentes."));
-		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 5 efectos de poción al mismo tiempo."));
+		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 3 efectos de poción al mismo tiempo."));
 		challenges.put(Challenge.MILK_ZOMBIE, new ItemCode('\uEE82', 42, "Dale un cubo de leche a un zombie."));
-		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 5 tipos de pociones diferentes."));
+		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 3 tipos de pociones diferentes."));
 		challenges.put(Challenge.EQUIP_DONKEY_CHEST, new ItemCode('\uEE84', 44, "Equipa un cofre a un burro."));
 		challenges.put(Challenge.HUNGER_DAMAGE, new ItemCode('\uEE85', 45, "Recibe daño por hambre."));
 		challenges.put(Challenge.HOGLIN_SCARE, new ItemCode('\uEE86', 46, "Asusta un hoglin usando un warped fungus."));
 		challenges.put(Challenge.PIGLIN_SCARE, new ItemCode('\uEE87', 47, "Asusta un piglin usando una antorcha o linterna de alma."));
 		challenges.put(Challenge.SHOOT_PORTAL, new ItemCode('\uEE88', 48, "Dispara a través de un portal del nether."));
-		challenges.put(Challenge.JARDINERO, new ItemCode('\uEE89', 49, "Coloca 5 flores diferentes en una maceta."));
+		challenges.put(Challenge.JARDINERO, new ItemCode('\uEE89', 49, "Coloca 3 flores diferentes en una maceta."));
 		challenges.put(Challenge.RIDE_HORSE_MINECART, new ItemCode('\uEE90', 50, "Monta a un caballo que este montando un minecart."));
                                 
 		challenges.put(Challenge.CAKE_EAT, new ItemCode('\uEE91', 51, "“Feliz Cumpleaños a ti” Todos los miembros del equipo deben comer de un mismo pastel."));
@@ -786,18 +786,18 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.VILLAGE_BELL, new ItemCode('\uEE99', 59, "“Falsa alarma” Toca una campana alertando a todos los aldeanos. jaja xd"));
 		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
 		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion."));
-		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 300 bloques con una enderpearl"));
-		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 40 esmeraldas con un aldeano."));
-		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 5 tipos diferentes de suspicious stew."));
-		challenges.put(Challenge.MINE_LIGHT_SOURCE, new ItemCode('\uEF06', 65, "Pica 5 bloques diferentes que den luz."));
+		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 200 bloques con una enderpearl."));
+		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 20 esmeraldas BASE con un aldeano."));
+		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 3 tipos diferentes de suspicious stew."));
+		challenges.put(Challenge.MINE_LIGHT_SOURCE, new ItemCode('\uEF06', 65, "Pica 3 bloques diferentes que den luz."));
 		challenges.put(Challenge.GLOWING_BAT, new ItemCode('\uEF07', 66, "Dispárale una flecha con glowing a un murciélago."));
 		challenges.put(Challenge.TEAM_SPAWN_ANCHOR, new ItemCode('\uEF08', 67, "Todos los miembros del equipo deben asignar su reaparición a un mismo respawn anchor."));
-		challenges.put(Challenge.NOTEBLOCK_INSTRUMENTS, new ItemCode('\uEF09', 68, "Toca 5 instrumentos diferentes en un note block."));
+		challenges.put(Challenge.NOTEBLOCK_INSTRUMENTS, new ItemCode('\uEF09', 68, "Toca 3 instrumentos diferentes en un note block."));
 		challenges.put(Challenge.DROWNED_MAP, new ItemCode('\uEF10', 69, "“Rey de los océanos” Dale un mapa a un drowned."));
 		challenges.put(Challenge.TEAM_DANCE, new ItemCode('\uEF11', 70, "Reproduce un disco en un tocadiscos y baila con todo tu equipo."));
 		challenges.put(Challenge.SNOWBALL_BLAZE_KILL, new ItemCode('\uEF12', 71, "Mata a un blaze usando bolas de nieve."));
 		challenges.put(Challenge.OBTAIN_MULE, new ItemCode('\uEF13', 72, "Consigue una Mula."));
-		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Haz crecer 5 cultivos diferentes."));
+		challenges.put(Challenge.FARM_CROPS, new ItemCode('\uEF14', 73, "Haz crecer 3 cultivos diferentes."));
 		challenges.put(Challenge.END_BINGO_MAX_HEIGHT, new ItemCode('\uEF15', 74, "“En la Cima” Todos los integrantes deben de estar juntos y en la capa 256 después de completar todos los otros logros."));
 		challenges.put(Challenge.OVER_ZOGLIN, new ItemCode('\uEF16', 75, "Mata un Zoglin."));
                 
