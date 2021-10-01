@@ -17,6 +17,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Data;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.game.newScatter.chunks.ChunkLoadTask;
+import me.aleiv.core.paper.game.newScatter.chunks.ChunksManager;
+import me.aleiv.core.paper.game.newScatter.chunks.CoordinatePair;
 import me.aleiv.core.paper.game.objects.Teleporter;
 import me.aleiv.core.paper.teams.objects.Team;
 import me.aleiv.core.paper.utilities.Frames;
@@ -36,8 +39,11 @@ public class ScatterManager {
     String fullTeleport = Character.toString('\uE309');
     String startTeleport = Character.toString('\uE260');
 
+    private ChunksManager chunkmanager;
+
     public ScatterManager(Core instance) {
         this.instance = instance;
+        this.chunkmanager = new ChunksManager(instance);
 
     }
 
@@ -45,8 +51,48 @@ public class ScatterManager {
         return null;
     }
 
-    public void loadChunks() {
+    public CompletableFuture<Boolean> loadAllChunks() {
 
+        var taskChain = new BukkitTCT();
+        //Combine the saved locations 
+        var chunks = transformLocationsToLoadTask();
+        
+        taskChain.add(() -> {
+            var iter = chunks.iterator();
+
+            while (iter.hasNext()) {
+                var next = iter.next();
+                // Run the task one tick later
+                Bukkit.getScheduler().runTaskLaterAsynchronously(instance, next, 1);
+
+                while (!next.isDone()) {
+                    // Hold for one second to check again if the previous load task is done
+                    System.out.println("Waiting for chunk " +next.getLocationID() +" to load");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+        return taskChain.execute();
+
+    }
+
+    public List<ChunkLoadTask> transformLocationsToLoadTask() {
+        List<ChunkLoadTask> loadTasks = new ArrayList<>();
+        // Loop through all the locations of safeLocations
+        for (var loc : safeLocations) {
+            loadTasks.add(fromLocationToLoadTask(loc));
+        }
+        return loadTasks;
+    }
+
+    public ChunkLoadTask fromLocationToLoadTask(Location loc) {
+        return new ChunkLoadTask(loc.getWorld(), chunkmanager, CoordinatePair.fromLocation(loc));
     }
 
     public void runKernelScatter() {
@@ -73,7 +119,7 @@ public class ScatterManager {
         });
 
         Teleporter bukkitTask = new Teleporter(instance, map);
-        bukkitTask.runTaskTimerAsynchronously(instance, 0L, 1L);
+        bukkitTask.runTaskTimerAsynchronously(instance, 0L, 20L);
 
     }
 

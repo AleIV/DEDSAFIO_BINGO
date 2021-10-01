@@ -51,6 +51,9 @@ public class AdminBingoCMD extends BaseCommand {
         var manager = instance.getScatterManager();
 
         manager.generateLocations(i);
+        manager.loadAllChunks().thenAccept(result -> {
+            System.out.println("Done loading locations.");
+        });
         sender.sendMessage(ChatColor.of(game.getColor1()) + "LOCATIONS GENERATED " + i);
 
     }
@@ -136,7 +139,7 @@ public class AdminBingoCMD extends BaseCommand {
 
         CompletableFuture.supplyAsync(() -> {
 
-            map.values().forEach(team ->{
+            map.values().forEach(team -> {
                 manager.destroyTeam(team);
             });
 

@@ -32,7 +32,8 @@ public class Teleporter extends BukkitRunnable {
         if (!players.hasNext()) {
             // Cancel this task
             this.cancel();
-            // Schedule a task to run 5 seconds later (compensate for lag) to actually start.
+            // Schedule a task to run 5 seconds later (compensate for lag) to actually
+            // start.
             Bukkit.getScheduler().runTaskLater(instance, __ -> instance.getBingoManager().totalStart(), 20 * 5);
             return;
         }
