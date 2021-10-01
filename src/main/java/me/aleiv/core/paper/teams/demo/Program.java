@@ -11,8 +11,7 @@ public class Program {
     private static Logger logger = Logger.getLogger("Demo-program");
 
     public static void main(String[] args) throws Exception {
-        var teamManager = new SimpleTeamManager(
-                "rediss://default:oKxs2n867eeGjo0b@db-redis-nyc3-13429-do-user-8130499-0.b.db.ondigitalocean.com:25061");
+        var teamManager = new SimpleTeamManager("");
         teamManager.initialize();
 
         try {
