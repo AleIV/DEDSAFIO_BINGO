@@ -43,7 +43,15 @@ public class Teleporter extends BukkitRunnable {
         var player = playerLocationEntry.getKey();
         var location = playerLocationEntry.getValue();
         // Teleport and hold until that task is completed.
-        instance.getScatterManager().Qteleport(player, location);
+        var esto = instance.getScatterManager().Qteleport(player, location);
+        while(!esto.isDone()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
         
         // Dont move forward unless is actually done.

@@ -119,7 +119,7 @@ public class ScatterManager {
         });
 
         Teleporter bukkitTask = new Teleporter(instance, map);
-        bukkitTask.runTaskTimer(instance, 0L, 5L);
+        bukkitTask.runTaskTimerAsynchronously(instance, 0L, 5L);
 
     }
 
