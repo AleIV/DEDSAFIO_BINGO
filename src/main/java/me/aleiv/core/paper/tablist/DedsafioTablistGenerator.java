@@ -19,7 +19,13 @@ import net.md_5.bungee.api.ChatColor;
 
 public class DedsafioTablistGenerator extends TablistGenerator {
     private HashMap<UUID, String> cachedNames = new HashMap<>();
-    private Gson gson = new Gson();
+    private static final Gson gson = new Gson();
+
+    private static final String STAR = Character.toString('\uEAA6');
+    private static final String teamTag = ChatColor.of("#59e4fc") + "Team %s " + ChatColor.WHITE + "%d"
+            + ChatColor.RESET + STAR;
+    private static final String teamMemberTag = ChatColor.of("#fef1aa") + "%s";
+    private static final String ffaTag = "%d" + STAR + " " + ChatColor.of("#fef1aa") + "%s";
 
     class SortByPoints implements Comparator<Team> {
 
@@ -34,7 +40,6 @@ public class DedsafioTablistGenerator extends TablistGenerator {
         super(plugin);
         plugin.getTeamManager().getRedisSyncConnection().hgetall("uuids:names").entrySet().forEach(entry -> {
             var name = gson.fromJson(entry.getValue(), JsonObject.class);
-            System.out.println(entry.getValue());
             if (name != null) {
                 var actualName = name.get("name");
                 if (actualName != null && !actualName.isJsonNull()) {
@@ -50,12 +55,6 @@ public class DedsafioTablistGenerator extends TablistGenerator {
     public String[] generateHeaderFooter(Player paramPlayer) {
         return List.of("§7§lDEDSAFIO", "§7§lDEDSAFIO").toArray(new String[0]);
     }
-
-    private static final String STAR = Character.toString('\uEAA6');
-    private static final String teamTag = ChatColor.of("#59e4fc") + "Team %s " + ChatColor.WHITE + "%d"
-            + ChatColor.RESET + STAR;
-    private static final String teamMemberTag = ChatColor.of("#fef1aa") + "%s";
-    private static final String ffaTag = "%d" + STAR + " " + ChatColor.of("#fef1aa") + "%s";
 
     @Override
     public TabEntry[] generateBars(Player paramPlayer) {
@@ -77,11 +76,6 @@ public class DedsafioTablistGenerator extends TablistGenerator {
                 array[i] = entry;
                 i++;
             }
-
-            for (; i < 79; i++) {
-                array[i] = new TabEntry(" ");
-
-            }
         } else { // Handle team case
             var iter = entries.iterator();
             while (iter.hasNext() && i < 80) {
@@ -100,10 +94,10 @@ public class DedsafioTablistGenerator extends TablistGenerator {
                 i++;
             }
 
-            for (; i < 79; i++) {
-                array[i] = new TabEntry(" ");
-
-            }
+        }
+        // Fill emptys slots with nothing.
+        for (; i < 80; i++) {
+            array[i] = new TabEntry(" ");
 
         }
 

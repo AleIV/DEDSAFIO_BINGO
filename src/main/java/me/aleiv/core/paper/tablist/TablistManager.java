@@ -16,7 +16,6 @@ public class TablistManager {
 
     private TablistGenerator generator;
 
-
     public TablistManager(TablistGenerator generator) throws Exception {
         this.generator = generator;
         BarPacketFactory.loadInfoField();
@@ -46,7 +45,6 @@ public class TablistManager {
         } while (!tablist.getPlayer().equals(player));
         return tablist;
     }
-
 
     static {
         for (int i = 0; i < 80; i++) {
