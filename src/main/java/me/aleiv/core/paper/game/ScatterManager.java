@@ -119,7 +119,7 @@ public class ScatterManager {
         });
 
         Teleporter bukkitTask = new Teleporter(instance, map);
-        bukkitTask.runTaskTimerAsynchronously(instance, 0L, 20L);
+        bukkitTask.runTaskTimer(instance, 0L, 5L);
 
     }
 
@@ -213,7 +213,7 @@ public class ScatterManager {
                 player.playSound(loc, "bingo.tpfinish", 1, 1);
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 20));
 
             }
 

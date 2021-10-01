@@ -544,14 +544,13 @@ public class BingoManager implements Listener {
     public void restartGame() {
         var game = instance.getGame();
 
-        var manager = instance.getScatterManager();
         game.setGameStage(GameStage.LOBBY);
 
         var world = Bukkit.getWorld("lobby");
         var loc = new Location(world, 0.5, 126, 0.5, 90, -0);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            manager.Qteleport(player, loc);
+            player.teleport(loc);
         });
 
     }

@@ -56,8 +56,9 @@ public class AdminBingoCMD extends BaseCommand {
         manager.generateLocations(i);
         manager.loadAllChunks().thenAccept(result -> {
             System.out.println("Done loading locations.");
+            sender.sendMessage(ChatColor.of(game.getColor1()) + "Done loading locations. " + i);
         });
-        sender.sendMessage(ChatColor.of(game.getColor1()) + "LOCATIONS GENERATED " + i);
+        sender.sendMessage(ChatColor.of(game.getColor1()) + "LOCATIONS GENERATING " + i);
 
     }
 
