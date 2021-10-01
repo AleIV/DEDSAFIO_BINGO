@@ -47,9 +47,9 @@ public class Teleporter extends BukkitRunnable {
         var esto = instance.getScatterManager().Qteleport(player, location);
         while (!esto.isDone()) {
             try {
-                Thread.sleep(1000);
+                System.out.println("Esperando que animacion espere");
+                Thread.sleep(500);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
