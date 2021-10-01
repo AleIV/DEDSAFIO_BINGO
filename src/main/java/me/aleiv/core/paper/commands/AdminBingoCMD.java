@@ -226,12 +226,18 @@ public class AdminBingoCMD extends BaseCommand {
     public void playAnimation(CommandSender sender, Integer from, Integer until, String... text) {
         var task = new BukkitTCT();
         var animation = Frames.getFramesCharsIntegersAll(from, until);
+
+        var newText = new StringBuilder();
+        for (var charac : text) {
+            newText.append(charac);
+        }
+
         animation.forEach(frame -> {
             task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
                     Bukkit.getOnlinePlayers().forEach(player ->{
-                        instance.showTitle(player, frame + "", ChatColor.GOLD + text.toString(), 0, 20, 0);
+                        instance.showTitle(player, frame + "", ChatColor.GOLD + newText.toString(), 0, 20, 0);
                     });
 
                 }

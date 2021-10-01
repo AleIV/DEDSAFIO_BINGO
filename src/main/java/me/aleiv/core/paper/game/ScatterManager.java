@@ -213,7 +213,60 @@ public class ScatterManager {
                 player.playSound(loc, "bingo.tpfinish", 1, 1);
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20 * 10000, 255));
+
+            }
+
+        }, 50);
+
+        postTeleport.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
+                }
+
+            }, 50);
+        });
+
+        return task.execute();
+
+    }
+
+    public CompletableFuture<Boolean> QteleportS(Player player, Location loc) {
+        var task = new BukkitTCT();
+
+        task.addWithDelay(new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                instance.showTitle(player, startTeleport + "", "", 0, 20, 0);
+                player.playSound(loc, "bingo.tpstart", 1, 1);
+
+            }
+
+        }, 50);
+
+        preTeleport.forEach(frame -> {
+            task.addWithDelay(new BukkitRunnable() {
+                @Override
+                public void run() {
+                    instance.showTitle(player, frame + "", "", 0, 20, 0);
+                }
+
+            }, 50);
+        });
+
+        task.addWithDelay(new BukkitRunnable() {
+            @Override
+            public void run() {
+                instance.showTitle(player, fullTeleport + "", "", 0, 20, 0);
+                player.teleport(loc);
+                player.setGameMode(GameMode.SURVIVAL);
+                player.playSound(loc, "bingo.tpfinish", 1, 1);
+
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 20));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 5, 20));
 
             }
 
