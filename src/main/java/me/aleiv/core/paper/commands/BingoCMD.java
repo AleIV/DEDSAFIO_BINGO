@@ -133,8 +133,10 @@ public class BingoCMD extends BaseCommand {
         var manager = instance.getBingoManager();
         final var color = instance.getGame().getColor1();
         
-        manager.selectTables();
-        sender.sendMessage(ChatColor.of(color) + "Tables selected.");
+        if(bool){
+            manager.selectTables();
+            sender.sendMessage(ChatColor.of(color) + "Tables selected.");
+        }
 
     }
 
@@ -200,5 +202,15 @@ public class BingoCMD extends BaseCommand {
         sender.sendMessage(ChatColor.of(color) + "Tables cleared.");
 
     }
+
+    @Subcommand("global-cmd")
+    @CommandPermission("admin.perm")
+    public void globalCMD(CommandSender sender, String text) {
+        instance.getTeamManager().sendCommandToNodes(text);
+        sender.sendMessage(ChatColor.YELLOW + "CMD SENT.");
+
+    }
+
+
 
 }

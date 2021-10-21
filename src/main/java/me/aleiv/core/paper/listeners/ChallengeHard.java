@@ -15,7 +15,6 @@ import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Drowned;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Mule;
 import org.bukkit.entity.Pig;
@@ -39,7 +38,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnFlag;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -53,9 +51,8 @@ public class ChallengeHard implements Listener {
 
     Core instance;
 
-    private final List<EntityType> flyingList = List.of(EntityType.BEE, EntityType.BAT, EntityType.PARROT,
-            EntityType.GHAST, EntityType.BLAZE, EntityType.PHANTOM, EntityType.WITHER);
-    private final List<String> invalidPotions = List.of("WATER", "AWKWARD", "MUNDANE", "THICK");
+    //private final List<EntityType> flyingList = List.of(EntityType.BEE, EntityType.BAT, EntityType.PARROT, EntityType.GHAST, EntityType.BLAZE, EntityType.PHANTOM, EntityType.WITHER);
+    //private final List<String> invalidPotions = List.of("WATER", "AWKWARD", "MUNDANE", "THICK");
     private final List<Material> crops = List.of(Material.WHEAT, Material.POTATOES, Material.BEETROOTS, Material.COCOA,
             Material.MELON_STEM, Material.PUMPKIN_STEM, Material.CARROTS, Material.SWEET_BERRY_BUSH);
 
@@ -112,11 +109,13 @@ public class ChallengeHard implements Listener {
         var game = instance.getGame();
         if (!game.isChallengeEnabledFor(Challenge.SNOWBALL_BLAZE_KILL)
                 || !game.isChallengeEnabledFor(Challenge.OVER_ZOGLIN)
-                || !game.isChallengeEnabledFor(Challenge.FLYING_MOBS_KILL)
                 || !game.isChallengeEnabledFor(Challenge.NETHER_MOB_KILL)
                 || !game.isChallengeEnabledFor(Challenge.PIG_FALL)
                 || !game.isChallengeEnabledFor(Challenge.CREEPER_TNT_KILL))
             return;
+
+            //|| !game.isChallengeEnabledFor(Challenge.FLYING_MOBS_KILL)
+                
         var manager = instance.getBingoManager();
 
         var entity = e.getEntity();
@@ -138,13 +137,13 @@ public class ChallengeHard implements Listener {
             }
 
         }
-        if (flyingList.contains(entity.getType())) {
+        /*if (flyingList.contains(entity.getType())) {
             var player = entity.getKiller();
             if (player != null) {
                 manager.attempToFind(player, Challenge.FLYING_MOBS_KILL, entity.getType().toString());
             }
 
-        }
+        }*/
         if (entity.getWorld().getEnvironment() == Environment.NETHER) {
             var player = entity.getKiller();
 
@@ -167,7 +166,7 @@ public class ChallengeHard implements Listener {
             if (damage instanceof EntityDamageByEntityEvent entityDamage && entityDamage.getDamager() instanceof TNTPrimed) {
 
                 var loc = creeper.getLocation();
-                var nearby = loc.getNearbyPlayers(15).stream().toList();
+                var nearby = loc.getNearbyPlayers(20).stream().toList();
                 for (var player : nearby) {
 
                     var table = manager.findTable(player.getUniqueId());
@@ -219,7 +218,7 @@ public class ChallengeHard implements Listener {
         if (!game.isChallengeEnabledFor(Challenge.DROWNED_MAP))
             return;
 
-        if (event.getEntity()instanceof Drowned zombie && event.getItem().getItemStack().getType() == Material.MAP) {
+        if (event.getEntity() instanceof Drowned zombie && event.getItem().getItemStack().getType() == Material.MAP) {
             var manager = instance.getBingoManager();
             var loc = zombie.getLocation();
             loc.getNearbyPlayers(10).stream().forEach(player -> {
@@ -321,7 +320,7 @@ public class ChallengeHard implements Listener {
     @EventHandler
     public void onCatch(PlayerItemConsumeEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.EAT_SUS_STEW) || !game.isChallengeEnabledFor(Challenge.POTION_TYPES))
+        if (!game.isChallengeEnabledFor(Challenge.EAT_SUS_STEW))
             return;
 
         var item = e.getItem();
@@ -341,7 +340,7 @@ public class ChallengeHard implements Listener {
 
                 manager.attempToFind(player, Challenge.EAT_SUS_STEW, nStr[0]);
             }
-        } else if (e.getItem().getType() == Material.POTION) {
+        } /*else if (e.getItem().getType() == Material.POTION) {
             var player = e.getPlayer();
             PotionMeta potionMeta = (PotionMeta) e.getItem().getItemMeta();
             String potionType = potionMeta.getBasePotionData().getType().toString();
@@ -352,7 +351,7 @@ public class ChallengeHard implements Listener {
                     manager.attempToFind(player, Game.Challenge.POTION_TYPES, potionType);
                 }
             }
-        }
+        }*/
     }
 
     @EventHandler

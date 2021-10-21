@@ -159,6 +159,8 @@ public class GlobalListener implements Listener {
 
         instance.sendHeader(player, getPlayerHeader(player));
 
+        e.joinMessage(instance.componentToString(""));
+
     }
 
     public String getPlayerHeader(Player player){
@@ -194,6 +196,8 @@ public class GlobalListener implements Listener {
         if (board != null) {
             board.delete();
         }
+
+        e.quitMessage(instance.componentToString(""));
     }
 
     @EventHandler

@@ -56,7 +56,7 @@ public class Game extends BukkitRunnable {
                 this.gameTime = 0;
                 this.gameStage = GameStage.LOBBY;
                 this.bingoRound = BingoRound.ONE;
-                this.bingoFase = BingoFase.ITEMS;
+                this.bingoFase = BingoFase.CHALLENGE;
 
                 this.timer = new Timer(instance, (int) gameTime);
 
@@ -808,7 +808,7 @@ public class Game extends BukkitRunnable {
 
                 challenge_1.add(Challenge.HALF_HEART);
                 challenge_1.add(Challenge.SHIELD_BREAK);
-                challenge_1.add(Challenge.ARMOR_MATERIALS);
+                //challenge_1.add(Challenge.ARMOR_MATERIALS);
                 challenge_1.add(Challenge.DOLPHIN_SWIM);
                 challenge_1.add(Challenge.MAXIMUM_HEIGHT);
                 challenge_1.add(Challenge.NETHER_TREE);
@@ -832,12 +832,14 @@ public class Game extends BukkitRunnable {
                 challenge_1.add(Challenge.MINE_MINERALS);
                 challenge_1.add(Challenge.GET_POISON);
 
+                challenge_1.add(Challenge.ACUATIC_KILL);//ADDED FROM 2
+
         }
 
         public void register_challenge_2(){
                 var challenge_2 = challengeRounds.get(BingoRound.TWO);
 
-                challenge_2.add(Challenge.ACUATIC_KILL);
+                challenge_2.add(Challenge.ACUATIC_KILL);//ADDED IN 1
                 challenge_2.add(Challenge.INVENTORY_STACKS);
                 challenge_2.add(Challenge.STRIDER_GAPPLE);
                 challenge_2.add(Challenge.PIGLIN_BARTER);
@@ -850,8 +852,8 @@ public class Game extends BukkitRunnable {
                 challenge_2.add(Challenge.BED_EXPLODE);
                 challenge_2.add(Challenge.MINE_LIGHT_SOURCE);
                 challenge_2.add(Challenge.GIVE_PLAYER_FLOWER);
-                challenge_2.add(Challenge.WATER_DROP);
-                challenge_2.add(Challenge.CAULDRON_WASH);
+                challenge_2.add(Challenge.WATER_DROP);//ADDED TO 3
+                challenge_2.add(Challenge.CAULDRON_WASH);//ADDED TO 3
                 challenge_2.add(Challenge.BREED_ANIMALS);
                 challenge_2.add(Challenge.POTION_EFFECTS);
                 challenge_2.add(Challenge.MILK_ZOMBIE);
@@ -877,23 +879,32 @@ public class Game extends BukkitRunnable {
                 challenge_3.add(Challenge.FIREWORK_CROSSBOW);
                 challenge_3.add(Challenge.CREEPER_TNT_KILL);
                 challenge_3.add(Challenge.NETHER_MOB_KILL);
-                challenge_3.add(Challenge.FLYING_MOBS_KILL);
+                //challenge_3.add(Challenge.FLYING_MOBS_KILL);
                 challenge_3.add(Challenge.LINGERING_WATER_POTION);
                 challenge_3.add(Challenge.ENDER_PEARL_TRAVEL);
                 challenge_3.add(Challenge.VILLAGER_EXPENSIVE_TRADE);
                 challenge_3.add(Challenge.EAT_SUS_STEW);
                 challenge_3.add(Challenge.PINK_SHEEP_BIOME);
-                challenge_3.add(Challenge.GLOWING_BAT);
-                challenge_3.add(Challenge.TEAM_SPAWN_ANCHOR);
+                //challenge_3.add(Challenge.GLOWING_BAT);
+                //challenge_3.add(Challenge.TEAM_SPAWN_ANCHOR);
                 challenge_3.add(Challenge.NOTEBLOCK_INSTRUMENTS);
-                challenge_3.add(Challenge.DROWNED_MAP);
+                //challenge_3.add(Challenge.DROWNED_MAP);
                 challenge_3.add(Challenge.TEAM_DANCE);
                 challenge_3.add(Challenge.SNOWBALL_BLAZE_KILL);
-                challenge_3.add(Challenge.OBTAIN_MULE);
+                //challenge_3.add(Challenge.OBTAIN_MULE);
                 challenge_3.add(Challenge.FARM_CROPS);
                 challenge_3.add(Challenge.END_BINGO_MAX_HEIGHT);
-                challenge_3.add(Challenge.OVER_ZOGLIN);
-                challenge_3.add(Challenge.POTION_TYPES);
+                //challenge_3.add(Challenge.OVER_ZOGLIN);
+                //challenge_3.add(Challenge.POTION_TYPES);
+
+                challenge_3.add(Challenge.MILK_ZOMBIE);
+                challenge_3.add(Challenge.PIGLIN_BARTER);
+                challenge_3.add(Challenge.STRIDER_GAPPLE);
+                challenge_3.add(Challenge.BREED_ANIMALS);//ADED FROM 2
+                challenge_3.add(Challenge.INVENTORY_STACKS);//ADDED FROM 2
+                challenge_3.add(Challenge.WATER_DROP);//ADDED FROM 2
+                challenge_3.add(Challenge.CAULDRON_WASH);//ADDED FROM 2
+                
 
         }
 

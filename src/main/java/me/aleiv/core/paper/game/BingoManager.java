@@ -264,6 +264,7 @@ public class BingoManager implements Listener {
                                 }
                                     break;
 
+                                case MINE_MINERALS:
                                 case ANIMAL_KILL:
                                 case HOSTILE_KILL:
                                 case CAULDRON_WASH: {
@@ -285,7 +286,6 @@ public class BingoManager implements Listener {
 
                                 case COLOR_SHEEP:
                                 case EAT_FOOD:
-                                case MINE_MINERALS:
                                 case REDSTONE_SIGNAL: {
 
                                     if (challengeInfo.contains(info)) {
@@ -338,7 +338,7 @@ public class BingoManager implements Listener {
                                         return;
                                     }
                                     challengeInfo.add(info);
-                                    if (challengeInfo.size() < 30)
+                                    if (challengeInfo.size() < 20)
                                         return;
                                 }
                                     break;

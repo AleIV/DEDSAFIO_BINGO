@@ -9,7 +9,7 @@ import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("info")
+@CommandAlias("info-team")
 public class TeamChatCMD extends BaseCommand {
 
     private @NonNull Core instance;

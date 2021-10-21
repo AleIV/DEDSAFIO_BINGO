@@ -88,8 +88,7 @@ public class InGameListener implements Listener {
 
         var player = e.getPlayer();
 
-        if (player.hasPermission("table.perm")) {
-            var clicked = (Player) e.getRightClicked();
+        if (player.hasPermission("table.perm") && e.getRightClicked() instanceof Player clicked) {
             var manager = instance.getBingoManager();
             var table = manager.findTable(clicked.getUniqueId());
 

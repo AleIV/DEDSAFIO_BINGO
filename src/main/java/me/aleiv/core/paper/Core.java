@@ -34,6 +34,7 @@ import me.aleiv.core.paper.teams.bukkit.commands.TeamCMD;
 import me.aleiv.core.paper.utilities.JsonConfig;
 import me.aleiv.core.paper.utilities.NegativeSpaces;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
@@ -123,6 +124,10 @@ public class Core extends JavaPlugin {
         teamManager.disconect();
         tablist.onDisable();
 
+    }
+    
+    public Component componentToString(String str) {
+        return miniMessage.parse(str);
     }
 
     public void broadcastMessage(String text) {

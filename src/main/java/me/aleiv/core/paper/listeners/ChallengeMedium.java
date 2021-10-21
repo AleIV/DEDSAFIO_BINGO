@@ -10,7 +10,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Donkey;
 import org.bukkit.entity.Fish;
@@ -321,13 +320,13 @@ public class ChallengeMedium implements Listener {
     @EventHandler
     public void onBlockInteractRound3(PlayerInteractEvent event) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.TEAM_SPAWN_ANCHOR) || !game.isChallengeEnabledFor(Challenge.CAKE_EAT))
+        if (!game.isChallengeEnabledFor(Challenge.CAKE_EAT))
             return;
-
+        //!game.isChallengeEnabledFor(Challenge.TEAM_SPAWN_ANCHOR) || 
         Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
-            if (block != null && block.getType() == Material.RESPAWN_ANCHOR) {
+            /*if (block != null && block.getType() == Material.RESPAWN_ANCHOR) {
                 RespawnAnchor respawnAnchor = (RespawnAnchor) block.getBlockData();
                 if (respawnAnchor.getCharges() > 0) {
                     String data = block.getLocation().getBlockX() + ";" + block.getLocation().getBlockY() + ";"
@@ -338,7 +337,7 @@ public class ChallengeMedium implements Listener {
                         manager.attempToFind(player, Game.Challenge.TEAM_SPAWN_ANCHOR, data);
                     }
                 }
-            } else if (block != null && block.getType() == Material.CAKE) {
+            } else */if (block != null && block.getType() == Material.CAKE) {
                 String data = block.getLocation().getBlockX() + ";" + block.getLocation().getBlockY() + ";"
                         + block.getLocation().getBlockZ();
                 var manager = instance.getBingoManager();
@@ -524,7 +523,7 @@ public class ChallengeMedium implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if (player.getFallDistance() >= 72 && player.getLocation().distance(event.getBlock().getLocation()) < 3) {
+        if (player.getFallDistance() >= 70 && player.getLocation().distance(event.getBlock().getLocation()) < 3) {
             final double preHealth = player.getHealth();
             Bukkit.getScheduler().runTaskLater(instance, task -> {
                 if (player.getGameMode() != GameMode.SPECTATOR && player.getHealth() >= preHealth) {

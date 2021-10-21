@@ -426,8 +426,7 @@ public class ChallengeEasy implements Listener {
     @EventHandler
     public void onEntDeath(EntityDeathEvent e) {
         var game = instance.getGame();
-        if (!game.isChallengeEnabledFor(Challenge.ACUATIC_KILL)
-                || !game.isChallengeEnabledFor(Challenge.DROWN_VILLAGER))
+        if (!game.isChallengeEnabledFor(Challenge.DROWN_VILLAGER))
             return;
 
         var entity = e.getEntity();
@@ -447,6 +446,20 @@ public class ChallengeEasy implements Listener {
             }
             return;
         }
+
+    }
+
+    @EventHandler
+    public void onEntDeath3(EntityDeathEvent e){
+        var game = instance.getGame();
+        if (!game.isChallengeEnabledFor(Challenge.ACUATIC_KILL))
+            return;
+
+            var entity = e.getEntity();
+        var player = entity.getKiller();
+        var manager = instance.getBingoManager();
+        
+        if(player == null) return;
 
         if (entity instanceof Fish || entity instanceof Squid || entity instanceof Turtle || entity instanceof Drowned
                 || entity instanceof Guardian || entity instanceof Dolphin) {
