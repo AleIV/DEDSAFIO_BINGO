@@ -1,5 +1,6 @@
 package me.aleiv.core.paper.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -207,6 +208,7 @@ public class BingoCMD extends BaseCommand {
     @CommandPermission("admin.perm")
     public void globalCMD(CommandSender sender, String text) {
         instance.getTeamManager().sendCommandToNodes(text);
+        Bukkit.dispatchCommand(sender, text);
         sender.sendMessage(ChatColor.YELLOW + "CMD SENT.");
 
     }
