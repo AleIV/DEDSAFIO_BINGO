@@ -55,8 +55,7 @@ public class BTeamManager extends TeamManager {
     @Override
     public void processCommand(String cmd, UUID nodeId) {
         // Called when a command is received from a node.
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-
+        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
     }
 
     @Override
