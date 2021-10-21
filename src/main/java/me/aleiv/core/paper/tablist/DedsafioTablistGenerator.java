@@ -65,7 +65,7 @@ public class DedsafioTablistGenerator extends TablistGenerator {
         // Sort them by points
         Collections.sort(entries, new SortByPoints());
         // Handle the ffa case
-        if (!plugin.getTeamManager().getDataset().equalsIgnoreCase("ffa")) {
+        if (plugin.getTeamManager().getDataset().equalsIgnoreCase("ffa")) {
             var iter = entries.iterator();
             while (iter.hasNext() && i < 80) {
                 var team = iter.next();
