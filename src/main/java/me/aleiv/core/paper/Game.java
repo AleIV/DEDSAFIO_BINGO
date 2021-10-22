@@ -763,7 +763,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.GIVE_PLAYER_FLOWER, new ItemCode('\uEE77', 37, "Regala una flor a un jugador de otro equipo con click derecho sobre ellos."));
 		challenges.put(Challenge.WATER_DROP, new ItemCode('\uEE78', 38, "“Salto de fe” Consigue un WaterDrop perfecto de más de 75 bloques de altura."));
 		challenges.put(Challenge.CAULDRON_WASH, new ItemCode('\uEE79', 39, "Destiñe una armadura de cuero completa usando un cauldron."));
-		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 5 tipos de animales diferentes."));
+		challenges.put(Challenge.BREED_ANIMALS, new ItemCode('\uEE80', 40, "Aparea 3 tipos de animales diferentes."));
 		challenges.put(Challenge.POTION_EFFECTS, new ItemCode('\uEE81', 41, "Consigue 3 efectos de poción al mismo tiempo."));
 		challenges.put(Challenge.MILK_ZOMBIE, new ItemCode('\uEE82', 42, "Dale un cubo de leche a un zombie."));
 		challenges.put(Challenge.POTION_TYPES, new ItemCode('\uEE83', 43, "Toma 3 tipos de pociones diferentes."));
@@ -778,7 +778,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.CAKE_EAT, new ItemCode('\uEE91', 51, "“Feliz Cumpleaños a ti” Todos los miembros del equipo deben comer de un mismo pastel."));
 		challenges.put(Challenge.END_LEAVE, new ItemCode('\uEE92', 52, "“De vuelta a casa” Regresa al overworld a través de un portal del end."));
 		challenges.put(Challenge.PLAYER_FISH, new ItemCode('\uEE93', 53, "Pesca un jugador de otro bando."));
-		challenges.put(Challenge.PIG_FALL, new ItemCode('\uEE94', 54, "“Cuando los cerdos vuelen” Guía a un cerdo a morir de caída."));
+		challenges.put(Challenge.PIG_FALL, new ItemCode('\uEE94', 54, "“Cuando los cerdos vuelen” Monta un cerdo mientras lo guías a morir de caída."));
 		challenges.put(Challenge.FULL_ARMOR, new ItemCode('\uEE95', 55, "“Equipados para todo” Todos los miembros deben llevar una armadura completa."));
 		challenges.put(Challenge.FIREWORK_CROSSBOW, new ItemCode('\uEE96', 56, "“Se fue con un BANG” Todos los miembros deben lanzar una ballesta cargada con fuegos artificiales"));
 		challenges.put(Challenge.CREEPER_TNT_KILL, new ItemCode('\uEE97', 57, "“Dulce Venganza” Mata a un creeper con tnt."));
@@ -786,7 +786,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.VILLAGE_BELL, new ItemCode('\uEE99', 59, "“Falsa alarma” Toca una campana alertando a todos los aldeanos. jaja xd"));
 		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
 		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion."));
-		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 200 bloques con una enderpearl."));
+		challenges.put(Challenge.ENDER_PEARL_TRAVEL, new ItemCode('\uEF03', 62, "Viaja más de 100 bloques con una enderpearl."));
 		challenges.put(Challenge.VILLAGER_EXPENSIVE_TRADE, new ItemCode('\uEF04', 63, "“ESTAFA” Tradea algo de más de 20 esmeraldas BASE con un aldeano."));
 		challenges.put(Challenge.EAT_SUS_STEW, new ItemCode('\uEF05', 64, "Come 3 tipos diferentes de suspicious stew."));
 		challenges.put(Challenge.MINE_LIGHT_SOURCE, new ItemCode('\uEF06', 65, "Pica 3 bloques diferentes que den luz."));
@@ -871,9 +871,10 @@ public class Game extends BukkitRunnable {
         public void register_challenge_3(){
                 var challenge_3 = challengeRounds.get(BingoRound.THREE);
 
+                challenge_3.add(Challenge.SHOOT_PORTAL);
                 challenge_3.add(Challenge.CAKE_EAT);
                 challenge_3.add(Challenge.END_LEAVE);
-                challenge_3.add(Challenge.PLAYER_FISH);
+                //challenge_3.add(Challenge.PLAYER_FISH);
                 challenge_3.add(Challenge.PIG_FALL);
                 challenge_3.add(Challenge.FULL_ARMOR);
                 challenge_3.add(Challenge.FIREWORK_CROSSBOW);
@@ -882,7 +883,7 @@ public class Game extends BukkitRunnable {
                 //challenge_3.add(Challenge.FLYING_MOBS_KILL);
                 challenge_3.add(Challenge.LINGERING_WATER_POTION);
                 challenge_3.add(Challenge.ENDER_PEARL_TRAVEL);
-                challenge_3.add(Challenge.VILLAGER_EXPENSIVE_TRADE);
+                //challenge_3.add(Challenge.VILLAGER_EXPENSIVE_TRADE);
                 challenge_3.add(Challenge.EAT_SUS_STEW);
                 challenge_3.add(Challenge.PINK_SHEEP_BIOME);
                 //challenge_3.add(Challenge.GLOWING_BAT);
@@ -897,6 +898,7 @@ public class Game extends BukkitRunnable {
                 //challenge_3.add(Challenge.OVER_ZOGLIN);
                 //challenge_3.add(Challenge.POTION_TYPES);
 
+                challenge_3.add(Challenge.VILLAGER_MAX_TRADE);
                 challenge_3.add(Challenge.MILK_ZOMBIE);
                 challenge_3.add(Challenge.PIGLIN_BARTER);
                 challenge_3.add(Challenge.STRIDER_GAPPLE);

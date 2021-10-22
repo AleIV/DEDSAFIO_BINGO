@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.Zoglin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -108,7 +107,6 @@ public class ChallengeHard implements Listener {
     public void onKill(EntityDeathEvent e) {
         var game = instance.getGame();
         if (!game.isChallengeEnabledFor(Challenge.SNOWBALL_BLAZE_KILL)
-                || !game.isChallengeEnabledFor(Challenge.OVER_ZOGLIN)
                 || !game.isChallengeEnabledFor(Challenge.NETHER_MOB_KILL)
                 || !game.isChallengeEnabledFor(Challenge.PIG_FALL)
                 || !game.isChallengeEnabledFor(Challenge.CREEPER_TNT_KILL))
@@ -130,14 +128,14 @@ public class ChallengeHard implements Listener {
 
             }
 
-        } else if (entity instanceof Zoglin zoglin) {
+        } /*else if (entity instanceof Zoglin zoglin) {
             var player = entity.getKiller();
             if (player != null) {
                 manager.attempToFind(player, Challenge.OVER_ZOGLIN, "");
             }
 
         }
-        /*if (flyingList.contains(entity.getType())) {
+        if (flyingList.contains(entity.getType())) {
             var player = entity.getKiller();
             if (player != null) {
                 manager.attempToFind(player, Challenge.FLYING_MOBS_KILL, entity.getType().toString());
@@ -361,7 +359,7 @@ public class ChallengeHard implements Listener {
             return;
 
         var cause = e.getCause();
-        if (cause == TeleportCause.ENDER_PEARL && getDistance(e.getFrom(), e.getTo()) >= 200) {
+        if (cause == TeleportCause.ENDER_PEARL && getDistance(e.getFrom(), e.getTo()) >= 100) {
             var manager = instance.getBingoManager();
             var player = e.getPlayer();
             manager.attempToFind(player, Challenge.ENDER_PEARL_TRAVEL, "");
