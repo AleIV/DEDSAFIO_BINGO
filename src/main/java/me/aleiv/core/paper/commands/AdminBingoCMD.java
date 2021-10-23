@@ -21,6 +21,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.game.BingoManager;
+import me.aleiv.core.paper.tablist.DedsafioTablistGenerator;
 import me.aleiv.core.paper.teams.exceptions.TeamAlreadyExistsException;
 import me.aleiv.core.paper.utilities.Frames;
 import me.aleiv.core.paper.utilities.TCT.BukkitTCT;
@@ -37,6 +38,12 @@ public class AdminBingoCMD extends BaseCommand {
     public AdminBingoCMD(Core instance) {
         this.instance = instance;
 
+    }
+
+    @Subcommand("recache-names")
+    public void recacheNames(CommandSender sender) {
+        DedsafioTablistGenerator.recacheNames();
+        sender.sendMessage("Succesfully recached all names!");
     }
 
     @CommandPermission("admin.perm")
@@ -236,7 +243,7 @@ public class AdminBingoCMD extends BaseCommand {
             task.addWithDelay(new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Bukkit.getOnlinePlayers().forEach(player ->{
+                    Bukkit.getOnlinePlayers().forEach(player -> {
                         instance.showTitle(player, frame + "", ChatColor.GOLD + newText.toString(), 0, 20, 0);
                     });
 
@@ -246,7 +253,6 @@ public class AdminBingoCMD extends BaseCommand {
         });
 
         task.execute();
-        
 
     }
 
@@ -257,7 +263,5 @@ public class AdminBingoCMD extends BaseCommand {
         instance.adminMessage("GLOBALMUTE " + game.getGlobalmute());
 
     }
-
-
 
 }
