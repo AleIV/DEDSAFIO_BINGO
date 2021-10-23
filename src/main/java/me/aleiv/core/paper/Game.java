@@ -782,7 +782,7 @@ public class Game extends BukkitRunnable {
 		challenges.put(Challenge.FULL_ARMOR, new ItemCode('\uEE95', 55, "“Equipados para todo” Todos los miembros deben llevar una armadura completa."));
 		challenges.put(Challenge.FIREWORK_CROSSBOW, new ItemCode('\uEE96', 56, "“Se fue con un BANG” Todos los miembros deben lanzar una ballesta cargada con fuegos artificiales"));
 		challenges.put(Challenge.CREEPER_TNT_KILL, new ItemCode('\uEE97', 57, "“Dulce Venganza” Mata a un creeper con tnt."));
-		challenges.put(Challenge.NETHER_MOB_KILL, new ItemCode('\uEE98', 58, "Cada miembro del equipo debe matar un mob en un bioma del nether diferente."));
+		challenges.put(Challenge.NETHER_MOB_KILL, new ItemCode('\uEE98', 58, "Mata un mob en 4 biomas diferentes del nether."));
 		challenges.put(Challenge.VILLAGE_BELL, new ItemCode('\uEE99', 59, "“Falsa alarma” Toca una campana alertando a todos los aldeanos. jaja xd"));
 		challenges.put(Challenge.FLYING_MOBS_KILL, new ItemCode('\uEF01', 60, "Mata 3 mobs voladores."));
 		challenges.put(Challenge.LINGERING_WATER_POTION, new ItemCode('\uEF02', 61, "Lanza una lingering potion."));

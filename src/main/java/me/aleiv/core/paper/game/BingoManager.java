@@ -264,6 +264,7 @@ public class BingoManager implements Listener {
                                 }
                                     break;
 
+                                case NETHER_MOB_KILL:
                                 case MINE_MINERALS:
                                 case ANIMAL_KILL:
                                 case HOSTILE_KILL:
@@ -302,7 +303,6 @@ public class BingoManager implements Listener {
                                 }
                                     break;
 
-                                case NETHER_MOB_KILL:
                                 case PINK_SHEEP_BIOME: {
 
                                     if (challengeInfo.contains(info) || infoPlayers.contains(playerName)) {

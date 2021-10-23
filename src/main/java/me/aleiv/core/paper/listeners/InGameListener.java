@@ -83,7 +83,7 @@ public class InGameListener implements Listener {
     @EventHandler
     public void invSpecEvent(PlayerInteractAtEntityEvent e) {
         if (e.getRightClicked() == null
-                || !(e.getRightClicked() instanceof Player || e.getPlayer().getGameMode() != GameMode.SPECTATOR))
+                || !(e.getRightClicked() instanceof Player && e.getPlayer().getGameMode() == GameMode.SPECTATOR))
             return;
 
         var player = e.getPlayer();
